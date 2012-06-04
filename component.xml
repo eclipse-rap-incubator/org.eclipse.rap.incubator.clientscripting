@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+  <name>
+    ClientScripting
+  </name>
+  <maintainer>
+    Tim Buschtöns
+  </maintainer>
+  <description>
+    <p>
+      ClientScripting allows developers to handle certain events that occur in RAP applications
+      directly on the client without creating any http-requests. Client scripts are written in
+      JavaScript using an SWT-like API.
+    </p>
+    <p>
+      <a href="http://wiki.eclipse.org/RAP/ClientScripting">ClientScripting wiki page</a>
+    </p>
+  </description>
+</component>

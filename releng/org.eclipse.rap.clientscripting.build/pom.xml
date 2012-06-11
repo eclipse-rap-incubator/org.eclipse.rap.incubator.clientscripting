@@ -33,6 +33,7 @@
   <modules>
     <module>../../features/org.eclipse.rap.clientscripting.feature</module>
     <module>../../bundles/org.eclipse.rap.clientscripting</module>
+    <module>repository</module>
   </modules>
 
   <repositories>

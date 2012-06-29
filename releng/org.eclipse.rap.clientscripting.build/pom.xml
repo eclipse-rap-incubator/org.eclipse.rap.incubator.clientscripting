@@ -22,7 +22,6 @@
   <properties>
     <tycho-version>0.15.0</tycho-version>
     <surefire-version>2.9</surefire-version>
-    <junit-version>3.8.2</junit-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -31,8 +30,9 @@
   </prerequisites>
 
   <modules>
-    <module>../../features/org.eclipse.rap.clientscripting.feature</module>
     <module>../../bundles/org.eclipse.rap.clientscripting</module>
+    <module>../../tests/org.eclipse.rap.clientscripting.test</module>
+    <module>../../features/org.eclipse.rap.clientscripting.feature</module>
     <module>repository</module>
   </modules>
 
@@ -41,6 +41,11 @@
       <id>base-platform-repository</id>
       <layout>p2</layout>
       <url>http://download.eclipse.org/rt/rap/1.5/runtime</url>
+    </repository>
+    <repository>
+      <id>extra-dependencies-repository</id>
+      <layout>p2</layout>
+      <url>http://build.eclipse.org/rt/rap/base-platforms/1.5/extra-dependencies</url>
     </repository>
   </repositories>
 

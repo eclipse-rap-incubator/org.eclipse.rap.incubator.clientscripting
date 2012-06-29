@@ -15,9 +15,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.eclipse.rap.clientscripting</groupId>
-    <artifactId>org.eclipse.rap.clientscripting-parent</artifactId>
+    <groupId>org.eclipse.rap.incubator</groupId>
+    <artifactId>org.eclipse.rap.incubator-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
+    <relativePath>../parent</relativePath>
   </parent>
 
   <artifactId>org.eclipse.rap.clientscripting-repository</artifactId>

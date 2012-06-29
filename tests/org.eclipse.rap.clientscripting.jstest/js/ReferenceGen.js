@@ -1,14 +1,16 @@
+
 /*global console:false */
+
 (function() {
-  
+
   var nl = "</br>";
   var lv1 = "*  ";
   var text = "## Available Setter:" + nl;
   var common = org.eclipse.rwt.protocol.AdapterUtil._controlProperties;
   var registry = org.eclipse.rwt.protocol.AdapterRegistry._registry;
-  
+
   var ignore = [ "children", "activeKeys", "cancelKeys", "customVariant", "parent" ];
-  
+
   var toSetter = function( properties ) {
     var result = [];
     for( var i = 0; i < properties.length; i++ ) {
@@ -31,13 +33,13 @@
     }
     return result;
   };
-  
+
   var filter = function( list ) {
     return filterIgnore( filterCommon( list ) );
   };
-  
-  text += lv1 + "<b>org.eclipse.swt.widgets.Control</b>: " + toSetter( filterIgnore( common ) ) + nl; 
-  
+
+  text += lv1 + "<b>org.eclipse.swt.widgets.Control</b>: " + toSetter( filterIgnore( common ) ) + nl;
+
   for( var key in registry ) {
     if( key.indexOf( "rwt.widgets" ) === 0 ) {
       try {
@@ -48,7 +50,7 @@
           text += toSetter( filter( adapter.properties ) );
         }
         text += nl;
-      } catch( ex ) { 
+      } catch( ex ) {
         console.log( ex );
       }
     }
@@ -58,9 +60,9 @@
   text += "## Available Getter:" + nl;
 
   var widgets = org.eclipse.rap.clientscripting.ClientScriptingUtil._getterMapping;
-  
+
   for( var key in widgets ) {
-    var type = "org.eclipse.swt.widget" + key.slice( key.lastIndexOf( "." ) ); 
+    var type = "org.eclipse.swt.widget" + key.slice( key.lastIndexOf( "." ) );
     text += lv1 + "<b>" + type + "</b>: ";
     var getters = widgets[ key ];
     var gettersArr = [];
@@ -69,7 +71,7 @@
     }
     text += gettersArr.join() + nl;
   }
-  
+
   console.log( text );
-  
+
 }());

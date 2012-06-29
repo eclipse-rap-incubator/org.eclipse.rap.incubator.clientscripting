@@ -122,7 +122,7 @@ public class ClientListener_Test extends TestCase {
   public void testBindingNotDisposedByDefault() {
     Label label = new Label( shell, SWT.NONE );
     listener.addTo( label, SWT.MouseDown );
-    
+
     ClientListenerBinding binding = TestUtil.findBinding( listener, label, SWT.MouseDown );
     assertFalse( binding.isDisposed() );
   }
@@ -132,7 +132,7 @@ public class ClientListener_Test extends TestCase {
     listener.addTo( label, SWT.MouseDown );
     Fixture.fakePhase( PhaseId.PROCESS_ACTION );
     label.dispose();
-    
+
     ClientListenerBinding binding = TestUtil.findBinding( listener, label, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
   }
@@ -160,7 +160,7 @@ public class ClientListener_Test extends TestCase {
     Label label = new Label( shell, SWT.NONE );
     listener.addTo( label, SWT.MouseDown );
     listener.removeFrom( label, SWT.MouseDown );
-    
+
     ClientListenerBinding binding = TestUtil.findBinding( listener, label, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
   }
@@ -170,7 +170,7 @@ public class ClientListener_Test extends TestCase {
     listener.addTo( label, SWT.MouseDown );
     listener.removeFrom( label, SWT.MouseDown );
     listener.removeFrom( label, SWT.MouseDown );
-    
+
     ClientListenerBinding binding = TestUtil.findBinding( listener, label, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
   }
@@ -181,7 +181,7 @@ public class ClientListener_Test extends TestCase {
 
     assertNull( TestUtil.findBinding( listener, label, SWT.MouseDown ) );
   }
-  
+
   public void testGetClientListenerAdapter() {
     ClientListenerAdapter adapter = listener.getAdapter( ClientListenerAdapter.class );
 

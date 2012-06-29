@@ -8,7 +8,7 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
- 
+
 qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
 
 org.eclipse.rap.clientscripting.WidgetProxy = function( originalWidget ) {
@@ -21,10 +21,10 @@ org.eclipse.rap.clientscripting.WidgetProxy = function( originalWidget ) {
   } );
 };
 
-org.eclipse.rap.clientscripting.WidgetProxy._PROXY_KEY = 
+org.eclipse.rap.clientscripting.WidgetProxy._PROXY_KEY =
   "org.eclipse.rap.clientscripting.WidgetProxy.PROXY";
 
-org.eclipse.rap.clientscripting.WidgetProxy._USERDATA_KEY = 
+org.eclipse.rap.clientscripting.WidgetProxy._USERDATA_KEY =
   "org.eclipse.rap.clientscripting.WidgetProxy.USERDATA";
 
 org.eclipse.rap.clientscripting.WidgetProxy.getInstance = function( widget ) {

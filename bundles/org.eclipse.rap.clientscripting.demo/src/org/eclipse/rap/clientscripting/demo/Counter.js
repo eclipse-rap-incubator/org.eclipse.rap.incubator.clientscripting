@@ -1,4 +1,4 @@
-var handleEvent = function( event ) { 
+var handleEvent = function( event ) {
   var widget = event.widget;
   var count = widget.getData( "count" );
   if( count === null ) {

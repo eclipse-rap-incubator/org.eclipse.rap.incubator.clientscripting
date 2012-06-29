@@ -19,7 +19,7 @@ var SWT = org.eclipse.rap.clientscripting.SWT;
 
 var text;
 var shell;
- 
+
 qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
 
   extend : qx.core.Object,
@@ -44,7 +44,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.press( text, "a" );
-      
+
       // Test type (or initial value) of all currently supported fields
       assertTrue( eventProxy.doit );
       assertEquals( "number", typeof eventProxy.type );
@@ -65,7 +65,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.press( text, "a" );
-      
+
       assertEquals( SWT.KeyDown, eventProxy.type );
     },
 
@@ -76,7 +76,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.press( text, "a" );
-      
+
       assertEquals( "a", eventProxy.character );
     },
 
@@ -87,7 +87,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.press( text, "a" );
-      
+
       assertEquals( 97, eventProxy.keyCode );
     },
 
@@ -98,7 +98,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.press( text, "A" );
-      
+
       assertEquals( 97, eventProxy.keyCode );
     },
 
@@ -109,7 +109,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.press( text, "Up" );
-      
+
       assertEquals( '\u0000', eventProxy.character );
       assertEquals( SWT.ARROW_UP, eventProxy.keyCode );
     },
@@ -122,7 +122,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
 
       var shift = qx.event.type.DomEvent.SHIFT_MASK;
       TestUtil.keyDown( text.getElement(), "Shift", shift );
-      
+
       assertEquals( '\u0000', eventProxy.character );
       assertEquals( SWT.SHIFT, eventProxy.keyCode );
     },
@@ -136,7 +136,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var shift = qx.event.type.DomEvent.SHIFT_MASK;
       var ctrl = qx.event.type.DomEvent.CTRL_MASK;
       TestUtil.keyDown( text.getElement(), "A", shift | ctrl );
-      
+
       assertEquals( SWT.SHIFT | SWT.CTRL, eventProxy.stateMask );
     },
 
@@ -147,7 +147,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.shiftClick( text );
-      
+
       assertEquals( SWT.SHIFT, eventProxy.stateMask );
     },
 
@@ -158,7 +158,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.click( text );
-      
+
       assertEquals( 1, eventProxy.button );
     },
 
@@ -169,7 +169,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.rightClick( text );
-      
+
       assertEquals( 3, eventProxy.button );
     },
 
@@ -183,7 +183,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.click( text, 23, 34 );
-      
+
       assertEquals( 3, eventProxy.x );
       assertEquals( 4, eventProxy.y );
     },
@@ -198,7 +198,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       TestUtil.click( text, 23, 34 );
-      
+
       assertEquals( 1, eventProxy.x );
       assertEquals( 2, eventProxy.y );
     },
@@ -211,7 +211,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textCharInput( text, "A" );
-      
+
       assertEquals( 65, eventProxy.keyCode );
       assertEquals( 'A', eventProxy.character );
       assertEquals( "A", eventProxy.text );
@@ -227,7 +227,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textCharInput( text, "A" );
-      
+
       assertEquals( 65, eventProxy.keyCode );
       assertEquals( 'A', eventProxy.character );
       assertEquals( "A", eventProxy.text );
@@ -243,7 +243,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textCharInput( text, "a" );
-      
+
       assertEquals( 65, eventProxy.keyCode );
       assertEquals( 'a', eventProxy.character );
       assertEquals( "a", eventProxy.text );
@@ -259,7 +259,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textPaste( text, "fooAba", [ 3, 3 ] );
-      
+
       assertEquals( 0, eventProxy.keyCode );
       assertEquals( '\u0000', eventProxy.character );
       assertEquals( "A", eventProxy.text );
@@ -275,7 +275,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textPaste( text, "foooba", [ 2, 2 ] );
-      
+
       assertEquals( "o", eventProxy.text );
       assertEquals( 2, eventProxy.start );
       assertEquals( 2, eventProxy.end );
@@ -289,7 +289,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textPaste( text, "fooLALAba", [ 3, 3 ] );
-      
+
       assertEquals( "LALA", eventProxy.text );
       assertEquals( 3, eventProxy.start );
       assertEquals( 3, eventProxy.end );
@@ -303,7 +303,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textPaste( text, "foob", [ 4, 5 ] );
-      
+
       assertEquals( 0, eventProxy.keyCode );
       assertEquals( '\u0000', eventProxy.character );
       assertEquals( "", eventProxy.text );
@@ -325,7 +325,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       text._inValueProperty = false;
       text._oninputDom( { "propertyName" : "value" } );
       TestUtil.keyUp( text, 46 );
-      
+
       assertEquals( 0, eventProxy.keyCode );
       assertEquals( '\u0000', eventProxy.character );
       assertEquals( "", eventProxy.text );
@@ -347,7 +347,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       text._inValueProperty = false;
       text._oninputDom( { "propertyName" : "value" } );
       TestUtil.keyUp( text, 8 );
-      
+
       assertEquals( 0, eventProxy.keyCode );
       assertEquals( '\u0000', eventProxy.character );
       assertEquals( "", eventProxy.text );
@@ -363,7 +363,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textPaste( text, "fba", [ 1, 3 ] );
-      
+
       assertEquals( 0, eventProxy.keyCode );
       assertEquals( '\u0000', eventProxy.character );
       assertEquals( "", eventProxy.text );
@@ -379,7 +379,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textPaste( text, "fooba", [ 1, 4 ] );
-      
+
       assertEquals( "", eventProxy.text );
       assertEquals( 1, eventProxy.start );
       assertEquals( 4, eventProxy.end );
@@ -421,7 +421,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textPaste( text, "foooooba", [ 3, 3 ] );
-      
+
       assertEquals( "oo", eventProxy.text );
       assertEquals( 3, eventProxy.start );
       assertEquals( 3, eventProxy.end );
@@ -435,7 +435,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
 
       this._textPaste( text, "faba", [ 1, 4 ] );
-      
+
       assertEquals( "a", eventProxy.text );
       assertEquals( 1, eventProxy.start );
       assertEquals( 4, eventProxy.end );
@@ -455,7 +455,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       assertEquals( 4, eventProxy.end );
     },
 
-    ///////// 
+    /////////
     // Helper
 
     _setUp : function() {
@@ -477,7 +477,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       text = ObjectManager.getObject( "w3" );
       text.focus();
     },
-    
+
     _tearDown : function() {
       Processor.processOperation( {
         "target" : "w2",
@@ -489,7 +489,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
       text = null;
     },
-    
+
     _textCharInput : function( textWidget, character ) {
       TestUtil.keyDown( textWidget, character );
       // we will assume that the carret is at the end
@@ -516,7 +516,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     }
 
   }
-    
+
 } );
 
 }());

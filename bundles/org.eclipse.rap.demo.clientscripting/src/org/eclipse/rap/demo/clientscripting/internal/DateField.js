@@ -1,4 +1,4 @@
-var handleEvent = function( event ) { 
+var handleEvent = function( event ) {
   switch( event.type ) {
     case SWT.Modify:
       handleModifyEvent( event );
@@ -8,7 +8,6 @@ var handleEvent = function( event ) {
     break;
   }
 };
-
 
 var handleVerifyEvent = function( event ) {
 
@@ -20,23 +19,23 @@ var handleVerifyEvent = function( event ) {
   var right = text.slice( end );
   var result = left + input + right;
   var points = result.split( "." ).length - 1;
-  
+
   event.doit = input.match( /^\d$|^\.$|^$/ ) !== null; // allow digits, points, or empty
-  
+
   if( input !== "" ) { // deleting allows everything
-    
+
     if( event.doit && result.match( /\d{3,}/ ) !== null ) { // more than 2 numbers together
       event.doit = result.match( /^\d{0,2}\.\d{0,2}\.\d{3,}/ ) !== null; // are only valid after two points
-    } 
-    
+    }
+
     if( event.doit && result.match( /\d{5,}/ ) !== null ) {
       event.doit = false; // no more than 4 numbers together
-    } 
-    
+    }
+
     if( event.doit && ( points > 2 || result.match( /\.\./ )  ) ) {
       event.doit = false; // only 2 points, never together
     }
-    
+
   }
 
 };
@@ -48,5 +47,5 @@ var handleModifyEvent = function( event ) {
     event.widget.setBackground( null );
   } else {
     event.widget.setBackground( [ 255, 255, 128 ] );
-  }  
-}
+  }
+};

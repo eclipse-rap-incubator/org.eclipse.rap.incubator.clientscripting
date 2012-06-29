@@ -13,13 +13,13 @@ public class CustomBehaviors {
   private CustomBehaviors() {
     // prevent instantiation
   }
-  
+
   public static void addUpperCaseBehavior( Text text ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "UpperCase.js" );
     ClientListener clientListener = new ClientListener( scriptCode );
     clientListener.addTo( text, ClientListener.Verify );
   }
-  
+
   public static void addDigitsOnlyBehavior( Text text ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "DigitsOnly.js" );
     ClientListener clientListener = new ClientListener( scriptCode );

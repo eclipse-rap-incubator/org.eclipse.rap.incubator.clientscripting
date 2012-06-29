@@ -8,22 +8,22 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
- 
+
 qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
 
 
 /**
  * Note: Thise class is available within ClientScriptingFunction simpl as "SWT" (no namespace)
- */ 
+ */
 org.eclipse.rap.clientscripting.SWT = {
-  
+
   /**
    * The key down event type
    */
   KeyDown : 1,
 
   /**
-   * The key up event type 
+   * The key up event type
    */
   KeyUp : 2,
 
@@ -33,32 +33,32 @@ org.eclipse.rap.clientscripting.SWT = {
   MouseDown : 3,
 
   /**
-   * The mouse up event type 
+   * The mouse up event type
    */
   MouseUp : 4,
-  
+
   /**
-   * The mouse move event type 
+   * The mouse move event type
    */
   MouseMove : 5,
-  
+
   /**
    * The mouse enter event type
    */
-  MouseEnter : 6,   
-  
-  /**
-   * The mouse exit event type 
-   */
-  MouseExit : 7,
-  
-  /**
-   * The mouse double click event type 
-   */
-  MouseDoubleClick : 8, 
+  MouseEnter : 6,
 
   /**
-   * The focus in event type 
+   * The mouse exit event type
+   */
+  MouseExit : 7,
+
+  /**
+   * The mouse double click event type
+   */
+  MouseDoubleClick : 8,
+
+  /**
+   * The focus in event type
    */
   FocusIn : 15,
 
@@ -69,15 +69,15 @@ org.eclipse.rap.clientscripting.SWT = {
 
 
   /**
-   * The modify event type 
-   * 
+   * The modify event type
+   *
    * Currently only supported by Text
    */
   Modify : 24,
 
   /**
    * The verify event type
-   * 
+   *
    * Current limitations:
    *  - works for Text only
    *  - is not fired on programatic changes
@@ -217,13 +217,13 @@ org.eclipse.rap.clientscripting.SWT = {
 
   /**
    * Keyboard event constant representing the numeric key
-   * pad zero key    
+   * pad zero key
    */
   KEYPAD_0 : 96,
 
   /**
    * Keyboard event constant representing the numeric key
-   * pad one key 
+   * pad one key
    */
   KEYPAD_1 : 97,
 
@@ -283,19 +283,19 @@ org.eclipse.rap.clientscripting.SWT = {
 
   /**
    * Keyboard event constant representing the numeric key
-   * pad enter key 
+   * pad enter key
    */
   KEYPAD_CR : 80,
 
   /**
    * Keyboard event constant representing the caps
-   * lock key 
+   * lock key
    */
   CAPS_LOCK : 20,
 
   /**
    * Keyboard event constant representing the num
-   * lock key 
+   * lock key
    */
   NUM_LOCK : 144,
 
@@ -307,26 +307,26 @@ org.eclipse.rap.clientscripting.SWT = {
 
   /**
    * Keyboard event constant representing the pause
-   * key 
+   * key
    */
   PAUSE : 19,
 
   /**
    * Keyboard event constant representing the break
-   * key 
+   * key
    */
   BREAK : 19,
 
   /**
    * Keyboard event constant representing the print screen
-   * key 
+   * key
    */
   PRINT_SCREEN : 44,
 
   /**
    * keyboard and/or mouse event mask indicating that the ALT key
    * was pushed on the keyboard when the event was generated
-   */  
+   */
   ALT : 1 << 16,
 
   /**
@@ -344,7 +344,7 @@ org.eclipse.rap.clientscripting.SWT = {
   /**
    * Keyboard and/or mouse event mask indicating that the CTRL key
    * was pushed on the keyboard when the event was generated. This
-   * is a synonym for CTRL 
+   * is a synonym for CTRL
    */
   CONTROL : 1 << 18,
 
@@ -354,9 +354,9 @@ org.eclipse.rap.clientscripting.SWT = {
    */
   COMMAND : 1 << 22,
 
-  // NOTE : The following constants are characters in SWT and can be compared with both the 
-  // keyCode and the character field of an event. Here these keys are currently only representend 
-  // by the events keyCode, therefore these are numbers instead and can only be compared with 
+  // NOTE : The following constants are characters in SWT and can be compared with both the
+  // keyCode and the character field of an event. Here these keys are currently only representend
+  // by the events keyCode, therefore these are numbers instead and can only be compared with
   // the keyCode field.
 
   /**

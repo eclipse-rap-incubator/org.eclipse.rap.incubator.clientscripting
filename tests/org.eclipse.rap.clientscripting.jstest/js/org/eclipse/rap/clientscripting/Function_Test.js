@@ -17,9 +17,9 @@ var SWT = org.eclipse.rap.clientscripting.SWT;
 qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
 
   extend : qx.core.Object,
-  
+
   members : {
-    
+
     testCreateFunctionWrongNamed : function() {
       var code = "function foo(){}";
       try {
@@ -30,7 +30,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
       }
     },
 
-    /*global global:true */ 
+    /*global global:true */
     testCreateFunctionWithHelper : function() {
       var code = "var foo = function(){  global = 1;  };var handleEvent = function(){ foo(); };";
       var listener = new Function( code );
@@ -48,7 +48,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
         // expected
       }
     },
-    
+
     testCreateFunctionNoFunction : function() {
       var code = "1";
       try {
@@ -110,7 +110,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
     }
 
   }
-  
+
 } );
 
 }());

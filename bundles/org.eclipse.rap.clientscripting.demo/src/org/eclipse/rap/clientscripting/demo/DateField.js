@@ -1,4 +1,4 @@
-var handleEvent = function( event ) { 
+var handleEvent = function( event ) {
   switch( event.type ) {
     case SWT.KeyDown:
       handleKeyDownEvent( event );
@@ -32,12 +32,12 @@ var handleKeyDownEvent = function( event ) {
     text = leftPart + value + rightPart;
     sel--;
   };
-  
+
   if( text.charAt( sel ) === "_" && isNumber( newCh ) ) {
     replaceNextChar( newCh );
     if( text.charAt( sel ) === "." ) {
       sel++;
-    }    
+    }
   } else if( keyCode === SWT.BS && sel > 0 ) {
     if( text.charAt( sel - 1 ) === "." ) {
       sel--;
@@ -53,13 +53,13 @@ var handleKeyDownEvent = function( event ) {
   // TODO: Setting text also sets selection to last position? - compare to SWT
   event.widget.setText( text );
   event.widget.setSelection( [ sel, sel ] );
-  event.doit = false; // prevent key input 
-}
+  event.doit = false; // prevent key input
+};
 
 var handleMouseEvent = function( event ) {
-  // not supported: 
+  // not supported:
   //event.doit = false; // prevent mouse selection change
-}
+};
 
 var handleVerifyEvent = function( event ) {
   if( event.character === '\u0000' ) {

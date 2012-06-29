@@ -8,7 +8,7 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
- 
+
 (function() {
 
 var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
@@ -22,7 +22,7 @@ var text;
 qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
 
   extend : qx.core.Object,
-  
+
   members : {
 
     testCreateTextWidgetProxy : function() {
@@ -30,7 +30,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
 
       assertTrue( widgetProxy instanceof WidgetProxy );
     },
-    
+
     testCreateTextWidgetProxyTwice : function() {
       var widgetProxy1 = WidgetProxy.getInstance( text );
       var widgetProxy2 = WidgetProxy.getInstance( text );
@@ -41,36 +41,36 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
         assertTrue( widgetProxy1.__proto__ === widgetProxy1.__proto__ );
       }
     },
-    
+
     testDisposeWidgetProxy : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
 
       text.destroy();
       TestUtil.flush();
-      
+
       assertTrue( TestUtil.hasNoObjects( widgetProxy ) );
       if( widgetProxy.__proto__ ) { // __proto__ is not an ECMA standard
         var proto = widgetProxy.__proto__;
         assertTrue( TestUtil.hasNoObjects( proto ) );
       }
     },
-    
+
     testDisposeUserData : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
       widgetProxy.setData( "key", {} );
       // hacky: get data object
       var data = text.getUserData( org.eclipse.rap.clientscripting.WidgetProxy._USERDATA_KEY );
       assertFalse( TestUtil.hasNoObjects( data ) );
-      
+
       text.destroy();
       TestUtil.flush();
-      
+
       assertTrue( TestUtil.hasNoObjects( data ) );
     },
 
     testSetter : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
-      
+
       widgetProxy.setText( "foo" );
 
       assertEquals( "foo", text.getValue() );
@@ -79,13 +79,13 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     testSetGetData : function() {
       var widgetProxy1 = WidgetProxy.getInstance( text );
       var widgetProxy2 = WidgetProxy.getInstance( text );
-      
+
       widgetProxy1.setData( "myKey", 24 );
 
-      assertNull( widgetProxy2.getData( "myWrongKey" ) ); 
-      assertEquals( 24, widgetProxy2.getData( "myKey" ) ); 
+      assertNull( widgetProxy2.getData( "myWrongKey" ) );
+      assertEquals( 24, widgetProxy2.getData( "myKey" ) );
     },
-    
+
     testSetDataTooManyArguments : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
       try {
@@ -95,7 +95,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
         // expected
       }
     },
-    
+
     testSetDataTooFewArguments : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
       try {
@@ -105,7 +105,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
         // expected
       }
     },
-    
+
     testGetDataTooManyArguments : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
       try {
@@ -115,7 +115,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
         // expected
       }
     },
-    
+
     testGetDataTooFewArguments : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
       try {
@@ -129,7 +129,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     testSetTextSync : function() {
       TestUtil.initRequestLog();
       var widgetProxy = WidgetProxy.getInstance( text );
-      
+
       widgetProxy.setText( "foo" );
       var req = org.eclipse.swt.Request.getInstance().send();
       var msg = TestUtil.getMessage();
@@ -139,9 +139,9 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     testTextGetText : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
       text.setValue( "foo" );
-      
+
       var value = widgetProxy.getText();
-      
+
       assertEquals( "foo", value );
     },
 
@@ -173,7 +173,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       text = ObjectManager.getObject( "w3" );
       text.focus();
     },
-    
+
     _tearDown : function() {
       Processor.processOperation( {
         "target" : "w2",
@@ -187,7 +187,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     }
 
   }
-    
+
 } );
 
 }());

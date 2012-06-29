@@ -1,5 +1,5 @@
 var isValid = function( text ) {
-  var result =    text.indexOf( " " ) === -1 
+  var result =    text.indexOf( " " ) === -1
                && text.indexOf( "@" ) === text.lastIndexOf( "@" );
   return result;
 };

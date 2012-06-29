@@ -8,9 +8,9 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
- 
+
 qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
- 
+
 org.eclipse.rap.clientscripting.EventBinding = function( source, eventType, targetFunction ) {
   try {
     var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
@@ -29,7 +29,7 @@ org.eclipse.rap.clientscripting.EventBinding.prototype = {
   _bind : function() {
     this._source.addEventListener( this._nativeType, this._processEvent, this );
   },
-  
+
   _unbind : function() {
     this._source.removeEventListener( this._nativeType, this._processEvent, this );
   },
@@ -43,7 +43,7 @@ org.eclipse.rap.clientscripting.EventBinding.prototype = {
     ClientScriptingUtil.postProcessEvent( eventProxy, wrappedEventProxy, event );
     EventProxy.disposeEventProxy( eventProxy );
   },
-  
+
   getType : function() {
     return this._eventType;
   },
@@ -59,4 +59,3 @@ org.eclipse.rap.clientscripting.EventBinding.prototype = {
   }
 
 };
-  

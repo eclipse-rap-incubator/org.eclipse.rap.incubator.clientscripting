@@ -8,9 +8,9 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
- 
+
 qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
- 
+
 // TODO [tb] : consider a name thats not a native Constructor ( "Function" )
 /*global handleEvent:false */
 org.eclipse.rap.clientscripting.Function = function( /* code */ ) {
@@ -24,7 +24,7 @@ org.eclipse.rap.clientscripting.Function = function( /* code */ ) {
     throw new Error( msg );
   }
   try {
-    this._function = handleEvent; // TODO [tb] : allow specific function name(s) 
+    this._function = handleEvent; // TODO [tb] : allow specific function name(s)
   } catch( ex ) {
     // handled in next if
   }

@@ -8,13 +8,13 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
- 
+
 qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
- 
+
 org.eclipse.rap.clientscripting.ClientScriptingUtil = {
 
   _wrapperHelper : function(){},
-  
+
   _getterMapping : {
     "org.eclipse.rwt.widgets.Text" : {
       "getText" : function( widget ) { return function() { return widget.getValue(); }; },
@@ -77,7 +77,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     this._wrapperHelper.prototype = null;
     return result;
   },
-  
+
   disposeObject : function( object ) {
     for( var key in object ) {
       if( object.hasOwnProperty( key ) ) {
@@ -85,7 +85,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       }
     }
   },
-  
+
   postProcessEvent : function( event, wrappedEvent, originalEvent ) {
     var SWT = org.eclipse.rap.clientscripting.SWT;
     switch( event.type ) {
@@ -105,7 +105,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     var properties = ObjectManager.getEntry( id ).adapter.properties;
     for( var i = 0; i < properties.length; i++ ) {
       var property = properties[ i ];
-      proxy[ "set" + qx.lang.String.toFirstUp( property ) ] = 
+      proxy[ "set" + qx.lang.String.toFirstUp( property ) ] =
         this._createSetter( id, property );
     }
   },
@@ -116,7 +116,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       proxy[ key ] = getterMap[ key ]( source );
     }
   },
-  
+
   attachUserData : function( proxy, source ) {
     var setter = this._setUserData;
     var getter = this._getUserData;
@@ -127,7 +127,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       return getter( source, arguments );
     };
   },
-  
+
   addDisposeListener : function( widget, listener ) {
     var orgDestroy = widget.destroy;
     widget.destroy = function() {
@@ -177,7 +177,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       "properties" : props
     } );
   },
-  
+
   _setUserData : function( source, args) {
     if( args.length !== 2 ) {
       var msg =  "Wrong number of arguments in SetData: Expected 2, found " + args.length;
@@ -193,7 +193,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     }
     data[ property ] = value;
   },
-  
+
   _getUserData : function( source, args ) {
     if( args.length !== 1 ) {
       var msg =  "Wrong number of arguments in SetData: Expected 1, found " + args.length;
@@ -219,16 +219,16 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     } else {
       var keyCode = this._getLastKeyCode();
       switch( keyCode ) {
-        case 16: 
+        case 16:
           event.keyCode = SWT.SHIFT;
         break;
-        case 17: 
+        case 17:
           event.keyCode = SWT.CTRL;
         break;
-        case 18: 
+        case 18:
           event.keyCode = SWT.ALT;
         break;
-        case 224: 
+        case 224:
           event.keyCode = SWT.COMMAND;
         break;
         default:
@@ -253,7 +253,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     }
     this._setStateMask( event, originalEvent );
   },
-  
+
   _initVerifyEvent : function( event, originalEvent ) {
     var text = originalEvent.getTarget();
     if( text.classname === "org.eclipse.rwt.widgets.Text" ) {
@@ -262,7 +262,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       var oldValue = text.getValue();
       var oldSelection = text.getSelection();
       var diff = this._getDiff( newValue, oldValue, oldSelection, keyCode );
-      if(    diff[ 0 ].length === 1 
+      if(    diff[ 0 ].length === 1
           && diff[ 1 ] === diff[ 2 ]
           && diff[ 0 ] === originalEvent.getData()
       ) {
@@ -274,7 +274,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       event.end = diff[ 2 ];
     }
   },
-  
+
   _postProcessVerifyEvent : function( event, wrappedEvent, originalEvent ) {
     var widget = originalEvent.getTarget();
     if( wrappedEvent.doit !== false ) {
@@ -311,7 +311,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   _getLastKeyCode : function() {
-    // NOTE : While this is a private field, this mechanism must be integrated with 
+    // NOTE : While this is a private field, this mechanism must be integrated with
     // KeyEventSupport anyway to support the doit flag better.
     return org.eclipse.rwt.KeyEventSupport.getInstance()._currentKeyCode;
   },
@@ -326,10 +326,10 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       text = newValue.slice( start, newValue.length - ( oldValue.length - oldSel[ 1 ] ) );
     } else {
       text = "";
-      if(    oldSel[ 0 ] === oldSel[ 1 ] 
+      if(    oldSel[ 0 ] === oldSel[ 1 ]
           && keyCode === 8 // backspace
-          && ( oldValue.length - 1 ) === newValue.length  
-      ) { 
+          && ( oldValue.length - 1 ) === newValue.length
+      ) {
         start = oldSel[ 0 ] - 1;
         end = oldSel[ 0 ];
       } else {

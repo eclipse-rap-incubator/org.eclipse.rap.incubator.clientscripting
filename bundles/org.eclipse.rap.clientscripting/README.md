@@ -20,7 +20,7 @@ http://wiki.eclipse.org/RAP/Protocol#Object_Type_Reference
 * <b>org.eclipse.swt.widgets.TreeItem</b>: setItemCount, setTexts, setImages, setBackground, setForeground, setFont, setCellBackgrounds, setCellForegrounds
 * <b>org.eclipse.swt.widgets.TableColumn</b>: setIndex, setLeft, setWidth, setText, setImage, setToolTip, setResizable, setMoveable
 * <b>org.eclipse.swt.widgets.Browser</b>: setUrl, setFunctionResult, setVisibility, setEnabled, setForeground
-* <b>org.eclipse.swt.widgets.ExternalBrowser</b>: 
+* <b>org.eclipse.swt.widgets.ExternalBrowser</b>:
 * <b>org.eclipse.swt.widgets.Group</b>: setText, setToolTip, setVisibility, setEnabled, setForeground, setBackground
 * <b>org.eclipse.swt.widgets.Shell</b>: setShowMinimize, setAllowMinimize, setShowMaximize, setAllowMaximize, setShowClose, setAllowClose, setResizable, setImage
 * <b>org.eclipse.swt.widgets.ProgressBar</b>: setMinimum, setMaximum, setSelection, setState

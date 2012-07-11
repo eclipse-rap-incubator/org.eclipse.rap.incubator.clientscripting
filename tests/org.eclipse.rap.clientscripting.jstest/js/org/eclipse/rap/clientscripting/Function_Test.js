@@ -36,7 +36,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
       var listener = new Function( code );
       listener.call();
       assertEquals( 1, global );
-      delete global;
+      delete global; // An alternative would be to create a storage for such cases in TestUtil
     },
 
     testCreateFunctionSyntaxError : function() {

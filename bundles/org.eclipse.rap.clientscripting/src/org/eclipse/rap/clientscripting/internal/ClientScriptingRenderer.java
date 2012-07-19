@@ -13,9 +13,9 @@ package org.eclipse.rap.clientscripting.internal;
 import java.util.Collection;
 
 import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.rap.rwt.internal.protocol.ClientObjectFactory;
+import org.eclipse.rap.rwt.internal.protocol.IClientObject;
 import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.internal.protocol.ClientObjectFactory;
-import org.eclipse.rwt.internal.protocol.IClientObject;
 import org.eclipse.rwt.lifecycle.PhaseEvent;
 import org.eclipse.rwt.lifecycle.PhaseId;
 import org.eclipse.rwt.lifecycle.PhaseListener;

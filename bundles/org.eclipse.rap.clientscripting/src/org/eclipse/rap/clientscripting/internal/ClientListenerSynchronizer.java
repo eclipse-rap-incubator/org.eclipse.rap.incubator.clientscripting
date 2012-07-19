@@ -11,7 +11,7 @@
 package org.eclipse.rap.clientscripting.internal;
 
 import org.eclipse.rap.clientscripting.ClientListener;
-import org.eclipse.rwt.internal.protocol.IClientObject;
+import org.eclipse.rap.rwt.internal.protocol.IClientObject;
 
 
 @SuppressWarnings( "restriction" )

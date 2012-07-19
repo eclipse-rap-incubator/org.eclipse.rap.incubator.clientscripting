@@ -17,7 +17,7 @@
 
   <feature url="http://eclipse.org/rap"
       id="org.eclipse.rap.clientscripting.feature"
-      version="0.1.0.qualifier">
+      version="0.1.100.qualifier">
     <category name="org.eclipse.rap.category"/>
   </feature>
 

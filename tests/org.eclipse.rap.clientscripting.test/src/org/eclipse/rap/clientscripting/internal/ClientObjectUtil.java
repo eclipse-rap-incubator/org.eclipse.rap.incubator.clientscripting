@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.internal;
 
+import org.eclipse.rap.rwt.Adaptable;
 import org.eclipse.rap.rwt.internal.protocol.IClientObjectAdapter;
-import org.eclipse.rwt.Adaptable;
 
 
 @SuppressWarnings( "restriction" )

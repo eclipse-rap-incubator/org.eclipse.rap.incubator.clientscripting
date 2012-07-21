@@ -13,8 +13,8 @@ package org.eclipse.rap.demo.clientscripting.internal;
 import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResource;
 import org.eclipse.rap.examples.IExampleContribution;
 import org.eclipse.rap.examples.IExamplePage;
-import org.eclipse.rwt.application.Application;
-import org.eclipse.rwt.resources.IResource;
+import org.eclipse.rap.rwt.application.Application;
+import org.eclipse.rap.rwt.resources.IResource;
 
 
 @SuppressWarnings( "restriction" )

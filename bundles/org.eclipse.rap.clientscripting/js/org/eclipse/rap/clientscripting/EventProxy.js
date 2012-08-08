@@ -80,6 +80,13 @@ org.eclipse.rap.clientscripting.EventProxy.prototype = {
   y : 0,
 
   /**
+   * depending on the event, the range of text being modified. Setting these
+   * fields has no effect.
+   */
+  start : 0,
+  end : 0,
+
+  /**
    * depending on the event, the new text that will be inserted.
    * Setting this field will change the text that is about to
    * be inserted or deleted.

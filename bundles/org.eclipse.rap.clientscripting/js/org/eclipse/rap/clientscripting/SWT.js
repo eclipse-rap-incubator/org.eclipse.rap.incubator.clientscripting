@@ -58,6 +58,11 @@ org.eclipse.rap.clientscripting.SWT = {
   MouseDoubleClick : 8,
 
   /**
+   * The paint event type
+   */
+  Paint : 9,
+
+  /**
    * The focus in event type
    */
   FocusIn : 15,

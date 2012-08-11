@@ -411,6 +411,50 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       assertEquals( SWT.Modify, logger.log[ 1 ].type );
     },
 
+//  NOTE : For now paint is only triggered explicitly by redraw()
+//    - should also be fired on appear (see below) and resize
+//    testBindPaintEventBeforeAppear : function() {
+//      Processor.processOperation( {
+//        "target" : "w4",
+//        "action" : "create",
+//        "type" : "rwt.widgets.Canvas",
+//        "properties" : {
+//          "style" : [ ],
+//          "parent" : "w2"
+//        }
+//      } );
+//      var canvas = ObjectManager.getObject( "w4" );
+//      var logger = this._createLogger();
+//
+//      new EventBinding( canvas, SWT.Paint, logger );
+//      TestUtil.flush();
+//
+//      assertEquals( 1, logger.log.length );
+//      canvas.destroy();
+//    },
+
+    testBindPaintEventAfterAppear : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.Canvas",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2"
+        }
+      } );
+      var canvas = ObjectManager.getObject( "w4" );
+      var logger = this._createLogger();
+      TestUtil.flush();
+
+      new EventBinding( canvas, SWT.Paint, logger );
+      canvas.dispatchSimpleEvent( "paint" );
+      TestUtil.flush();
+
+
+      assertEquals( 1, logger.log.length );
+      canvas.destroy();
+    },
 
     /////////
     // helper

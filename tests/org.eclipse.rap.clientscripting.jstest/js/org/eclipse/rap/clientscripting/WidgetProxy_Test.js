@@ -16,6 +16,8 @@ var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = org.eclipse.rwt.protocol.Processor;
 var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
 var WidgetProxy = org.eclipse.rap.clientscripting.WidgetProxy;
+var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
+var SWT = org.eclipse.rap.clientscripting.SWT;
 
 var text;
 
@@ -155,8 +157,43 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       assertEquals( [ 1, 2 ], value );
     },
 
+    testRedraw : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.Canvas",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2"
+        }
+      } );
+      var canvas = ObjectManager.getObject( "w4" );
+      var widgetProxy = WidgetProxy.getInstance( canvas );
+      var logger = this._createLogger();
+      TestUtil.flush();
+      new EventBinding( canvas, SWT.Paint, logger );
+
+      assertEquals( 0, logger.log.length );
+      widgetProxy.redraw();
+
+      assertEquals( 1, logger.log.length );
+      canvas.destroy();
+    },
+
     ////////
     // Helper
+
+    _createLogger : function() {
+      var log = [];
+      var result = {
+        "log" : log,
+        "call" : function( arg ) {
+          log.push( arg );
+        }
+      };
+      return result;
+    },
+
 
     setUp : function() {
       TestUtil.createShellByProtocol( "w2" );

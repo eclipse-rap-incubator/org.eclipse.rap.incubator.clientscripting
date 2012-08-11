@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -33,7 +34,7 @@ public class Demo implements IEntryPoint {
     Shell shell = new Shell( display );
     shell.setText( "RAP Client Scripting Examples" );
     createShellContents( shell );
-    shell.setBounds( 20, 20, 400, 400 );
+    shell.setBounds( 20, 20, 800, 500 );
     shell.open();
     while( !shell.isDisposed() ) {
       if( !display.readAndDispatch() ) {
@@ -45,11 +46,12 @@ public class Demo implements IEntryPoint {
   }
 
   private void createShellContents( Composite parent ) {
-    parent.setLayout( new GridLayout( 1, false ) );
+    parent.setLayout( new GridLayout( 2, false ) );
     addUpperCaseExample( parent );
     addDigitsOnlyExample( parent );
     addDateFieldExample( parent );
     addCounterExample( parent );
+    addCanvasExample( parent );
   }
 
   private void addUpperCaseExample( Composite parent ) {
@@ -80,6 +82,13 @@ public class Demo implements IEntryPoint {
     button.setText( "Click me!" );
     button.setLayoutData( new GridData( 120, SWT.DEFAULT ) );
     CustomBehaviors.addCounterBehavior( button );
+  }
+
+  private void addCanvasExample( Composite parent ) {
+    addHeaderLabel( parent, "Canvas:" );
+    Canvas canvas = new Canvas( parent, SWT.BORDER );
+    canvas.setLayoutData( new GridData( 250, 250 ) );
+    CustomBehaviors.addPaintingBehavior( canvas );
   }
 
   private static void addHeaderLabel( Composite parent, String text ) {

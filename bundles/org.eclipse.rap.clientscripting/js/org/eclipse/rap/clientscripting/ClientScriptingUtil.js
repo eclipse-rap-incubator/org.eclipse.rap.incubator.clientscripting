@@ -51,6 +51,9 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       case SWT.MouseDoubleClick:
         result = "dblclick";
       break;
+      case SWT.Paint:
+        result = "paint";
+      break;
       case SWT.FocusIn:
         result = "focus";
       break;
@@ -128,6 +131,12 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     };
   },
 
+  attachControlMethods : function( proxy, source ) {
+    proxy.redraw = function() {
+      source.dispatchSimpleEvent( "paint" );
+    };
+  },
+
   addDisposeListener : function( widget, listener ) {
     var orgDestroy = widget.destroy;
     widget.destroy = function() {
@@ -136,10 +145,9 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     };
   },
 
-  initEvent : function( event, type, originalEvent ) {
+  initEvent : function( event, type, target, originalEvent ) {
     var SWT = org.eclipse.rap.clientscripting.SWT;
-    var control = org.eclipse.swt.WidgetUtil.getControl( originalEvent.getTarget() );
-    event.widget = org.eclipse.rap.clientscripting.WidgetProxy.getInstance( control );
+    event.widget = org.eclipse.rap.clientscripting.WidgetProxy.getInstance( target );
     event.type = type;
     switch( type ) {
       case SWT.KeyDown:
@@ -156,6 +164,9 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       break;
       case SWT.Verify:
         this._initVerifyEvent( event, originalEvent );
+      break;
+      case SWT.Paint:
+        this._initPaintEvent( event, target );
       break;
     }
   },
@@ -253,6 +264,34 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     }
     this._setStateMask( event, originalEvent );
   },
+
+  _initPaintEvent : function( event, target ) {
+    var gc = target.getUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY );
+    if( gc == null ) {
+      gc = new org.eclipse.swt.graphics.GC( target );
+      target.setUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY, gc );
+    }
+    this._initGC( gc, target.getInnerWidth(), target.getInnerHeight() );
+    event.gc = gc._context;
+  },
+
+  // NOTE : This is a customized version of GC.js#_init. It's setting the size without help
+  // from the server (this should be the case in the framework too, but isn't), and doesn't
+  // change any properties.
+  _initGC : qx.core.Variant.select( "qx.client", {
+    "mshtml" : function( gc, width, height ) {
+      qx.ui.core.Widget.flushGlobalQueues();
+      gc._context.clearRect( 0, 0, width, height );
+    },
+    "default" : function( gc, width, height ) {
+      gc._canvas.width = width;
+      gc._canvas.style.width = width + "px";
+      gc._canvas.height = height;
+      gc._canvas.style.height = height + "px";
+      gc._context.clearRect( 0, 0, width, height );
+    }
+  } ),
+
 
   _initVerifyEvent : function( event, originalEvent ) {
     var text = originalEvent.getTarget();

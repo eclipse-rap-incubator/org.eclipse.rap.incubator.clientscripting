@@ -11,8 +11,9 @@
 
 qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
 
-org.eclipse.rap.clientscripting.EventProxy = function( eventType, originalEvent ) {
-  org.eclipse.rap.clientscripting.ClientScriptingUtil.initEvent( this, eventType, originalEvent );
+org.eclipse.rap.clientscripting.EventProxy = function( eventType, target, originalEvent ) {
+  var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
+  ClientScriptingUtil.initEvent( this, eventType, target, originalEvent );
 };
 
 org.eclipse.rap.clientscripting.EventProxy.prototype = {
@@ -91,7 +92,40 @@ org.eclipse.rap.clientscripting.EventProxy.prototype = {
    * Setting this field will change the text that is about to
    * be inserted or deleted.
    */
-  text : ""
+  text : "",
+
+  /**
+   * the graphics context to use when painting.
+   * It supports a subset of the HTML5 Canvas API (http://www.w3.org/TR/2dcontext/):
+   * Fields:
+   *  - strokeStyle
+   *  - fillStyle
+   *  - lineWidth
+   *  - lineJoin
+   *  - lineCap
+   *  - miterLimit
+   *  - globalAlpha
+   * Methods:
+   *  - save
+   *  - restore
+   *  - beginPath
+   *  - closePath
+   *  - clearRect (Limitation: in IE 7+8 arguments are ignored, the entire canvas is cleared)
+   *  - stroke
+   *  - fill
+   *  - moveTo
+   *  - lineTo
+   *  - quadraticCurveTo
+   *  - bezierCurveTo
+   *  - drawImage
+   *  - createLinearGradient (Limitations: In IE 7+8, the gradient can be only be drawn either
+   *                          vertically or horizontally. Calls to "addColorStop" must be in the
+   *                          order of the offsets and can not overwrite previous colorsStops)
+   *
+   * More methods may be supported on specific browser.
+   */
+  gc : null
+
 
 };
 

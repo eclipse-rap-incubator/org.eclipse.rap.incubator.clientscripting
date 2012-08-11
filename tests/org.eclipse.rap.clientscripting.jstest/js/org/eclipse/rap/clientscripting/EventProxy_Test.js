@@ -11,6 +11,7 @@
 (function() {
 
 var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
+var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = org.eclipse.rwt.protocol.Processor;
 var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
@@ -29,7 +30,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testCreateEventProxy : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       TestUtil.press( text, "a" );
@@ -40,7 +41,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testEventProxyFields : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       TestUtil.press( text, "a" );
@@ -61,7 +62,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testType : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       TestUtil.press( text, "a" );
@@ -72,7 +73,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testCharacter : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       TestUtil.press( text, "a" );
@@ -83,7 +84,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testKeyCodeCharacterLowerCase : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       TestUtil.press( text, "a" );
@@ -94,7 +95,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testKeyCodeCharacterUpperCase : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       TestUtil.press( text, "A" );
@@ -105,7 +106,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testKeyCodeCharacterNonPrintable : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       TestUtil.press( text, "Up" );
@@ -117,7 +118,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testKeyCodeModifierKey : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       var shift = qx.event.type.DomEvent.SHIFT_MASK;
@@ -130,7 +131,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testModifierStateMask : function() {
       var eventProxy;
       text.addEventListener( "keypress", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.KeyDown, event );
+        eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
       var shift = qx.event.type.DomEvent.SHIFT_MASK;
@@ -143,7 +144,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testMouseEventStateMask : function() {
       var eventProxy;
       text.addEventListener( "mousedown", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.MouseDown, event );
+        eventProxy = new EventProxy( SWT.MouseDown, text, event );
       } );
 
       TestUtil.shiftClick( text );
@@ -154,7 +155,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testMouseEventButtonLeft : function() {
       var eventProxy;
       text.addEventListener( "mousedown", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.MouseDown, event );
+        eventProxy = new EventProxy( SWT.MouseDown, text, event );
       } );
 
       TestUtil.click( text );
@@ -165,7 +166,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     testMouseEventButtonRight : function() {
       var eventProxy;
       text.addEventListener( "mousedown", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.MouseDown, event );
+        eventProxy = new EventProxy( SWT.MouseDown, text, event );
       } );
 
       TestUtil.rightClick( text );
@@ -179,7 +180,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var eventProxy;
       text.addEventListener( "mousedown", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.MouseDown, event );
+        eventProxy = new EventProxy( SWT.MouseDown, text, event );
       } );
 
       TestUtil.click( text, 23, 34 );
@@ -194,7 +195,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var eventProxy;
       text.addEventListener( "mousedown", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.MouseDown, event );
+        eventProxy = new EventProxy( SWT.MouseDown, text, event );
       } );
 
       TestUtil.click( text, 23, 34 );
@@ -207,7 +208,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textCharInput( text, "A" );
@@ -223,7 +224,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textCharInput( text, "A" );
@@ -239,7 +240,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textCharInput( text, "a" );
@@ -255,7 +256,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "fooAba", [ 3, 3 ] );
@@ -271,7 +272,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "foooba", [ 2, 2 ] );
@@ -285,7 +286,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "fooLALAba", [ 3, 3 ] );
@@ -299,7 +300,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "foob", [ 4, 5 ] );
@@ -315,7 +316,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       text.setSelection( [ 4, 4 ] );
@@ -337,7 +338,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       text.setSelection( [ 5, 5 ] );
@@ -359,7 +360,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "fooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "fba", [ 1, 3 ] );
@@ -375,7 +376,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "foooooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "fooba", [ 1, 4 ] );
@@ -389,7 +390,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "foooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "fooaaba", [ 3, 4 ] );
@@ -403,7 +404,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "foooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "fooaaba", [ 3, 5 ] );
@@ -417,7 +418,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "foooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "foooooba", [ 3, 3 ] );
@@ -431,7 +432,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "foooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "faba", [ 1, 4 ] );
@@ -445,7 +446,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var eventProxy;
       text.setValue( "foooba" );
       text.addEventListener( "input", function( event ) {
-        eventProxy = new org.eclipse.rap.clientscripting.EventProxy( SWT.Verify, event );
+        eventProxy = new EventProxy( SWT.Verify, text, event );
       } );
 
       this._textPaste( text, "faoba", [ 1, 4 ] );
@@ -453,6 +454,59 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       assertEquals( "ao", eventProxy.text );
       assertEquals( 1, eventProxy.start );
       assertEquals( 4, eventProxy.end );
+    },
+
+    testPaintEventHasGC : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.Canvas",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2"
+        }
+      } );
+      var canvas = ObjectManager.getObject( "w4" );
+      TestUtil.flush();
+      var gc;
+
+      new EventBinding( canvas, SWT.Paint, {
+        "call" : function( ev ) {
+          gc = ev.gc;
+        }
+      } );
+      WidgetProxy.getInstance( canvas ).redraw();
+
+      assertNotNull( gc );
+      assertTrue( gc.stroke instanceof Function );
+      canvas.destroy();
+    },
+
+    testPaintEventHasSameGCTwice : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.Canvas",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2"
+        }
+      } );
+      var canvas = ObjectManager.getObject( "w4" );
+      TestUtil.flush();
+      var gc = [];
+
+      new EventBinding( canvas, SWT.Paint, {
+        "call" : function( ev ) {
+          gc.push( ev.gc );
+        }
+      } );
+      WidgetProxy.getInstance( canvas ).redraw();
+      WidgetProxy.getInstance( canvas ).redraw();
+
+      assertTrue( gc[ 0 ].stroke instanceof Function );
+      assertIdentical( gc[ 0 ], gc[ 1 ] );
+      canvas.destroy();
     },
 
     /////////

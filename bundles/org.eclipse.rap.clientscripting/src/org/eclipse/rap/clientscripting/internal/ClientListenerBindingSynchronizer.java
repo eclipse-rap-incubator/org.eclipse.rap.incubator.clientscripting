@@ -55,27 +55,30 @@ public class ClientListenerBindingSynchronizer implements Synchronizer<ClientLis
       break;
       case ClientListener.MouseDown:
         result = "MouseDown";
-        break;
+      break;
       case ClientListener.MouseUp:
         result = "MouseUp";
-        break;
+      break;
       case ClientListener.MouseEnter:
         result = "MouseEnter";
-        break;
+      break;
       case ClientListener.MouseExit:
         result = "MouseExit";
-        break;
+      break;
       case ClientListener.MouseMove:
         result = "MouseMove";
-        break;
+      break;
       case ClientListener.MouseDoubleClick:
         result = "MouseDoubleClick";
       break;
       case ClientListener.Modify:
         result = "Modify";
-        break;
+      break;
       case ClientListener.Verify:
         result = "Verify";
+      break;
+      case ClientListener.Paint:
+        result = "Paint";
       break;
     }
     if( result == null ) {

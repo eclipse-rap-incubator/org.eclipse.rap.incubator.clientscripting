@@ -11,6 +11,7 @@
 package org.eclipse.rap.clientscripting.demo;
 
 import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
@@ -65,6 +66,13 @@ public class CustomBehaviors {
     listener.addTo( widget, ClientListener.MouseExit );
     listener.addTo( widget, ClientListener.MouseMove );
     listener.addTo( widget, ClientListener.MouseDoubleClick );
+  }
+
+  public static void addPaintingBehavior( Canvas canvas ) {
+    String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "Painting.js" );
+    ClientListener listener = new ClientListener( scriptCode );
+    listener.addTo( canvas, ClientListener.MouseMove );
+    listener.addTo( canvas, ClientListener.Paint );
   }
 
 }

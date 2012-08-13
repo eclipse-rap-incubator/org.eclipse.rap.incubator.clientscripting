@@ -470,7 +470,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
         "properties" : {
           "style" : [ "SINGLE", "RIGHT" ],
           "parent" : "w2",
-          "bounds" : [ 0, 0, 10, 10 ]
+          "bounds" : [ 10, 10, 100, 100 ]
         }
       } );
       TestUtil.flush();

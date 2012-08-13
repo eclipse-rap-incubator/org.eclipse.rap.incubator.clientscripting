@@ -434,7 +434,8 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         "type" : "rwt.widgets.Text",
         "properties" : {
           "style" : [ "SINGLE", "RIGHT" ],
-          "parent" : "w2"
+          "parent" : "w2",
+          "bounds" : [ 10, 10, 100, 100 ]
         }
       } );
       TestUtil.flush();

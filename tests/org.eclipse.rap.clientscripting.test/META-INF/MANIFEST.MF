@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests for RAP ClientScripting
 Bundle-SymbolicName: org.eclipse.rap.clientscripting.test
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.1.100.qualifier
 Bundle-Vendor: Eclipse.org - RAP Incubator
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Fragment-Host: org.eclipse.rap.clientscripting;bundle-version="0.1.0"
+Fragment-Host: org.eclipse.rap.clientscripting;bundle-version="0.1.100"
 Require-Bundle: org.junit,
  org.mockito;bundle-version="[1.8.4,2.0.0)",
  org.objenesis;bundle-version="[1.0.0,2.0.0)"

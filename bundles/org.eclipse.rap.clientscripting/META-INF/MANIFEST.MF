@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: RAP ClientScripting
 Bundle-SymbolicName: org.eclipse.rap.clientscripting;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.1.100.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.rap.rwt;bundle-version="1.5.0"
-Export-Package: org.eclipse.rap.clientscripting,
- org.eclipse.rap.clientscripting.internal;x-friends:="org.eclipse.rap.clientscripting.test",
- org.eclipse.rap.clientscripting.internal.resources;x-friends:="org.eclipse.rap.clientscripting.jstest"
+Require-Bundle: org.eclipse.rap.rwt;bundle-version="[1.5.0,2.0.0)"
+Export-Package: org.eclipse.rap.clientscripting;version="0.1.100",
+ org.eclipse.rap.clientscripting.internal;version="0.1.100";x-friends:="org.eclipse.rap.clientscripting.test",
+ org.eclipse.rap.clientscripting.internal.resources;version="0.1.100";x-friends:="org.eclipse.rap.clientscripting.jstest"
 Bundle-Vendor: Eclipse.org - RAP Incubator

@@ -268,30 +268,47 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   _initPaintEvent : function( event, target ) {
     var gc = target.getUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY );
     if( gc == null ) {
-      gc = new org.eclipse.swt.graphics.GC( target );
+      gc = this._findExistingGC( target );
+      if( gc == null ) {
+        gc = new org.eclipse.swt.graphics.GC( target );
+      }
       target.setUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY, gc );
     }
-    this._initGC( gc, target.getInnerWidth(), target.getInnerHeight() );
+    this._initGC( gc, target );
     event.gc = gc._context;
   },
 
-  // NOTE : This is a customized version of GC.js#_init. It's setting the size without help
-  // from the server (this should be the case in the framework too, but isn't), and doesn't
-  // change any properties.
-  _initGC : qx.core.Variant.select( "qx.client", {
-    "mshtml" : function( gc, width, height ) {
-      qx.ui.core.Widget.flushGlobalQueues();
-      gc._context.clearRect( 0, 0, width, height );
-    },
-    "default" : function( gc, width, height ) {
-      gc._canvas.width = width;
-      gc._canvas.style.width = width + "px";
-      gc._canvas.height = height;
-      gc._canvas.style.height = height + "px";
-      gc._context.clearRect( 0, 0, width, height );
+  _initGC : function( gc, widget ) {
+    var width = widget.getInnerWidth();
+    var height = widget.getInnerHeight();
+    var fillStyle = widget.getBackgroundColor();
+    var strokeStyle = widget.getTextColor();
+    var font = [[]];
+    if( widget.getFont() ) {
+      font[ 0 ] = widget.getFont().getFamily();
+      font[ 1 ] = widget.getFont().getSize();
+      font[ 2 ] = widget.getFont().getBold();
+      font[ 3 ] = widget.getFont().getItalic();
     }
-  } ),
+    gc.init(
+      width,
+      height,
+      font,
+      qx.util.ColorUtil.stringToRgb( fillStyle ? fillStyle : "#000000" ),
+      qx.util.ColorUtil.stringToRgb( strokeStyle ? strokeStyle : "#000000" )
+    );
+  },
 
+  _findExistingGC : function( widget ) {
+    var children = widget._getTargetNode().childNodes;
+    var result = null;
+    for( var i = 0; i < children.length && result == null; i++ ) {
+      if( children[ i ].rwtObject instanceof org.eclipse.swt.graphics.GC ) {
+        result = children[ i ].rwtObject;
+      }
+    }
+    return result;
+  },
 
   _initVerifyEvent : function( event, originalEvent ) {
     var text = originalEvent.getTarget();

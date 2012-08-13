@@ -7,7 +7,6 @@ var handleEvent = function( event ) {
       event.widget.redraw();
     break;
     case SWT.Paint:
-      event.gc.strokeStyle = "#FF0000";
       event.gc.lineWidth = 4;
       event.gc.beginPath();
       event.gc.moveTo( points[ 0 ][ 0 ], points[ 0 ][ 1 ] );

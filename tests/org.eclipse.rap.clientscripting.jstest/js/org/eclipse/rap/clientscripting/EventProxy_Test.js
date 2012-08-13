@@ -509,6 +509,110 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       canvas.destroy();
     },
 
+
+//  NOTE [tb] : currently not possible on 1.5
+//    testPaintUsesExistingGC : function() {
+//      Processor.processOperation( {
+//        "target" : "w4",
+//        "action" : "create",
+//        "type" : "rwt.widgets.Canvas",
+//        "properties" : {
+//          "style" : [ ],
+//          "parent" : "w2"
+//        }
+//      } );
+//      Processor.processOperation( {
+//        "target" : "w5",
+//        "action" : "create",
+//        "type" : "rwt.GC",
+//        "properties" : {
+//          "parent" : "w4"
+//        }
+//      } );
+//      var canvas = ObjectManager.getObject( "w4" );
+//      var serverGc = ObjectManager.getObject( "w5" );
+//      TestUtil.flush();
+//      var gc;
+//
+//      new EventBinding( canvas, SWT.Paint, {
+//        "call" : function( ev ) {
+//          gc = ev.gc;
+//        }
+//      } );
+//      WidgetProxy.getInstance( canvas ).redraw();
+//
+//      assertIdentical( serverGc._context, gc );
+//      canvas.destroy();
+//    },
+
+    testPaintResetsPropsToWidgetValues : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.Canvas",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2"
+        }
+      } );
+      var canvas = ObjectManager.getObject( "w4" );
+      canvas.setBackgroundColor( "#aaaaaa" );
+      canvas.setTextColor( "#bbbbbb" );
+      canvas.setFont( qx.ui.core.Font.fromString( "11px bold italic Arial") );
+      TestUtil.flush();
+      var props;
+
+      new EventBinding( canvas, SWT.Paint, {
+        "call" : function( ev ) {
+          var gc = ev.gc;
+          props = [
+            gc.strokeStyle,
+            gc.fillStyle,
+            qx.ui.core.Font.fromString( gc.font ).toCss()
+          ];
+          gc.strokeStyle = "#ff00ff";
+          gc.fillStyle = "#00ff00";
+        }
+      } );
+      WidgetProxy.getInstance( canvas ).redraw();
+      WidgetProxy.getInstance( canvas ).redraw();
+
+      assertEquals( [ "#bbbbbb", "#aaaaaa", "italic bold 11px Arial" ], props );
+      canvas.destroy();
+    },
+
+    testPaintResetsPropsToWidgetValuesNull : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.Canvas",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2"
+        }
+      } );
+      var canvas = ObjectManager.getObject( "w4" );
+      canvas.setBackgroundColor( null );
+      canvas.setTextColor( null );
+      canvas.setFont( null );
+      TestUtil.flush();
+      var props;
+
+      new EventBinding( canvas, SWT.Paint, {
+        "call" : function( ev ) {
+          var gc = ev.gc;
+          props = [ gc.strokeStyle, gc.fillStyle ];
+          gc.strokeStyle = "#ff00ff";
+          gc.fillStyle = "#00ff00";
+        }
+      } );
+      WidgetProxy.getInstance( canvas ).redraw();
+      WidgetProxy.getInstance( canvas ).redraw();
+
+      assertEquals( [ "#000000", "#000000" ], props );
+      canvas.destroy();
+    },
+
     /////////
     // Helper
 

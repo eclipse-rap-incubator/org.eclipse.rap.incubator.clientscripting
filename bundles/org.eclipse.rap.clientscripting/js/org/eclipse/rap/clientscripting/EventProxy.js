@@ -117,6 +117,8 @@ org.eclipse.rap.clientscripting.EventProxy.prototype = {
    *  - lineTo
    *  - quadraticCurveTo
    *  - bezierCurveTo
+   *  - rect
+   *  - arc
    *  - drawImage
    *  - createLinearGradient (Limitations: In IE 7+8, the gradient can be only be drawn either
    *                          vertically or horizontally. Calls to "addColorStop" must be in the

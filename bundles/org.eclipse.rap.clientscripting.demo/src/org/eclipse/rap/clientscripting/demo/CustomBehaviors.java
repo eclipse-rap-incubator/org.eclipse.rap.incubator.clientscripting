@@ -11,6 +11,12 @@
 package org.eclipse.rap.clientscripting.demo;
 
 import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
@@ -68,11 +74,28 @@ public class CustomBehaviors {
     listener.addTo( widget, ClientListener.MouseDoubleClick );
   }
 
-  public static void addPaintingBehavior( Canvas canvas ) {
+  public static void addPaintingBehavior( final Canvas canvas ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "Painting.js" );
     ClientListener listener = new ClientListener( scriptCode );
+    canvas.addMouseListener( new MouseAdapter() {
+      public void mouseUp( MouseEvent e ) {
+        canvas.setForeground( getRandomColor( canvas.getDisplay() ) );
+        canvas.redraw();
+      }
+    } );
     listener.addTo( canvas, ClientListener.MouseMove );
     listener.addTo( canvas, ClientListener.Paint );
+    canvas.setForeground( getRandomColor( canvas.getDisplay() ) );
+    canvas.redraw();
+  }
+
+  public static Color getRandomColor( Device device ) {
+    RGB rgb = new RGB(
+      ( int )Math.round(  Math.random() * 255 ),
+      ( int )Math.round(  Math.random() * 255 ),
+      ( int )Math.round(  Math.random() * 255 )
+    );
+    return new Color( device, rgb );
   }
 
 }

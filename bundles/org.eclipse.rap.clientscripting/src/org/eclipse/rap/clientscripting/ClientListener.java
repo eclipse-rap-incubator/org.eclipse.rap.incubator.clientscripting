@@ -38,6 +38,10 @@ public class ClientListener implements Adaptable {
   public static final int MouseEnter = 6;
   public static final int MouseExit = 7;
   public static final int MouseDoubleClick = SWT.MouseDoubleClick;
+  /**
+   * <strong>Warning: Paint even is only supported on Canvas.</strong>
+   * Using it on other widgets may produce unexpected results.
+   */
   public static final int Paint = 9;
   public static final int FocusIn = SWT.FocusIn;
   public static final int FocusOut = SWT.FocusOut;

@@ -35,13 +35,18 @@ org.eclipse.rap.clientscripting.EventBinding.prototype = {
   },
 
   _processEvent : function( event ) {
-    var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
-    var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
-    var eventProxy = new EventProxy( this._eventType, this._source, event );
-    var wrappedEventProxy = ClientScriptingUtil.wrapAsProto( eventProxy );
-    this._targetFunction.call( wrappedEventProxy );
-    ClientScriptingUtil.postProcessEvent( eventProxy, wrappedEventProxy, event );
-    EventProxy.disposeEventProxy( eventProxy );
+    try {
+      var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
+      var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
+      var eventProxy = new EventProxy( this._eventType, this._source, event );
+      var wrappedEventProxy = ClientScriptingUtil.wrapAsProto( eventProxy );
+      this._targetFunction.call( wrappedEventProxy );
+      ClientScriptingUtil.postProcessEvent( eventProxy, wrappedEventProxy, event );
+      EventProxy.disposeEventProxy( eventProxy );
+    } catch( ex ) {
+      var msg = "Error in ClientScripting event type ";
+      throw new Error( msg + this._eventType + ": " + ex.message ? ex.message : ex );
+    }
   },
 
   getType : function() {

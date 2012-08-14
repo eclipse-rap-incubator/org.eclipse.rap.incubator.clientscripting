@@ -87,7 +87,7 @@ public class Demo implements IEntryPoint {
   private void addCanvasExample( Composite parent ) {
     addHeaderLabel( parent, "Canvas:" );
     Canvas canvas = new Canvas( parent, SWT.BORDER );
-    canvas.setLayoutData( new GridData( 250, 250 ) );
+    canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     CustomBehaviors.addPaintingBehavior( canvas );
   }
 

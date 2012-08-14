@@ -133,7 +133,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
 
   attachControlMethods : function( proxy, source ) {
     proxy.redraw = function() {
-      source.dispatchSimpleEvent( "paint" );
+      org.eclipse.rap.clientscripting.ClientScriptingUtil._initGC( source );
     };
   },
 
@@ -266,19 +266,24 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   _initPaintEvent : function( event, target ) {
-    var gc = target.getUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY );
-    if( gc == null ) {
-      gc = this._findExistingGC( target );
-      if( gc == null ) {
-        gc = new org.eclipse.swt.graphics.GC( target );
-      }
-      target.setUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY, gc );
-    }
-    this._initGC( gc, target );
+    var gc = this._getGCFor( target );
     event.gc = gc.getNativeContext();
   },
 
-  _initGC : function( gc, widget ) {
+  _getGCFor : function( widget ) {
+    var gc = widget.getUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY );
+    if( gc == null ) {
+      gc = this._findExistingGC( widget );
+      if( gc == null ) {
+        gc = new org.eclipse.swt.graphics.GC( widget );
+      }
+      widget.setUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY, gc );
+    }
+    return gc;
+  },
+
+  _initGC : function( widget ) {
+    var gc = this._getGCFor( widget );
     var width = widget.getInnerWidth();
     var height = widget.getInnerHeight();
     var fillStyle = widget.getBackgroundColor();

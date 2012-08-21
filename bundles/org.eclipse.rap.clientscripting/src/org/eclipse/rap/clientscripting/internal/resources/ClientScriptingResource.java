@@ -26,7 +26,8 @@ public abstract class ClientScriptingResource implements IResource {
     new FunctionResource(),
     new ListenerAdapterResource(),
     new SWTResource(),
-    new WidgetProxyResource()
+    new WidgetProxyResource(),
+    new GCPatchResource()
   };
 
   private final String location;

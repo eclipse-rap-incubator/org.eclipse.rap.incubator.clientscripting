@@ -510,40 +510,39 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     },
 
 
-//  NOTE [tb] : currently not possible on 1.5
-//    testPaintUsesExistingGC : function() {
-//      Processor.processOperation( {
-//        "target" : "w4",
-//        "action" : "create",
-//        "type" : "rwt.widgets.Canvas",
-//        "properties" : {
-//          "style" : [ ],
-//          "parent" : "w2"
-//        }
-//      } );
-//      Processor.processOperation( {
-//        "target" : "w5",
-//        "action" : "create",
-//        "type" : "rwt.GC",
-//        "properties" : {
-//          "parent" : "w4"
-//        }
-//      } );
-//      var canvas = ObjectManager.getObject( "w4" );
-//      var serverGc = ObjectManager.getObject( "w5" );
-//      TestUtil.flush();
-//      var gc;
-//
-//      new EventBinding( canvas, SWT.Paint, {
-//        "call" : function( ev ) {
-//          gc = ev.gc;
-//        }
-//      } );
-//      WidgetProxy.getInstance( canvas ).redraw();
-//
-//      assertIdentical( serverGc._context, gc );
-//      canvas.destroy();
-//    },
+    testPaintUsesExistingGC : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.Canvas",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2"
+        }
+      } );
+      Processor.processOperation( {
+        "target" : "w5",
+        "action" : "create",
+        "type" : "rwt.GC",
+        "properties" : {
+          "parent" : "w4"
+        }
+      } );
+      var canvas = ObjectManager.getObject( "w4" );
+      var serverGc = ObjectManager.getObject( "w5" );
+      TestUtil.flush();
+      var gc;
+
+      new EventBinding( canvas, SWT.Paint, {
+        "call" : function( ev ) {
+          gc = ev.gc;
+        }
+      } );
+      WidgetProxy.getInstance( canvas ).redraw();
+
+      assertIdentical( serverGc._context, gc );
+      canvas.destroy();
+    },
 
     testPaintResetsPropsToWidgetValues : function() {
       Processor.processOperation( {

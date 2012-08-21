@@ -27,6 +27,9 @@
       <resource
             class="org.eclipse.rap.clientscripting.internal.resources.WidgetProxyResource">
       </resource>
+      <resource
+            class="org.eclipse.rap.clientscripting.internal.resources.GCPatchResource">
+      </resource>
    </extension>
 
 </plugin>

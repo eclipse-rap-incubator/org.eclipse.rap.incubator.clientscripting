@@ -26,6 +26,16 @@ qx.Mixin.define( "org.eclipse.rap.clientscripting.GCPatch", {
   },
 
   members : {
+
+    init : function() {
+      arguments.callee.base.apply( this, arguments );
+      this._control.dispatchSimpleEvent( "paint" ); // client-side painting on server-side redraw
+    },
+
+    getNativeContext : function() {
+      return this._context;
+    }
+
   }
 
 } );

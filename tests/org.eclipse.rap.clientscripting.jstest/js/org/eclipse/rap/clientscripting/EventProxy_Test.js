@@ -477,7 +477,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
       WidgetProxy.getInstance( canvas ).redraw();
 
-      assertNotNull( gc );
+      assertTrue( gc != null );
       assertTrue( gc.stroke instanceof Function );
       canvas.destroy();
     },
@@ -528,8 +528,8 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           "parent" : "w4"
         }
       } );
-      var canvas = ObjectManager.getObject( "w4" );
       var serverGc = ObjectManager.getObject( "w5" );
+      var canvas = ObjectManager.getObject( "w4" );
       TestUtil.flush();
       var gc;
 
@@ -609,6 +609,49 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       WidgetProxy.getInstance( canvas ).redraw();
 
       assertEquals( [ "#000000", "#000000" ], props );
+      canvas.destroy();
+    },
+
+
+    testPaintEventFromServer : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.Canvas",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2"
+        }
+      } );
+      var canvas = ObjectManager.getObject( "w4" );
+      Processor.processOperation( {
+        "target" : "w5",
+        "action" : "create",
+        "type" : "rwt.GC",
+        "properties" : {
+          "parent" : "w4"
+        }
+      } );
+      var serverGc = ObjectManager.getObject( "w5" );
+      TestUtil.flush();
+      var fontArr = [ [ "Arial" ], 11, true, true ];
+      var props;
+
+      new EventBinding( canvas, SWT.Paint, {
+        "call" : function( ev ) {
+          var gc = ev.gc;
+          props = [
+            gc.strokeStyle,
+            gc.fillStyle,
+            qx.ui.core.Font.fromString( gc.font ).toCss()
+          ];
+          gc.strokeStyle = "#ff00ff";
+          gc.fillStyle = "#00ff00";
+        }
+      } );
+      serverGc.init( 500, 500, fontArr, [ 170, 170, 170 ], [ 187, 187, 187 ] );
+
+      assertEquals( [ "#bbbbbb", "#aaaaaa", "italic bold 11px Arial" ], props );
       canvas.destroy();
     },
 

@@ -11,7 +11,6 @@
 
 (function() {
 
-var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = org.eclipse.rwt.protocol.Processor;
 var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
@@ -86,6 +85,12 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
 
       assertNull( widgetProxy2.getData( "myWrongKey" ) );
       assertEquals( 24, widgetProxy2.getData( "myKey" ) );
+    },
+
+    testGetWidgetId : function() {
+      var widgetProxy = WidgetProxy.getInstance( text );
+
+      assertEquals( "w3", widgetProxy.getData( "rwt.id" ) );
     },
 
     testSetDataTooManyArguments : function() {

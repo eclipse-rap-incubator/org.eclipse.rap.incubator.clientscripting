@@ -129,6 +129,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     proxy.getData = function( property ) {
       return getter( source, arguments );
     };
+    proxy.setData( "rwt.id", org.eclipse.rwt.protocol.ObjectManager.getId( source ) );
   },
 
   attachControlMethods : function( proxy, source ) {

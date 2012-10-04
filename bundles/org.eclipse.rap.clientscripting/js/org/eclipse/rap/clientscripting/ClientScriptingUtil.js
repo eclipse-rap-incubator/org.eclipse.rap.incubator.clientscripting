@@ -16,7 +16,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   _wrapperHelper : function(){},
 
   _getterMapping : {
-    "org.eclipse.rwt.widgets.Text" : {
+    "rwt.widgets.Text" : {
       "getText" : function( widget ) { return function() { return widget.getValue(); }; },
       "getSelection" : function( widget ) { return function() { return widget.getSelection(); };
       }
@@ -61,7 +61,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
         result = "blur";
       break;
     }
-    if( source.classname === "org.eclipse.rwt.widgets.Text" ) {
+    if( source.classname === "rwt.widgets.Text" ) {
       switch( eventType ) {
         case SWT.Verify:
           result = "input"; // TODO [tb] : does currently not react on programatic changes
@@ -103,12 +103,12 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   attachSetter : function( proxy, source ) {
-    var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
+    var ObjectManager = rwt.protocol.ObjectRegistry;
     var id = ObjectManager.getId( source );
     var properties = ObjectManager.getEntry( id ).adapter.properties;
     for( var i = 0; i < properties.length; i++ ) {
       var property = properties[ i ];
-      proxy[ "set" + qx.lang.String.toFirstUp( property ) ] =
+      proxy[ "set" + rwt.util.String.toFirstUp( property ) ] =
         this._createSetter( id, property );
     }
   },
@@ -182,7 +182,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   _setProperty : function( id, property, value ) {
     var props = {};
     props[ property ] = value;
-    org.eclipse.rwt.protocol.Processor.processOperation( {
+    rwt.protocol.MessageProcessor.processOperation( {
       "target" : id,
       "action" : "set",
       "properties" : props
@@ -299,8 +299,8 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       width,
       height,
       font,
-      qx.util.ColorUtil.stringToRgb( fillStyle ? fillStyle : "#000000" ),
-      qx.util.ColorUtil.stringToRgb( strokeStyle ? strokeStyle : "#000000" )
+      rwt.util.ColorUtil.stringToRgb( fillStyle ? fillStyle : "#000000" ),
+      rwt.util.ColorUtil.stringToRgb( strokeStyle ? strokeStyle : "#000000" )
     );
   },
 
@@ -317,7 +317,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
 
   _initVerifyEvent : function( event, originalEvent ) {
     var text = originalEvent.getTarget();
-    if( text.classname === "org.eclipse.rwt.widgets.Text" ) {
+    if( text.classname === "rwt.widgets.Text" ) {
       var keyCode = this._getLastKeyCode();
       var newValue = text.getComputedValue();
       var oldValue = text.getValue();

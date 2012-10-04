@@ -13,8 +13,8 @@
 var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
 var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
-var Processor = org.eclipse.rwt.protocol.Processor;
-var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
+var Processor = rwt.protocol.MessageProcessor;
+var ObjectManager = rwt.protocol.ObjectRegistry;
 var WidgetProxy = org.eclipse.rap.clientscripting.WidgetProxy;
 var SWT = org.eclipse.rap.clientscripting.SWT;
 

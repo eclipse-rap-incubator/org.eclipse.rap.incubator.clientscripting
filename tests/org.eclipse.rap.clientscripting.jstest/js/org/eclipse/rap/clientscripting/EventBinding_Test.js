@@ -14,9 +14,8 @@
 var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
-var Processor = org.eclipse.rwt.protocol.Processor;
-var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
-var Function = org.eclipse.rap.clientscripting.Function;
+var Processor = rwt.protocol.MessageProcessor;
+var ObjectManager = rwt.protocol.ObjectRegistry;
 var SWT = org.eclipse.rap.clientscripting.SWT;
 var EventHandlerUtil = org.eclipse.rwt.EventHandlerUtil;
 
@@ -30,10 +29,8 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
   members : {
 
     testCreateBindingByProtocol : function() {
-      var listener = new Function( "function handleEvent(){}" );
       var code = "var handleEvent = function(){};";
-      var processor = org.eclipse.rwt.protocol.Processor;
-      processor.processOperation( {
+      Processor.processOperation( {
         "target" : "w4",
         "action" : "create",
         "type" : "rwt.clientscripting.Listener",
@@ -42,7 +39,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       } );
 
-      processor.processOperation( {
+      Processor.processOperation( {
         "target" : "w5",
         "action" : "create",
         "type" : "rwt.clientscripting.EventBinding",
@@ -53,7 +50,6 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       } );
 
-      var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
       var result = ObjectManager.getObject( "w5" );
       assertTrue( result instanceof EventBinding );
       assertIdentical( ObjectManager.getObject( "w4" ), result.getTargetFunction() );
@@ -64,7 +60,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, SWT.KeyDown, logger );
+      new EventBinding( text, SWT.KeyDown, logger );
       TestUtil.press( text, "A" );
 
       assertEquals( 1, logger.log.length );
@@ -85,7 +81,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testBindCreatesProxyEvent : function() {
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, SWT.KeyDown, logger );
+      new EventBinding( text, SWT.KeyDown, logger );
       TestUtil.press( text, "A" );
 
       var event = logger.log[ 0 ];
@@ -95,7 +91,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testBindDisposesProxyEvent : function() {
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, SWT.KeyDown, logger );
+      new EventBinding( text, SWT.KeyDown, logger );
       TestUtil.press( text, "A" );
 
       var event = logger.log[ 0 ];
@@ -109,7 +105,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       };
 
-      var binding = new EventBinding( text, SWT.KeyDown, listener );
+      new EventBinding( text, SWT.KeyDown, listener );
       var domEvent = TestUtil.createFakeDomKeyEvent( text.getElement(), "keypress", "a" );
       TestUtil.fireFakeDomEvent( domEvent );
 
@@ -123,7 +119,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       };
 
-      var binding = new EventBinding( text, SWT.MouseDown, listener );
+      new EventBinding( text, SWT.MouseDown, listener );
       var domEvent = TestUtil.createFakeDomKeyEvent( text.getElement(), "keypress", "a" );
       TestUtil.fireFakeDomEvent( domEvent );
 
@@ -148,7 +144,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       text.blur();
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, SWT.FocusIn, logger );
+      new EventBinding( text, SWT.FocusIn, logger );
       text.focus();
 
       assertEquals( 1, logger.log.length );
@@ -158,7 +154,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       text.focus();
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, SWT.FocusOut, logger );
+      new EventBinding( text, SWT.FocusOut, logger );
       text.blur();
 
       assertEquals( 1, logger.log.length );
@@ -167,7 +163,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testBindMouseDown : function() {
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, SWT.MouseDown, logger );
+      new EventBinding( text, SWT.MouseDown, logger );
       TestUtil.fakeMouseEventDOM( textEl, "mousedown" );
 
       assertEquals( 1, logger.log.length );
@@ -177,7 +173,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var logger = this._createLogger();
 
       TestUtil.fakeMouseEventDOM( textEl, "mousedown" );
-      var binding = new EventBinding( text, SWT.MouseUp, logger );
+      new EventBinding( text, SWT.MouseUp, logger );
       TestUtil.fakeMouseEventDOM( textEl, "mouseup" );
 
       assertEquals( 1, logger.log.length );
@@ -187,7 +183,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var logger = this._createLogger();
 
       TestUtil.fakeMouseEventDOM( textEl, "mouseover" );
-      var binding = new EventBinding( text, SWT.MouseMove, logger );
+      new EventBinding( text, SWT.MouseMove, logger );
       TestUtil.fakeMouseEventDOM( textEl, "mousemove" );
 
       assertEquals( 1, logger.log.length );
@@ -196,7 +192,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testBindMouseEnter : function() {
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, SWT.MouseEnter, logger );
+      new EventBinding( text, SWT.MouseEnter, logger );
       TestUtil.fakeMouseEventDOM( textEl, "mouseover" );
 
       assertEquals( 1, logger.log.length );
@@ -206,7 +202,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var logger = this._createLogger();
 
       TestUtil.fakeMouseEventDOM( textEl, "mouseover" );
-      var binding = new EventBinding( text, SWT.MouseExit, logger );
+      new EventBinding( text, SWT.MouseExit, logger );
       TestUtil.fakeMouseEventDOM( textEl, "mouseout" );
 
       assertEquals( 1, logger.log.length );
@@ -216,7 +212,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, SWT.Verify, logger );
+      new EventBinding( text, SWT.Verify, logger );
       this._inputText( text, "goo" );
 
       assertEquals( 1, logger.log.length );
@@ -244,7 +240,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       };
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       this._inputText( text, "bar" );
 
       assertEquals( "bar", text.getValue() );
@@ -260,7 +256,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       };
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       this._inputText( text, "bar" );
 
       assertEquals( "foo", text.getValue() );
@@ -276,7 +272,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       };
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       this._inputText( text, "foobarxxx", [ 3, 3 ] );
 
       assertEquals( 3, text._getSelectionStart() );
@@ -292,7 +288,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       } ;
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       this._inputText( text, "bar" );
 
       assertEquals( "bar", text.getValue() );
@@ -307,7 +303,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       };
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       this._inputText( text, "foob", [ 3, 3 ] );
 
       assertEquals( "foobar", text.getValue() );
@@ -322,7 +318,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       } ;
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       this._inputText( text, "foxo", [ 2, 2 ] );
 
       assertEquals( "fobaro", text.getValue() );
@@ -339,7 +335,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       } ;
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       this._inputText( text, "fxo", [ 1, 2 ] );
 
       assertEquals( "fbaro", text.getValue() );
@@ -358,7 +354,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       } ;
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       this._inputText( text, "foxo", [ 2, 2 ] );
 
       assertEquals( 5, text._getSelectionStart() );
@@ -377,7 +373,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       } ;
 
-      var binding = new EventBinding( text, SWT.Verify, handler );
+      new EventBinding( text, SWT.Verify, handler );
       text._setSelectionStart( 2 );
       text._setSelectionLength( 0 );
       TestUtil.press( text, "x" );

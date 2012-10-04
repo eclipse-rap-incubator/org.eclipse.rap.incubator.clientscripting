@@ -11,10 +11,9 @@
 
 (function() {
 
-var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
-var Processor = org.eclipse.rwt.protocol.Processor;
-var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
+var Processor = rwt.protocol.MessageProcessor;
+var ObjectManager = rwt.protocol.ObjectRegistry;
 var WidgetProxy = org.eclipse.rap.clientscripting.WidgetProxy;
 var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var SWT = org.eclipse.rap.clientscripting.SWT;
@@ -133,9 +132,9 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       var widgetProxy = WidgetProxy.getInstance( text );
 
       widgetProxy.setText( "foo" );
-      var req = org.eclipse.swt.Request.getInstance().send();
-      var msg = TestUtil.getMessage();
-      assertTrue( msg.indexOf( "w3.text=foo" ) != -1 );
+      rwt.remote.Server.getInstance().send();
+      var msg = TestUtil.getMessageObject();
+      assertEquals( "foo", msg.findSetProperty( "w3", "text" ) );
     },
 
     testTextGetText : function() {

@@ -27,8 +27,10 @@
 
   <modules>
     <module>../../bundles/org.eclipse.rap.clientscripting</module>
+    <module>../../bundles/org.eclipse.rap.demo.clientscripting</module>
     <module>../../tests/org.eclipse.rap.clientscripting.test</module>
     <module>../../features/org.eclipse.rap.clientscripting.feature</module>
+    <module>../../features/org.eclipse.rap.clientscripting.examples.feature</module>
     <module>repository</module>
   </modules>
 

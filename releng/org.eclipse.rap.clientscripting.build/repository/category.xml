@@ -21,4 +21,10 @@
     <category name="org.eclipse.rap.category"/>
   </feature>
 
+  <feature url="http://eclipse.org/rap"
+      id="org.eclipse.rap.clientscripting.examples.feature"
+      version="0.1.100.qualifier">
+    <category name="org.eclipse.rap.category"/>
+  </feature>
+
 </site>

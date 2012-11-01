@@ -10,11 +10,10 @@
  ******************************************************************************/
 package org.eclipse.rap.demo.clientscripting.internal;
 
-import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResource;
+import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
 import org.eclipse.rap.examples.IExampleContribution;
 import org.eclipse.rap.examples.IExamplePage;
 import org.eclipse.rap.rwt.application.Application;
-import org.eclipse.rap.rwt.resources.IResource;
 
 
 @SuppressWarnings( "restriction" )
@@ -33,8 +32,6 @@ public class ValidationExampleContribution implements IExampleContribution {
   }
 
   public void configure( Application application ) {
-    for( IResource resource : ClientScriptingResource.ALL_RESOURCES ) {
-      application.addResource( resource );
-    }
+    ClientScriptingResources.register( application );
   }
 }

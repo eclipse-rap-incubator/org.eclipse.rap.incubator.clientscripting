@@ -13,7 +13,7 @@ package org.eclipse.rap.clientscripting.internal;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResource;
+import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
 import org.eclipse.rap.rwt.jstest.TestContribution;
 
 
@@ -45,7 +45,7 @@ public class ClientScriptingResourcesContribution implements TestContribution {
   }
 
   public InputStream getResourceAsStream( String resourceName ) throws IOException {
-    return ClientScriptingResource.class.getResourceAsStream( resourceName );
+    return ClientScriptingResources.class.getResourceAsStream( resourceName );
   }
 
 }

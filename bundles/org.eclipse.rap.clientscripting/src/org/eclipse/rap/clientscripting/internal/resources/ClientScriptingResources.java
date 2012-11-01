@@ -19,7 +19,7 @@ import org.eclipse.rap.rwt.resources.ResourceLoader;
 
 public final class ClientScriptingResources {
 
-  private static final String PREFIX = "org/eclipse/rap/clientscripting/"; 
+  private static final String PREFIX = "org/eclipse/rap/clientscripting/";
   private static final String[] ALL_RESOURCES = {
     "ClientScriptingUtil.js",
     "EventBindingAdapter.js",
@@ -30,7 +30,7 @@ public final class ClientScriptingResources {
     "SWT.js",
     "WidgetProxy.js"
   };
-  
+
   public static void register( Application application ) {
     ClientscriptingResourceLoader resourceLoader = new ClientscriptingResourceLoader();
     for( String resourceName : ALL_RESOURCES ) {
@@ -40,14 +40,14 @@ public final class ClientScriptingResources {
 
   private ClientScriptingResources() {
   }
-  
+
   private static class ClientscriptingResourceLoader implements ResourceLoader {
 
     public InputStream getResourceAsStream( String resourceName ) throws IOException {
       ClassLoader classLoader = ClientScriptingResources.class.getClassLoader();
       return classLoader.getResourceAsStream( PREFIX + resourceName );
     }
-    
+
   }
 
 }

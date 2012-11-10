@@ -23,6 +23,6 @@
 
   <artifactId>org.eclipse.rap.clientscripting.test</artifactId>
   <version>0.1.100-SNAPSHOT</version>
-  <packaging>eclipse-plugin</packaging>
+  <packaging>eclipse-test-plugin</packaging>
 
 </project>

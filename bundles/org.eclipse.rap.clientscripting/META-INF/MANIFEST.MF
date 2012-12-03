@@ -10,6 +10,8 @@ Export-Package: org.eclipse.rap.clientscripting;version="0.1.100",
 Bundle-Vendor: Eclipse.org - RAP Incubator
 Import-Package: org.eclipse.rap.rwt;version="[2.0.0,3.0.0)",
  org.eclipse.rap.rwt.application;version="[2.0.0,3.0.0)",
+ org.eclipse.rap.rwt.client;version="[2.0.0,3.0.0)",
+ org.eclipse.rap.rwt.client.service;version="[2.0.0,3.0.0)",
  org.eclipse.rap.rwt.internal.protocol;version="[2.0.0,3.0.0)",
  org.eclipse.rap.rwt.lifecycle;version="[2.0.0,3.0.0)",
  org.eclipse.rap.rwt.resources;version="[2.0.0,3.0.0)",
@@ -17,4 +19,3 @@ Import-Package: org.eclipse.rap.rwt;version="[2.0.0,3.0.0)",
  org.eclipse.swt,
  org.eclipse.swt.events,
  org.eclipse.swt.widgets
-Require-Bundle: org.eclipse.rap.ui;bundle-version="2.0.0";resolution:=optional

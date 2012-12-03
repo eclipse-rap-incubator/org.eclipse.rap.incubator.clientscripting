@@ -17,8 +17,9 @@ import java.util.Collections;
 import org.eclipse.rap.clientscripting.internal.ClientListenerAdapter;
 import org.eclipse.rap.clientscripting.internal.ClientListenerBinding;
 import org.eclipse.rap.clientscripting.internal.ClientListenerManager;
-import org.eclipse.rap.clientscripting.internal.IClientObjectAdapter2;
 import org.eclipse.rap.clientscripting.internal.ClientObjectAdapterImpl;
+import org.eclipse.rap.clientscripting.internal.IClientObjectAdapter2;
+import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
 import org.eclipse.rap.rwt.Adaptable;
 import org.eclipse.rap.rwt.internal.protocol.IClientObjectAdapter;
 import org.eclipse.swt.SWT;
@@ -55,6 +56,7 @@ public class ClientListener implements Adaptable {
   protected Collection<ClientListenerBinding> bindings;
 
   public ClientListener( String scriptCode ) {
+    ClientScriptingResources.ensure();
     this.scriptCode = scriptCode;
     disposed = false;
     bindings = new ArrayList<ClientListenerBinding>();

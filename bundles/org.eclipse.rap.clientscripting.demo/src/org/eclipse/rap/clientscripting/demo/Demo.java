@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.demo;
 
-import org.eclipse.rap.rwt.lifecycle.IEntryPoint;
+import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 
 
 @SuppressWarnings( "serial" )
-public class Demo implements IEntryPoint {
+public class Demo implements EntryPoint {
 
   public int createUI() {
     Display display = new Display();

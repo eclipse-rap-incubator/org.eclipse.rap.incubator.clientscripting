@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.application.Application;
 import org.eclipse.rap.rwt.client.service.JavaScriptLoader;
@@ -54,7 +55,7 @@ public final class ClientScriptingResources {
 
   private static void ensureLoaded() {
     JavaScriptLoader loader = RWT.getClient().getService( JavaScriptLoader.class );
-    loader.ensure( RWT.getResourceManager().getLocation( REGISTER_NAME ) );
+    loader.require( RWT.getResourceManager().getLocation( REGISTER_NAME ) );
   }
 
   private static void register() throws IOException {

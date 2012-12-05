@@ -22,6 +22,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.*;
 
+import junit.framework.TestCase;
+
 import org.eclipse.rap.rwt.application.Application;
 import org.eclipse.rap.rwt.client.Client;
 import org.eclipse.rap.rwt.client.service.JavaScriptLoader;
@@ -29,8 +31,6 @@ import org.eclipse.rap.rwt.resources.ResourceLoader;
 import org.eclipse.rap.rwt.resources.ResourceManager;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.mockito.ArgumentCaptor;
-
-import junit.framework.TestCase;
 
 
 public class ClientScriptingResources_Test extends TestCase {
@@ -72,7 +72,7 @@ public class ClientScriptingResources_Test extends TestCase {
 
     ClientScriptingResources.ensure();
 
-    verify( loader ).ensure( endsWith( "clientscripting.js" ) );
+    verify( loader ).require( endsWith( "clientscripting.js" ) );
   }
 
   public void testRegistersWithApplication() throws IOException {

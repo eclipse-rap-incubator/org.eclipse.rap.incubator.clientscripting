@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.application.Application;
 import org.eclipse.rap.rwt.client.service.JavaScriptLoader;
-import org.eclipse.rap.rwt.resources.ResourceLoader;
+import org.eclipse.rap.rwt.service.ResourceLoader;
 
 
 public final class ClientScriptingResources {

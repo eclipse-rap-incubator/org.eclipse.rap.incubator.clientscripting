@@ -27,8 +27,8 @@ import junit.framework.TestCase;
 import org.eclipse.rap.rwt.application.Application;
 import org.eclipse.rap.rwt.client.Client;
 import org.eclipse.rap.rwt.client.service.JavaScriptLoader;
-import org.eclipse.rap.rwt.resources.ResourceLoader;
-import org.eclipse.rap.rwt.resources.ResourceManager;
+import org.eclipse.rap.rwt.service.ResourceLoader;
+import org.eclipse.rap.rwt.service.ResourceManager;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.mockito.ArgumentCaptor;
 

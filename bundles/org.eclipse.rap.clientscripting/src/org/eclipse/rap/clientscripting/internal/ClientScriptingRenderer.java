@@ -19,7 +19,7 @@ import org.eclipse.rap.rwt.internal.protocol.IClientObject;
 import org.eclipse.rap.rwt.lifecycle.PhaseEvent;
 import org.eclipse.rap.rwt.lifecycle.PhaseId;
 import org.eclipse.rap.rwt.lifecycle.PhaseListener;
-import org.eclipse.rap.rwt.service.IApplicationStore;
+import org.eclipse.rap.rwt.service.ApplicationContext;
 
 
 @SuppressWarnings( { "restriction", "serial" } )
@@ -38,13 +38,13 @@ final class ClientScriptingRenderer {
 
   static void registerPhaseListener() {
     PhaseListener phaseListener;
-    IApplicationStore store = RWT.getApplicationStore();
+    ApplicationContext context = RWT.getApplicationContext();
     synchronized( lock ) {
-      phaseListener = ( PhaseListener )store.getAttribute( ATTR_RENDERING_PHASE_LISTENER );
+      phaseListener = ( PhaseListener )context.getAttribute( ATTR_RENDERING_PHASE_LISTENER );
       if( phaseListener == null ) {
         phaseListener = new RenderPhaseListener();
         RWT.getLifeCycle().addPhaseListener( phaseListener );
-        store.setAttribute( ATTR_RENDERING_PHASE_LISTENER, phaseListener );
+        context.setAttribute( ATTR_RENDERING_PHASE_LISTENER, phaseListener );
       }
     }
   }

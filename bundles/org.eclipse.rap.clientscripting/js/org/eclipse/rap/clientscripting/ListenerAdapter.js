@@ -9,7 +9,7 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-rwt.protocol.AdapterRegistry.add( "rwt.clientscripting.Listener", {
+rwt.remote.HandlerRegistry.add( "rwt.clientscripting.Listener", {
 
   factory : function( properties ) {
     var code = properties.code;

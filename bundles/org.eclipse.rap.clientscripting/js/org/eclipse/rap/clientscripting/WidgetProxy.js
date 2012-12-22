@@ -9,14 +9,14 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
 
 org.eclipse.rap.clientscripting.WidgetProxy = function( originalWidget ) {
   var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
   ClientScriptingUtil.attachSetter( this, originalWidget );
   ClientScriptingUtil.attachGetter( this, originalWidget );
   ClientScriptingUtil.attachUserData( this, originalWidget );
-  if( org.eclipse.swt.WidgetManager.getInstance().isControl( originalWidget ) ) {
+  if( rwt.remote.WidgetManager.getInstance().isControl( originalWidget ) ) {
     ClientScriptingUtil.attachControlMethods( this, originalWidget );
   }
   ClientScriptingUtil.addDisposeListener( originalWidget, function() {

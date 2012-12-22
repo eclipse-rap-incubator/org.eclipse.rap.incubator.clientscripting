@@ -9,7 +9,7 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
 
 org.eclipse.rap.clientscripting.EventBinding = function( source, eventType, targetFunction ) {
   try {

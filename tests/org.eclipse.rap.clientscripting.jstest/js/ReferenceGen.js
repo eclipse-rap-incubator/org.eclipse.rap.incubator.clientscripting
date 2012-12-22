@@ -16,8 +16,8 @@
   var nl = "</br>";
   var lv1 = "*  ";
   var text = "## Available Setter:" + nl;
-  var common = org.eclipse.rwt.protocol.AdapterUtil._controlProperties;
-  var registry = org.eclipse.rwt.protocol.AdapterRegistry._registry;
+  var common = org.eclipse.rwt.remote.HandlerUtil._controlProperties;
+  var registry = org.eclipse.rwt.remote.HandlerRegistry._registry;
 
   var ignore = [ "children", "activeKeys", "cancelKeys", "customVariant", "parent" ];
 

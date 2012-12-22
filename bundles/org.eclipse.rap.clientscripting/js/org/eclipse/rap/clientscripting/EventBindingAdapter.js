@@ -9,12 +9,12 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-rwt.protocol.AdapterRegistry.add( "rwt.clientscripting.EventBinding", {
+rwt.remote.HandlerRegistry.add( "rwt.clientscripting.EventBinding", {
 
   factory : function( properties ) {
-    var source = rwt.protocol.ObjectRegistry.getObject( properties.targetObject );
+    var source = rwt.remote.ObjectRegistry.getObject( properties.targetObject );
     var eventType = org.eclipse.rap.clientscripting.SWT[ properties.eventType ];
-    var targetFunction = rwt.protocol.ObjectRegistry.getObject( properties.listener );
+    var targetFunction = rwt.remote.ObjectRegistry.getObject( properties.listener );
     return new org.eclipse.rap.clientscripting.EventBinding( source, eventType, targetFunction );
   }
 

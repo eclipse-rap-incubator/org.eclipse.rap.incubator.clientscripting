@@ -14,9 +14,9 @@
 var Function = org.eclipse.rap.clientscripting.Function;
 var SWT = org.eclipse.rap.clientscripting.SWT;
 
-qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
+rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
 
-  extend : qx.core.Object,
+  extend : rwt.qx.Object,
 
   members : {
 
@@ -61,7 +61,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
 
     testCreateFunctionByProtocol : function() {
       var code = "var handleEvent = function(){};";
-      var processor = org.eclipse.rwt.protocol.Processor;
+      var processor = rwt.remote.MessageProcessor;
 
       processor.processOperation( {
         "target" : "w3",
@@ -72,7 +72,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
         }
       } );
 
-      var ObjectManager = org.eclipse.rwt.protocol.ObjectManager;
+      var ObjectManager = rwt.remote.ObjectRegistry;
       var result = ObjectManager.getObject( "w3" );
       assertTrue( result instanceof Function );
     },

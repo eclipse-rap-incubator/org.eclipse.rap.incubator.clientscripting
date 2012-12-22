@@ -14,17 +14,17 @@
 var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
-var Processor = rwt.protocol.MessageProcessor;
-var ObjectManager = rwt.protocol.ObjectRegistry;
+var Processor = rwt.remote.MessageProcessor;
+var ObjectManager = rwt.remote.ObjectRegistry;
 var SWT = org.eclipse.rap.clientscripting.SWT;
-var EventHandlerUtil = org.eclipse.rwt.EventHandlerUtil;
+var EventHandlerUtil = rwt.event.EventHandlerUtil;
 
 var text;
 var textEl;
 
-qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
+rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
 
-  extend : qx.core.Object,
+  extend : rwt.qx.Object,
 
   members : {
 
@@ -464,10 +464,6 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     tearDown : function() {
       Processor.processOperation( {
         "target" : "w2",
-        "action" : "destroy"
-      } );
-      Processor.processOperation( {
-        "target" : "w3",
         "action" : "destroy"
       } );
       text = null;

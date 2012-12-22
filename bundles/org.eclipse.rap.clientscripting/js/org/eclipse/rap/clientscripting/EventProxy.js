@@ -9,7 +9,7 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
 
 org.eclipse.rap.clientscripting.EventProxy = function( eventType, target, originalEvent ) {
   var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;

@@ -13,17 +13,17 @@
 var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
 var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
-var Processor = rwt.protocol.MessageProcessor;
-var ObjectManager = rwt.protocol.ObjectRegistry;
+var Processor = rwt.remote.MessageProcessor;
+var ObjectManager = rwt.remote.ObjectRegistry;
 var WidgetProxy = org.eclipse.rap.clientscripting.WidgetProxy;
 var SWT = org.eclipse.rap.clientscripting.SWT;
 
 var text;
 var shell;
 
-qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
+rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
 
-  extend : qx.core.Object,
+  extend : rwt.qx.Object,
 
   members : {
 
@@ -121,7 +121,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
         eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
-      var shift = qx.event.type.DomEvent.SHIFT_MASK;
+      var shift = rwt.event.DomEvent.SHIFT_MASK;
       TestUtil.keyDown( text.getElement(), "Shift", shift );
 
       assertEquals( '\u0000', eventProxy.character );
@@ -134,8 +134,8 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
         eventProxy = new EventProxy( SWT.KeyDown, text, event );
       } );
 
-      var shift = qx.event.type.DomEvent.SHIFT_MASK;
-      var ctrl = qx.event.type.DomEvent.CTRL_MASK;
+      var shift = rwt.event.DomEvent.SHIFT_MASK;
+      var ctrl = rwt.event.DomEvent.CTRL_MASK;
       TestUtil.keyDown( text.getElement(), "A", shift | ctrl );
 
       assertEquals( SWT.SHIFT | SWT.CTRL, eventProxy.stateMask );
@@ -191,7 +191,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
 
     testMouseEventLocationWithBorder : function() {
       text.setLocation( 10, 20 );
-      text.setBorder( new org.eclipse.rwt.Border( 2, "solid", "black" ) );
+      text.setBorder( new rwt.html.Border( 2, "solid", "black" ) );
       TestUtil.flush();
       var eventProxy;
       text.addEventListener( "mousedown", function( event ) {
@@ -522,7 +522,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       Processor.processOperation( {
         "target" : "w5",
         "action" : "create",
-        "type" : "rwt.GC",
+        "type" : "rwt.widgets.GC",
         "properties" : {
           "parent" : "w4"
         }
@@ -556,7 +556,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var canvas = ObjectManager.getObject( "w4" );
       canvas.setBackgroundColor( "#aaaaaa" );
       canvas.setTextColor( "#bbbbbb" );
-      canvas.setFont( qx.ui.core.Font.fromString( "11px bold italic Arial") );
+      canvas.setFont( rwt.html.Font.fromString( "11px bold italic Arial") );
       TestUtil.flush();
       var props;
 
@@ -566,7 +566,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           props = [
             gc.strokeStyle,
             gc.fillStyle,
-            qx.ui.core.Font.fromString( gc.font ).toCss()
+            rwt.html.Font.fromString( gc.font ).toCss()
           ];
           gc.strokeStyle = "#ff00ff";
           gc.fillStyle = "#00ff00";
@@ -626,7 +626,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       Processor.processOperation( {
         "target" : "w5",
         "action" : "create",
-        "type" : "rwt.GC",
+        "type" : "rwt.widgets.GC",
         "properties" : {
           "parent" : "w4"
         }
@@ -642,7 +642,7 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           props = [
             gc.strokeStyle,
             gc.fillStyle,
-            qx.ui.core.Font.fromString( gc.font ).toCss()
+            rwt.html.Font.fromString( gc.font ).toCss()
           ];
           gc.strokeStyle = "#ff00ff";
           gc.fillStyle = "#00ff00";
@@ -680,10 +680,6 @@ qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
     tearDown : function() {
       Processor.processOperation( {
         "target" : "w2",
-        "action" : "destroy"
-      } );
-      Processor.processOperation( {
-        "target" : "w3",
         "action" : "destroy"
       } );
       text = null;

@@ -12,17 +12,17 @@
 (function() {
 
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
-var Processor = rwt.protocol.MessageProcessor;
-var ObjectManager = rwt.protocol.ObjectRegistry;
+var Processor = rwt.remote.MessageProcessor;
+var ObjectManager = rwt.remote.ObjectRegistry;
 var WidgetProxy = org.eclipse.rap.clientscripting.WidgetProxy;
 var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var SWT = org.eclipse.rap.clientscripting.SWT;
 
 var text;
 
-qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
+rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
 
-  extend : qx.core.Object,
+  extend : rwt.qx.Object,
 
   members : {
 
@@ -213,10 +213,6 @@ qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     tearDown : function() {
       Processor.processOperation( {
         "target" : "w2",
-        "action" : "destroy"
-      } );
-      Processor.processOperation( {
-        "target" : "w3",
         "action" : "destroy"
       } );
       text = null;

@@ -9,7 +9,7 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
 
 org.eclipse.rap.clientscripting.ClientScriptingUtil = {
 
@@ -103,12 +103,12 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   attachSetter : function( proxy, source ) {
-    var ObjectManager = rwt.protocol.ObjectRegistry;
+    var ObjectManager = rwt.remote.ObjectRegistry;
     var id = ObjectManager.getId( source );
-    var properties = ObjectManager.getEntry( id ).adapter.properties;
+    var properties = ObjectManager.getEntry( id ).handler.properties;
     for( var i = 0; i < properties.length; i++ ) {
       var property = properties[ i ];
-      proxy[ "set" + rwt.util.String.toFirstUp( property ) ] =
+      proxy[ "set" + rwt.util.Strings.toFirstUp( property ) ] =
         this._createSetter( id, property );
     }
   },
@@ -182,7 +182,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   _setProperty : function( id, property, value ) {
     var props = {};
     props[ property ] = value;
-    rwt.protocol.MessageProcessor.processOperation( {
+    rwt.remote.MessageProcessor.processOperation( {
       "target" : id,
       "action" : "set",
       "properties" : props
@@ -252,7 +252,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
 
   _initMouseEvent : function( event, originalEvent ) {
     var target = originalEvent.getTarget()._getTargetNode();
-    var offset = qx.bom.element.Location.get( target, "scroll" );
+    var offset = rwt.html.Location.get( target, "scroll" );
     event.x = originalEvent.getPageX() - offset.left;
     event.y = originalEvent.getPageY() - offset.top;
     if( originalEvent.isLeftButtonPressed() ) {
@@ -275,7 +275,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     if( gc == null ) {
       gc = this._findExistingGC( widget );
       if( gc == null ) {
-        gc = new org.eclipse.swt.graphics.GC( widget );
+        gc = new rwt.widgets.GC( widget );
       }
       widget.setUserData( org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY, gc );
     }
@@ -299,8 +299,8 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       width,
       height,
       font,
-      rwt.util.ColorUtil.stringToRgb( fillStyle ? fillStyle : "#000000" ),
-      rwt.util.ColorUtil.stringToRgb( strokeStyle ? strokeStyle : "#000000" )
+      rwt.util.Colors.stringToRgb( fillStyle ? fillStyle : "#000000" ),
+      rwt.util.Colors.stringToRgb( strokeStyle ? strokeStyle : "#000000" )
     );
   },
 
@@ -308,7 +308,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     var children = widget._getTargetNode().childNodes;
     var result = null;
     for( var i = 0; i < children.length && result == null; i++ ) {
-      if( children[ i ].rwtObject instanceof org.eclipse.swt.graphics.GC ) {
+      if( children[ i ].rwtObject instanceof rwt.widgets.GC ) {
         result = children[ i ].rwtObject;
       }
     }
@@ -374,7 +374,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   _getLastKeyCode : function() {
     // NOTE : While this is a private field, this mechanism must be integrated with
     // KeyEventSupport anyway to support the doit flag better.
-    return org.eclipse.rwt.KeyEventSupport.getInstance()._currentKeyCode;
+    return rwt.remote.KeyEventSupport.getInstance()._currentKeyCode;
   },
 
   _getDiff : function( newValue, oldValue, oldSel, keyCode ) {

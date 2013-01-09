@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,77 +10,122 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting;
 
-import junit.framework.TestCase;
+import static org.eclipse.rap.clientscripting.TestUtil.fakeRemoteObjectFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import org.eclipse.rap.clientscripting.internal.ClientListenerAdapter;
-import org.eclipse.rap.clientscripting.internal.ClientListenerBinding;
-import org.eclipse.rap.clientscripting.internal.ClientListenerManager;
-import org.eclipse.rap.clientscripting.internal.IClientObjectAdapter2;
-import org.eclipse.rap.clientscripting.test.TestUtil;
+import org.eclipse.rap.rwt.internal.remote.RemoteObject;
+import org.eclipse.rap.rwt.internal.remote.RemoteObjectFactory;
 import org.eclipse.rap.rwt.lifecycle.PhaseId;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
+import org.junit.*;
 
 
-public class ClientListener_Test extends TestCase {
+@SuppressWarnings( "restriction" )
+public class ClientListener_Test {
 
   private Shell shell;
   private Display display;
   private ClientListener listener;
 
-  @Override
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     Fixture.setUp();
     createWidgets();
     createListener();
   }
 
-  @Override
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     Fixture.tearDown();
   }
 
-  public void testCreateWithNull() {
+  @Test
+  public void testCreation_failsWithNull() {
     try {
       new ClientListener( null );
       fail();
     } catch( NullPointerException expected ) {
+      assertTrue( expected.getMessage().contains( "scriptCode" ) );
     }
   }
 
-  public void testCreateDoesNotRegister() {
-    new ClientListener( "code" );
+  @Test
+  public void testCreation_createsRemoteObject() {
+    RemoteObjectFactory remoteObjectFactory = fakeRemoteObjectFactory( mock( RemoteObject.class ) );
 
-    assertTrue( ClientListenerManager.getInstance().getListeners().isEmpty() );
+    new ClientListener( "script code" );
+
+    verify( remoteObjectFactory ).createRemoteObject( "rwt.clientscripting.Listener" );
   }
 
-  public void testIsDisposed() {
+  @Test
+  public void testCreation_initializesRemoteObject() {
+    RemoteObject remoteObject = mock( RemoteObject.class );
+    fakeRemoteObjectFactory( remoteObject );
+
+    new ClientListener( "script code" );
+
+    verify( remoteObject ).set( eq( "code" ), eq( "script code" ) );
+  }
+
+  @Test
+  public void testDispose_disposesBindings() {
+    Label label = new Label( shell, SWT.NONE );
+    listener.addTo( label, SWT.MouseDown );
+    Fixture.fakePhase( PhaseId.PROCESS_ACTION );
+    label.dispose();
+
+    ClientListenerBinding binding = listener.findBinding( label, SWT.MouseDown );
+    assertTrue( binding.isDisposed() );
+  }
+
+  @Test
+  public void testDispose_mayBeCalledTwice() {
+    listener.dispose();
+    listener.dispose();
+
+    assertTrue( listener.isDisposed() );
+  }
+
+  @Test
+  public void testIsDisposed_falseByDefault() {
     assertFalse( listener.isDisposed() );
   }
 
-  public void testDispose() {
+  @Test
+  public void testIsDisposed_trueAfterDispose() {
     listener.dispose();
 
     assertTrue( listener.isDisposed() );
   }
 
-  public void testDisposeTwice() {
-    listener.dispose();
-    listener.dispose();
-
-    assertTrue( listener.isDisposed() );
-  }
-
-  public void testAddToRegistersListener() {
+  @Test
+  public void testAddTo_createsBinding() {
     listener.addTo( shell, ClientListener.MouseDown );
 
-    assertTrue( ClientListenerManager.getInstance().getListeners().contains( listener ) );
+    assertNotNull( listener.findBinding( shell, SWT.MouseDown ) );
   }
 
-  public void testAddToFailsAfterDispose() {
+  @Test
+  public void testAddTo_ignoresSubsequentCalls() {
+    listener.addTo( shell, SWT.KeyDown );
+    listener.addTo( shell, SWT.KeyDown );
+
+    assertEquals( 1, listener.getBindings().size() );
+  }
+
+  @Test
+  public void testAddTo_failsAfterDispose() {
     listener.dispose();
 
     try {
@@ -91,7 +136,8 @@ public class ClientListener_Test extends TestCase {
     }
   }
 
-  public void testAddToFailsWithNullWidget() {
+  @Test
+  public void testAddTo_failsWithNullWidget() {
     try {
       listener.addTo( null, SWT.MouseDown );
       fail();
@@ -100,7 +146,8 @@ public class ClientListener_Test extends TestCase {
     }
   }
 
-  public void testAddToFailsWithDisposedWidget() {
+  @Test
+  public void testAddTo_failsWithDisposedWidget() {
     Label label = new Label( shell, SWT.NONE );
     label.dispose();
 
@@ -112,32 +159,8 @@ public class ClientListener_Test extends TestCase {
     }
   }
 
-  public void testAddToAddsBindingToList() {
-    Label label = new Label( shell, SWT.NONE );
-    listener.addTo( label, SWT.MouseDown );
-
-    assertNotNull( TestUtil.findBinding( listener, label, SWT.MouseDown ) );
-  }
-
-  public void testBindingNotDisposedByDefault() {
-    Label label = new Label( shell, SWT.NONE );
-    listener.addTo( label, SWT.MouseDown );
-
-    ClientListenerBinding binding = TestUtil.findBinding( listener, label, SWT.MouseDown );
-    assertFalse( binding.isDisposed() );
-  }
-
-  public void testBindingDisposedWhenWidgetDisposed() {
-    Label label = new Label( shell, SWT.NONE );
-    listener.addTo( label, SWT.MouseDown );
-    Fixture.fakePhase( PhaseId.PROCESS_ACTION );
-    label.dispose();
-
-    ClientListenerBinding binding = TestUtil.findBinding( listener, label, SWT.MouseDown );
-    assertTrue( binding.isDisposed() );
-  }
-
-  public void testRemoveFromFailsAfterDispose() {
+  @Test
+  public void testRemoveFrom_failsAfterDispose() {
     listener.dispose();
     try {
       listener.removeFrom( shell, SWT.MouseDown );
@@ -147,7 +170,8 @@ public class ClientListener_Test extends TestCase {
     }
   }
 
-  public void testRemoveFromFailsWithNullWidget() {
+  @Test
+  public void testRemoveFrom_failsWithNullWidget() {
     try {
       listener.removeFrom( null, SWT.MouseDown );
       fail();
@@ -156,86 +180,36 @@ public class ClientListener_Test extends TestCase {
     }
   }
 
-  public void testRemoveFromDisposesBinding() {
+  @Test
+  public void testRemoveFrom_disposesBinding() {
     Label label = new Label( shell, SWT.NONE );
     listener.addTo( label, SWT.MouseDown );
+
     listener.removeFrom( label, SWT.MouseDown );
 
-    ClientListenerBinding binding = TestUtil.findBinding( listener, label, SWT.MouseDown );
+    ClientListenerBinding binding = listener.findBinding( label, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
   }
 
-  public void testRemoveFromCalledTwice() {
+  @Test
+  public void testRemoveFrom_mayBeCalledTwice() {
     Label label = new Label( shell, SWT.NONE );
     listener.addTo( label, SWT.MouseDown );
+
     listener.removeFrom( label, SWT.MouseDown );
     listener.removeFrom( label, SWT.MouseDown );
 
-    ClientListenerBinding binding = TestUtil.findBinding( listener, label, SWT.MouseDown );
+    ClientListenerBinding binding = listener.findBinding( label, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
   }
 
-  public void testRemoveFromNonExistingBinding() {
+  @Test
+  public void testRemoveFrom_ignoresNonExistingBinding() {
     Label label = new Label( shell, SWT.NONE );
+
     listener.removeFrom( label, SWT.MouseDown );
 
-    assertNull( TestUtil.findBinding( listener, label, SWT.MouseDown ) );
-  }
-
-  public void testGetClientListenerAdapter() {
-    ClientListenerAdapter adapter = listener.getAdapter( ClientListenerAdapter.class );
-
-    assertNotNull( adapter );
-  }
-
-  public void testGetClientListenerAdapter_sameInstance() {
-    ClientListenerAdapter adapter = listener.getAdapter( ClientListenerAdapter.class );
-
-    assertSame( adapter, listener.getAdapter( ClientListenerAdapter.class ) );
-  }
-
-  public void testGetClientListenerAdapter_scriptCode() {
-    ClientListenerAdapter adapter = listener.getAdapter( ClientListenerAdapter.class );
-
-    assertEquals( "code", adapter.getScriptCode() );
-  }
-
-  public void testGetClientObjectAdapter() {
-    IClientObjectAdapter2 adapter = listener.getAdapter( IClientObjectAdapter2.class );
-
-    assertNotNull( adapter );
-  }
-
-  public void testGetClientObjectAdapter_sameInstance() {
-    IClientObjectAdapter2 adapter = listener.getAdapter( IClientObjectAdapter2.class );
-
-    assertSame( adapter, listener.getAdapter( IClientObjectAdapter2.class ) );
-  }
-
-  public void testGetClientObjectAdapter_differentInstances() {
-    ClientListener listener1 = new ClientListener( "code" );
-    ClientListener listener2 = new ClientListener( "code" );
-
-    IClientObjectAdapter2 adapter1 = listener1.getAdapter( IClientObjectAdapter2.class );
-    IClientObjectAdapter2 adapter2 = listener2.getAdapter( IClientObjectAdapter2.class );
-
-    assertNotSame( adapter1, adapter2 );
-  }
-
-  public void testAddTo() {
-    listener.addTo( shell, SWT.KeyDown );
-
-    ClientListenerAdapter adapter = listener.getAdapter( ClientListenerAdapter.class );
-    ClientListenerBinding wanted = new ClientListenerBinding( shell, SWT.KeyDown, listener );
-    assertTrue( adapter.getBindings().contains( wanted ) );
-  }
-
-  public void testAddToTwice() {
-    listener.addTo( shell, SWT.KeyDown );
-    listener.addTo( shell, SWT.KeyDown );
-
-    ClientListenerAdapter adapter = listener.getAdapter( ClientListenerAdapter.class );
-    assertEquals( 1, adapter.getBindings().size() );
+    assertNull( listener.findBinding( label, SWT.MouseDown ) );
   }
 
   private void createWidgets() {

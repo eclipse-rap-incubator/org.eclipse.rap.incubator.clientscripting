@@ -11,36 +11,13 @@
 package org.eclipse.rap.clientscripting.internal;
 
 import org.eclipse.rap.clientscripting.ClientListener;
-import org.eclipse.rap.rwt.Adaptable;
-import org.eclipse.rap.rwt.internal.protocol.IClientObject;
-import org.eclipse.rap.rwt.internal.protocol.IClientObjectAdapter;
-import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 
 
-@SuppressWarnings( "restriction" )
-public class ClientListenerBindingSynchronizer implements Synchronizer<ClientListenerBinding> {
+public class ClientListenerUtil {
 
-  private static final String TYPE = "rwt.clientscripting.EventBinding";
-
-  public void renderCreate( ClientListenerBinding binding, IClientObject clientObject ) {
-    clientObject.create( TYPE );
-    clientObject.set( "listener", getId( binding.getListener() ) );
-    clientObject.set( "targetObject", WidgetUtil.getId( binding.getWidget() ) );
-    clientObject.set( "eventType", getEventType( binding ) );
-  }
-
-  public void renderDestroy( ClientListenerBinding binding, IClientObject clientObject ) {
-    clientObject.destroy();
-  }
-
-  private static String getId( Adaptable object ) {
-    IClientObjectAdapter adapter = object.getAdapter( IClientObjectAdapter.class );
-    return adapter.getId();
-  }
-
-  private static String getEventType( ClientListenerBinding binding ) {
+  public static String getEventType( int bindingType ) {
     String result = null;
-    switch( binding.getEventType() ) {
+    switch( bindingType ) {
       case ClientListener.KeyUp:
         result = "KeyUp";
       break;
@@ -82,7 +59,7 @@ public class ClientListenerBindingSynchronizer implements Synchronizer<ClientLis
       break;
     }
     if( result == null ) {
-      throw new IllegalArgumentException( "Unknown Event Type " + binding.getEventType() );
+      throw new IllegalArgumentException( "Unknown Event Type " + bindingType );
     }
     return result;
   }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,32 +8,34 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
-package org.eclipse.rap.clientscripting.internal;
+package org.eclipse.rap.clientscripting;
 
-import org.eclipse.rap.clientscripting.ClientListener;
-import org.eclipse.rap.rwt.Adaptable;
-import org.eclipse.rap.rwt.internal.protocol.IClientObjectAdapter;
+import org.eclipse.rap.clientscripting.internal.ClientListenerUtil;
+import org.eclipse.rap.rwt.internal.remote.RemoteObject;
+import org.eclipse.rap.rwt.internal.remote.RemoteObjectFactory;
+import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.widgets.Widget;
 
 
-@SuppressWarnings( { "restriction" } )
-public class ClientListenerBinding implements Adaptable {
+@SuppressWarnings( "restriction" )
+class ClientListenerBinding {
+
+  private static final String REMOTE_TYPE = "rwt.clientscripting.EventBinding";
 
   private final ClientListener listener;
   private final Widget widget;
   private final int eventType;
-  private IClientObjectAdapter2 iClientObjectAdapter2;
+  private final RemoteObject remoteObject;
   private boolean disposed;
 
-  public ClientListenerBinding( Widget widget, int eventType, ClientListener listener ) {
+  ClientListenerBinding( ClientListener listener, Widget widget, int eventType ) {
+    this.listener = listener;
     this.widget = widget;
     this.eventType = eventType;
-    this.listener = listener;
-    disposed = false;
-  }
-
-  public ClientListener getListener() {
-    return listener;
+    remoteObject = RemoteObjectFactory.getInstance().createRemoteObject( REMOTE_TYPE );
+    remoteObject.set( "listener", listener.getRemoteId() );
+    remoteObject.set( "targetObject", WidgetUtil.getId( widget ) );
+    remoteObject.set( "eventType", ClientListenerUtil.getEventType( eventType ) );
   }
 
   public Widget getWidget() {
@@ -44,12 +46,15 @@ public class ClientListenerBinding implements Adaptable {
     return eventType;
   }
 
-  public boolean isDisposed() {
-    return disposed;
+  public void dispose() {
+    if( !disposed ) {
+      remoteObject.destroy();
+    }
+    disposed = true;
   }
 
-  public void markDisposed() {
-    disposed = true;
+  public boolean isDisposed() {
+    return disposed;
   }
 
   @Override
@@ -73,18 +78,6 @@ public class ClientListenerBinding implements Adaptable {
     result = prime * result + eventType;
     result = prime * result + widget.hashCode();
     result = prime * result + listener.hashCode();
-    return result;
-  }
-
-  @SuppressWarnings( "unchecked" )
-  public <T> T getAdapter( Class<T> adapter ) {
-    T result = null;
-    if( adapter == IClientObjectAdapter2.class || adapter == IClientObjectAdapter.class ) {
-      if( iClientObjectAdapter2 == null ) {
-        iClientObjectAdapter2 = new ClientObjectAdapterImpl();
-      }
-      result = ( T )iClientObjectAdapter2;
-    }
     return result;
   }
 

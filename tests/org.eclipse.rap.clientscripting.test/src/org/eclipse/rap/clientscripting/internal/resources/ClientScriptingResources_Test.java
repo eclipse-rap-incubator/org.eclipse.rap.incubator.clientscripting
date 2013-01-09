@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,10 @@ import static org.mockito.Mockito.when;
 
 import java.io.*;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import org.eclipse.rap.rwt.application.Application;
 import org.eclipse.rap.rwt.client.Client;
@@ -33,18 +36,19 @@ import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.mockito.ArgumentCaptor;
 
 
-public class ClientScriptingResources_Test extends TestCase {
+public class ClientScriptingResources_Test {
 
-  @Override
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     Fixture.setUp();
   }
 
-  @Override
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     Fixture.tearDown();
   }
 
+  @Test
   public void testRegistersWithResourceManager() {
     ResourceManager resourceManager = mock( ResourceManager.class );
     Fixture.fakeResourceManager( resourceManager );
@@ -54,6 +58,7 @@ public class ClientScriptingResources_Test extends TestCase {
     verify( resourceManager ).register( eq( "clientscripting.js" ), ( InputStream )notNull() );
   }
 
+  @Test
   public void testDoesNotRegisterWithResourceManagerTwice() {
     ResourceManager resourceManager = mock( ResourceManager.class );
     when( Boolean.valueOf( resourceManager.isRegistered( anyString() ) ) ).thenReturn( Boolean.TRUE );
@@ -64,6 +69,7 @@ public class ClientScriptingResources_Test extends TestCase {
     verify( resourceManager, times( 0 ) ).register( anyString(), any( InputStream.class ) );
   }
 
+  @Test
   public void testLoadsJavaScript() {
     JavaScriptLoader loader = mock( JavaScriptLoader.class );
     Client client = mock( Client.class );
@@ -75,6 +81,7 @@ public class ClientScriptingResources_Test extends TestCase {
     verify( loader ).require( endsWith( "clientscripting.js" ) );
   }
 
+  @Test
   public void testRegistersWithApplication() throws IOException {
     Application application = mock( Application.class );
 
@@ -87,6 +94,7 @@ public class ClientScriptingResources_Test extends TestCase {
     assertNotNull( resourceLoader.getValue().getResourceAsStream( resourceName.getValue() ) );
   }
 
+  @Test
   public void testReadInputStream() throws IOException {
     InputStream inputStream = new ByteArrayInputStream( "line1\nline2\n".getBytes() );
     StringBuilder builder = new StringBuilder();
@@ -96,6 +104,7 @@ public class ClientScriptingResources_Test extends TestCase {
     assertEquals( "line1\nline2\n", builder.toString() );
   }
 
+  @Test
   public void testReadLongInputStream() throws IOException {
     String longString = createRandomString( 10000 ); // bigger than buffer size
     InputStream inputStream = new ByteArrayInputStream( longString.getBytes() );

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting;
 
-import static org.eclipse.rap.clientscripting.TestUtil.fakeRemoteObjectFactory;
+import static org.eclipse.rap.clientscripting.TestUtil.fakeConnection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -21,16 +21,15 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.eclipse.rap.rwt.internal.remote.RemoteObject;
-import org.eclipse.rap.rwt.internal.remote.RemoteObjectFactory;
 import org.eclipse.rap.rwt.lifecycle.PhaseId;
+import org.eclipse.rap.rwt.remote.Connection;
+import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.junit.*;
 
 
-@SuppressWarnings( "restriction" )
 public class ClientListener_Test {
 
   private Shell shell;
@@ -61,17 +60,17 @@ public class ClientListener_Test {
 
   @Test
   public void testCreation_createsRemoteObject() {
-    RemoteObjectFactory remoteObjectFactory = fakeRemoteObjectFactory( mock( RemoteObject.class ) );
+    Connection connection = fakeConnection( mock( RemoteObject.class ) );
 
     new ClientListener( "script code" );
 
-    verify( remoteObjectFactory ).createRemoteObject( "rwt.clientscripting.Listener" );
+    verify( connection ).createRemoteObject( "rwt.clientscripting.Listener" );
   }
 
   @Test
   public void testCreation_initializesRemoteObject() {
     RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeRemoteObjectFactory( remoteObject );
+    fakeConnection( remoteObject );
 
     new ClientListener( "script code" );
 

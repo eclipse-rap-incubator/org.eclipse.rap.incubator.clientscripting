@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting;
 
-import static org.eclipse.rap.clientscripting.TestUtil.fakeRemoteObjectFactory;
+import static org.eclipse.rap.clientscripting.TestUtil.fakeConnection;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -20,15 +20,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.eclipse.rap.rwt.internal.remote.RemoteObject;
-import org.eclipse.rap.rwt.internal.remote.RemoteObjectFactory;
 import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
+import org.eclipse.rap.rwt.remote.Connection;
+import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 
 
-@SuppressWarnings( "restriction" )
 public class ClientListenerBinding_Test {
 
   private Shell shell;
@@ -83,17 +82,17 @@ public class ClientListenerBinding_Test {
 
   @Test
   public void testCreation_createsRemoteObject() {
-    RemoteObjectFactory remoteObjectFactory = fakeRemoteObjectFactory( mock( RemoteObject.class ) );
+    Connection connection = fakeConnection( mock( RemoteObject.class ) );
 
     binding = new ClientListenerBinding( listener1, label1, ClientListener.KeyDown );
 
-    verify( remoteObjectFactory ).createRemoteObject( eq( "rwt.clientscripting.EventBinding" ) );
+    verify( connection ).createRemoteObject( eq( "rwt.clientscripting.EventBinding" ) );
   }
 
   @Test
   public void testCreation_initializesRemoteObject() {
     RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeRemoteObjectFactory( remoteObject );
+    fakeConnection( remoteObject );
 
     binding = new ClientListenerBinding( listener1, label1, ClientListener.KeyDown );
 
@@ -105,7 +104,7 @@ public class ClientListenerBinding_Test {
   @Test
   public void testDispose_destroysRemoteObject() {
     RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeRemoteObjectFactory( remoteObject );
+    fakeConnection( remoteObject );
     binding = new ClientListenerBinding( listener1, label1, ClientListener.KeyDown );
 
     binding.dispose();
@@ -116,7 +115,7 @@ public class ClientListenerBinding_Test {
   @Test
   public void testDispose_mayBeCalledTwice() {
     RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeRemoteObjectFactory( remoteObject );
+    fakeConnection( remoteObject );
     binding = new ClientListenerBinding( listener1, label1, ClientListener.KeyDown );
 
     binding.dispose();

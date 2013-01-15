@@ -14,19 +14,18 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.eclipse.rap.rwt.internal.remote.RemoteObject;
-import org.eclipse.rap.rwt.internal.remote.RemoteObjectFactory;
+import org.eclipse.rap.rwt.remote.Connection;
+import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 
 
-@SuppressWarnings( "restriction" )
 public class TestUtil {
 
-  static RemoteObjectFactory fakeRemoteObjectFactory( RemoteObject remoteObject ) {
-    RemoteObjectFactory factory = mock( RemoteObjectFactory.class );
-    when( factory.createRemoteObject( anyString() ) ).thenReturn( remoteObject );
-    Fixture.fakeRemoteObjectFactory( factory );
-    return factory;
+  static Connection fakeConnection( RemoteObject remoteObject ) {
+    Connection connection = mock( Connection.class );
+    when( connection.createRemoteObject( anyString() ) ).thenReturn( remoteObject );
+    Fixture.fakeConnection( connection );
+    return connection;
   }
 
 }

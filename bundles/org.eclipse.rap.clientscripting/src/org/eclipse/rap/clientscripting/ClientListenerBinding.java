@@ -11,13 +11,12 @@
 package org.eclipse.rap.clientscripting;
 
 import org.eclipse.rap.clientscripting.internal.ClientListenerUtil;
-import org.eclipse.rap.rwt.internal.remote.RemoteObject;
-import org.eclipse.rap.rwt.internal.remote.RemoteObjectFactory;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
+import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.swt.widgets.Widget;
 
 
-@SuppressWarnings( "restriction" )
 class ClientListenerBinding {
 
   private static final String REMOTE_TYPE = "rwt.clientscripting.EventBinding";
@@ -32,7 +31,7 @@ class ClientListenerBinding {
     this.listener = listener;
     this.widget = widget;
     this.eventType = eventType;
-    remoteObject = RemoteObjectFactory.getInstance().createRemoteObject( REMOTE_TYPE );
+    remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
     remoteObject.set( "listener", listener.getRemoteId() );
     remoteObject.set( "targetObject", WidgetUtil.getId( widget ) );
     remoteObject.set( "eventType", ClientListenerUtil.getEventType( eventType ) );

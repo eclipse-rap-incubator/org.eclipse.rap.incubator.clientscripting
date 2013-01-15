@@ -12,17 +12,18 @@ package org.eclipse.rap.clientscripting;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
-import org.eclipse.rap.rwt.internal.remote.RemoteObject;
-import org.eclipse.rap.rwt.internal.remote.RemoteObjectFactory;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.internal.remote.RemoteObjectImpl;
+import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Widget;
 
 
-@SuppressWarnings( { "serial" , "restriction" } )
+@SuppressWarnings( { "serial", "restriction" } )
 public class ClientListener {
 
   private static final String REMOTE_TYPE = "rwt.clientscripting.Listener";
@@ -56,7 +57,7 @@ public class ClientListener {
     ClientScriptingResources.ensure();
     disposed = false;
     bindings = new ArrayList<ClientListenerBinding>();
-    remoteObject = RemoteObjectFactory.getInstance().createRemoteObject( REMOTE_TYPE );
+    remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
     remoteObject.set( "code", scriptCode );
   }
 

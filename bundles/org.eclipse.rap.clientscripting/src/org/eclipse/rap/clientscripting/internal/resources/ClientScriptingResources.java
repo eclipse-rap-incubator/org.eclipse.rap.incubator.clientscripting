@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,10 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.internal.resources;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.SequenceInputStream;
+import java.util.Vector;
 
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.application.Application;
@@ -24,7 +23,6 @@ import org.eclipse.rap.rwt.service.ResourceLoader;
 
 public final class ClientScriptingResources {
 
-  private static final String CHARSET = "UTF-8";
   private static final String REGISTER_NAME = "clientscripting.js";
   private static final String PREFIX = "org/eclipse/rap/clientscripting/";
   private static final String[] ALL_RESOURCES = {
@@ -75,21 +73,12 @@ public final class ClientScriptingResources {
     } );
   }
 
-  private static InputStream getConcatentatedInputStream() throws IOException {
-    return new ByteArrayInputStream( concatResources().getBytes( CHARSET ) );
-  }
-
-  private static String concatResources() throws IOException {
-    StringBuilder builder = new StringBuilder();
+  private static InputStream getConcatentatedInputStream() {
+    Vector<InputStream> inputStreams = new Vector<InputStream>( ALL_RESOURCES.length );
     for( String resourceName : ALL_RESOURCES ) {
-      InputStream inputStream = getResourceAsStream( resourceName );
-      try {
-        read( inputStream, builder );
-      } finally {
-        inputStream.close();
-      }
+      inputStreams.add( getResourceAsStream( resourceName ) );
     }
-    return builder.toString();
+    return new SequenceInputStream( inputStreams.elements() );
   }
 
   private static InputStream getResourceAsStream( String resourceName ) {
@@ -99,17 +88,6 @@ public final class ClientScriptingResources {
       throw new RuntimeException( "Resource not found: " + resourceName );
     }
     return inputStream;
-  }
-
-  static void read( InputStream inputStream, StringBuilder builder ) throws IOException {
-    InputStreamReader reader = new InputStreamReader( inputStream, CHARSET );
-    BufferedReader bufferedReader = new BufferedReader( reader );
-    char[] buffer = new char[ 4096 ];
-    int read = bufferedReader.read( buffer );
-    while( read != -1 ) {
-      builder.append( buffer, 0, read );
-      read = bufferedReader.read( buffer );
-    }
   }
 
   private ClientScriptingResources() {

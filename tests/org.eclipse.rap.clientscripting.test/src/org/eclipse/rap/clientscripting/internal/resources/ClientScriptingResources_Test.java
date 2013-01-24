@@ -15,13 +15,14 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.endsWith;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.*;
-
+import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
@@ -34,6 +35,8 @@ import org.eclipse.rap.rwt.service.ResourceLoader;
 import org.eclipse.rap.rwt.service.ResourceManager;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.mockito.ArgumentCaptor;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 
 public class ClientScriptingResources_Test {
@@ -56,6 +59,41 @@ public class ClientScriptingResources_Test {
     ClientScriptingResources.ensure();
 
     verify( resourceManager ).register( eq( "clientscripting.js" ), ( InputStream )notNull() );
+  }
+
+  @Test
+  public void testRegistersConcatenatedResources() {
+    final AtomicReference<String> registeredStringCaptor = new AtomicReference<String>();
+    ResourceManager resourceManager = mock( ResourceManager.class );
+    Fixture.fakeResourceManager( resourceManager );
+    doAnswer( new Answer<Object>() {
+      public Object answer( InvocationOnMock invocation ) throws Throwable {
+        InputStream inputStream = ( InputStream )invocation.getArguments()[1];
+        registeredStringCaptor.set( read( inputStream, "UTF-8" ) );
+        inputStream.close();
+        return null;
+      }
+    } ).when( resourceManager ).register( anyString(), any( InputStream.class ) );
+
+    ClientScriptingResources.ensure();
+
+    String registeredCode = registeredStringCaptor.get();
+    assertTrue( registeredCode.contains( "clientscripting.ClientScriptingUtil =" ) );
+    assertTrue( registeredCode.contains( "clientscripting.EventBinding =" ) );
+    assertTrue( registeredCode.contains( "clientscripting.SWT =" ) );
+    assertTrue( registeredCode.contains( "clientscripting.EventProxy =" ) );
+  }
+
+  static String read( InputStream inputStream, String charset ) throws IOException {
+    InputStreamReader reader = new InputStreamReader( inputStream, charset );
+    StringBuilder builder = new StringBuilder();
+    char[] buffer = new char[ 4096 ];
+    int read = reader.read( buffer );
+    while( read != -1 ) {
+      builder.append( buffer, 0, read );
+      read = reader.read( buffer );
+    }
+    return builder.toString();
   }
 
   @Test
@@ -92,36 +130,6 @@ public class ClientScriptingResources_Test {
     verify( application ).addResource( resourceName.capture(), resourceLoader.capture() );
 
     assertNotNull( resourceLoader.getValue().getResourceAsStream( resourceName.getValue() ) );
-  }
-
-  @Test
-  public void testReadInputStream() throws IOException {
-    InputStream inputStream = new ByteArrayInputStream( "line1\nline2\n".getBytes() );
-    StringBuilder builder = new StringBuilder();
-
-    ClientScriptingResources.read( inputStream, builder );
-
-    assertEquals( "line1\nline2\n", builder.toString() );
-  }
-
-  @Test
-  public void testReadLongInputStream() throws IOException {
-    String longString = createRandomString( 10000 ); // bigger than buffer size
-    InputStream inputStream = new ByteArrayInputStream( longString.getBytes() );
-    StringBuilder builder = new StringBuilder();
-
-    ClientScriptingResources.read( inputStream, builder );
-
-    assertEquals( longString, builder.toString() );
-  }
-
-  private static String createRandomString( int length ) {
-    String chars = "abcdefghijklmnopqrstuvwxyz";
-    StringBuilder builder = new StringBuilder( length );
-    for( int i = 0; i < length; i++ ) {
-      builder.append( chars.charAt( ( int )( Math.random() * chars.length() ) ) );
-    }
-    return builder.toString();
   }
 
 }

@@ -189,7 +189,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     } );
   },
 
-  _setUserData : function( source, args) {
+  _setUserData : function( source, args ) {
     if( args.length !== 2 ) {
       var msg =  "Wrong number of arguments in SetData: Expected 2, found " + args.length;
       throw new Error( msg );
@@ -197,11 +197,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     var property = args[ 0 ];
     var value = args[ 1 ];
     var USERDATA_KEY = org.eclipse.rap.clientscripting.WidgetProxy._USERDATA_KEY;
-    var data = source.getUserData( USERDATA_KEY );
-    if( data == null ) {
-      data = {};
-      source.setUserData( USERDATA_KEY, data );
-    }
+    var data = rwt.remote.HandlerUtil.getServerData( source );
     data[ property ] = value;
   },
 
@@ -212,9 +208,8 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     }
     var property = args[ 0 ];
     var result = null;
-    var USERDATA_KEY = org.eclipse.rap.clientscripting.WidgetProxy._USERDATA_KEY;
-    var data = source.getUserData( USERDATA_KEY );
-    if( data !== null && typeof data[ property ] !== "undefined" ) {
+    var data = rwt.remote.HandlerUtil.getServerData( source );
+    if( typeof data[ property ] !== "undefined" ) {
       result = data[ property ];
     }
     return result;

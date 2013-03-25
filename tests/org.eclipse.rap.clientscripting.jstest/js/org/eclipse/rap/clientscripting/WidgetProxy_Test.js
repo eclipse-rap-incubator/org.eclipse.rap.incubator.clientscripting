@@ -59,8 +59,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     testDisposeUserData : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
       widgetProxy.setData( "key", {} );
-      // hacky: get data object
-      var data = text.getUserData( org.eclipse.rap.clientscripting.WidgetProxy._USERDATA_KEY );
+      var data = rwt.remote.HandlerUtil.getServerData( text );
       assertFalse( TestUtil.hasNoObjects( data ) );
 
       text.destroy();

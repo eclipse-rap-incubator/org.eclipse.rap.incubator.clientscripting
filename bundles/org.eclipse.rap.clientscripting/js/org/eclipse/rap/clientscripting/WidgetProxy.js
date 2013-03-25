@@ -27,9 +27,6 @@ org.eclipse.rap.clientscripting.WidgetProxy = function( originalWidget ) {
 org.eclipse.rap.clientscripting.WidgetProxy._PROXY_KEY =
   "org.eclipse.rap.clientscripting.WidgetProxy.PROXY";
 
-org.eclipse.rap.clientscripting.WidgetProxy._USERDATA_KEY =
-  "org.eclipse.rap.clientscripting.WidgetProxy.USERDATA";
-
 org.eclipse.rap.clientscripting.WidgetProxy._GC_KEY =
   "org.eclipse.rap.clientscripting.WidgetProxy.GC";
 
@@ -44,7 +41,7 @@ org.eclipse.rap.clientscripting.WidgetProxy.getInstance = function( widget ) {
 
 org.eclipse.rap.clientscripting.WidgetProxy.disposeWidgetProxy = function( widget ) {
   var protoInstance = widget.getUserData( this._PROXY_KEY );
-  var userData = widget.getUserData( this._USERDATA_KEY );
+  var userData = widget.getUserData( rwt.remote.HandlerUtil.SERVER_DATA );
   org.eclipse.rap.clientscripting.ClientScriptingUtil.disposeObject( protoInstance );
   org.eclipse.rap.clientscripting.ClientScriptingUtil.disposeObject( userData );
 };

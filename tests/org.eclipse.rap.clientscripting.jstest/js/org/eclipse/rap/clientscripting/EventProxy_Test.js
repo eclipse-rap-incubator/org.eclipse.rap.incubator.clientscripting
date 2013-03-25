@@ -556,7 +556,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var canvas = ObjectManager.getObject( "w4" );
       canvas.setBackgroundColor( "#aaaaaa" );
       canvas.setTextColor( "#bbbbbb" );
-      canvas.setFont( rwt.html.Font.fromString( "11px bold italic Arial") );
+      canvas.setFont( rwt.html.Font.fromString( "11px italic Arial") );
       TestUtil.flush();
       var props;
 
@@ -575,7 +575,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       WidgetProxy.getInstance( canvas ).redraw();
       WidgetProxy.getInstance( canvas ).redraw();
 
-      assertEquals( [ "#bbbbbb", "#aaaaaa", "italic bold 11px Arial" ], props );
+      assertEquals( [ "#bbbbbb", "#aaaaaa", "italic 11px Arial" ], props );
       canvas.destroy();
     },
 
@@ -633,7 +633,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
       var serverGc = ObjectManager.getObject( "w5" );
       TestUtil.flush();
-      var fontArr = [ [ "Arial" ], 11, true, true ];
+      var fontArr = [ [ "Arial" ], 11, false, true ];
       var props;
 
       new EventBinding( canvas, SWT.Paint, {
@@ -650,7 +650,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       } );
       serverGc.init( 500, 500, fontArr, [ 170, 170, 170 ], [ 187, 187, 187 ] );
 
-      assertEquals( [ "#bbbbbb", "#aaaaaa", "italic bold 11px Arial" ], props );
+      assertEquals( [ "#bbbbbb", "#aaaaaa", "italic 11px Arial" ], props );
       canvas.destroy();
     },
 

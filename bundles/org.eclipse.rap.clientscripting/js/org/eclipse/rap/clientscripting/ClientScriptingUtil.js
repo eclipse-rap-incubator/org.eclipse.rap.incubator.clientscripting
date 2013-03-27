@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -103,20 +103,25 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   attachSetter : function( proxy, source ) {
-    var ObjectManager = rwt.remote.ObjectRegistry;
-    var id = ObjectManager.getId( source );
-    var properties = ObjectManager.getEntry( id ).handler.properties;
-    for( var i = 0; i < properties.length; i++ ) {
-      var property = properties[ i ];
-      proxy[ "set" + rwt.util.Strings.toFirstUp( property ) ] =
-        this._createSetter( id, property );
+    var ObjectRegistry = rwt.remote.ObjectRegistry;
+    var id = ObjectRegistry.getId( source );
+    var handler = id ? ObjectRegistry.getEntry( id ).handler : null;
+    if( handler ) {
+      var properties = handler.properties;
+      for( var i = 0; i < properties.length; i++ ) {
+        var property = properties[ i ];
+        proxy[ "set" + rwt.util.Strings.toFirstUp( property ) ] =
+          this._createSetter( id, property );
+      }
     }
   },
 
   attachGetter : function( proxy, source ) {
-    var getterMap = this._getterMapping[ source.classname ];
-    for( var key in getterMap ) {
-      proxy[ key ] = getterMap[ key ]( source );
+    if( source.classname ) {
+      var getterMap = this._getterMapping[ source.classname ];
+      for( var key in getterMap ) {
+        proxy[ key ] = getterMap[ key ]( source );
+      }
     }
   },
 

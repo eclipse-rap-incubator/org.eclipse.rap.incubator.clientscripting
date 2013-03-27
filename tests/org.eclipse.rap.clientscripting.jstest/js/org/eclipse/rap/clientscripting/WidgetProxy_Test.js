@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,21 +26,19 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
 
   members : {
 
-    testCreateTextWidgetProxy : function() {
+  testCreateTextWidgetProxyFromPublicAPI : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
 
-      assertTrue( widgetProxy instanceof WidgetProxy );
+      var otherProxy = rap.getObject( "w3" );
+
+      assertIdentical( widgetProxy, otherProxy );
     },
 
     testCreateTextWidgetProxyTwice : function() {
       var widgetProxy1 = WidgetProxy.getInstance( text );
       var widgetProxy2 = WidgetProxy.getInstance( text );
 
-      assertTrue( widgetProxy1 !== widgetProxy2 ); // protect against abuse
-      if( widgetProxy1.__proto__ ) { // __proto__ is not an ECMA standard
-        assertTrue( widgetProxy1.__proto__ instanceof WidgetProxy );
-        assertTrue( widgetProxy1.__proto__ === widgetProxy1.__proto__ );
-      }
+      assertTrue( widgetProxy1 === widgetProxy2 );
     },
 
     testDisposeWidgetProxy : function() {

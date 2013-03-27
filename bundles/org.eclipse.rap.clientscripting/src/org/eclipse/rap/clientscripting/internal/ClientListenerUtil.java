@@ -57,6 +57,12 @@ public class ClientListenerUtil {
       case ClientListener.Paint:
         result = "Paint";
       break;
+      case ClientListener.Selection:
+        result = "Selection";
+      break;
+      case ClientListener.DefaultSelection:
+        result = "DefaultSelection";
+      break;
     }
     if( result == null ) {
       throw new IllegalArgumentException( "Unknown Event Type " + bindingType );

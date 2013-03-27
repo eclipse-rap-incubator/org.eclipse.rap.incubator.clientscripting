@@ -41,6 +41,14 @@ public class ClientListener {
    * Using it on other widgets may produce unexpected results.
    */
   public static final int Paint = 9;
+  /**
+   * Currently only supported on List
+   */
+  public static final int Selection = SWT.Selection;
+  /**
+   * Currently only supported on List
+   */
+  public static final int DefaultSelection = SWT.DefaultSelection;
   public static final int FocusIn = SWT.FocusIn;
   public static final int FocusOut = SWT.FocusOut;
   public static final int Modify = SWT.Modify;

@@ -20,9 +20,33 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       "getText" : function( widget ) { return function() { return widget.getValue(); }; },
       "getSelection" : function( widget ) { return function() { return widget.getSelection(); };
       }
+    },
+    "rwt.widgets.List" : {
+      "getSelection" : function( widget ) {
+        return function() {
+          var items = widget.getSelectedItems();
+          var result = [];
+          for( var i = 0; i < items.length; i++ ) {
+            result[ i ] = rwt.util.Encoding.unescape( items[ i ].getLabel() );
+          }
+          return result;
+        };
+      }
     }
   },
 
+  getNativeEventSource : function( source, eventType ) {
+    var SWT = org.eclipse.rap.clientscripting.SWT;
+    var result;
+    if( source.classname === "rwt.widgets.List" && eventType === SWT.Selection ) {
+      result = source.getManager();
+    } else {
+      result = source;
+    }
+    return result;
+  },
+
+  // TODO [tb] : extract maps
   getNativeEventType : function( source, eventType ) {
     var SWT = org.eclipse.rap.clientscripting.SWT;
     var result;
@@ -61,7 +85,16 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
         result = "blur";
       break;
     }
-    if( source.classname === "rwt.widgets.Text" ) {
+    if( source.classname === "rwt.widgets.List" ) {
+      switch( eventType ) {
+        case SWT.Selection:
+          result = "changeSelection";
+        break;
+        case SWT.DefaultSelection:
+          result = "dblclick";
+        break;
+      }
+    } else if( source.classname === "rwt.widgets.Text" ) {
       switch( eventType ) {
         case SWT.Verify:
           result = "input"; // TODO [tb] : does currently not react on programatic changes

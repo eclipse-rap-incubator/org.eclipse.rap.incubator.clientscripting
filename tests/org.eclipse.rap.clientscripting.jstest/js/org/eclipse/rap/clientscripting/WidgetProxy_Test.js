@@ -153,6 +153,48 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       assertEquals( [ 1, 2 ], value );
     },
 
+    testListGetSelection : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.List",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2",
+          "items" : [ "a", "b", "c" ]
+        }
+      } );
+      var list = ObjectManager.getObject( "w4" );
+      TestUtil.flush();
+      var widgetProxy = WidgetProxy.getInstance( list );
+      TestUtil.click( list.getItems()[ 1 ] );
+
+      var value = widgetProxy.getSelection();
+
+      assertEquals( [ "b" ], value );
+    },
+
+    testListGetSelection_unescaped : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.List",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2",
+          "items" : [ "a", "b & x", "c" ]
+        }
+      } );
+      var list = ObjectManager.getObject( "w4" );
+      TestUtil.flush();
+      var widgetProxy = WidgetProxy.getInstance( list );
+      TestUtil.click( list.getItems()[ 1 ] );
+
+      var value = widgetProxy.getSelection();
+
+      assertEquals( [ "b & x" ], value );
+    },
+
     testRedraw : function() {
       Processor.processOperation( {
         "target" : "w4",

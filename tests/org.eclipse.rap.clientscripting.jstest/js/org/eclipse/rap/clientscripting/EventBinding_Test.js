@@ -430,6 +430,50 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       canvas.destroy();
     },
 
+    testBindSelectionEventOnList : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.List",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2",
+          "items" : [ "a", "b", "c" ]
+        }
+      } );
+      var list = ObjectManager.getObject( "w4" );
+      var logger = this._createLogger();
+      TestUtil.flush();
+
+      new EventBinding( list, SWT.Selection, logger );
+      TestUtil.click( list.getItems()[ 1 ] );
+      TestUtil.flush();
+
+      assertEquals( 1, logger.log.length );
+    },
+
+    testBindDefaultSelectionEventOnList : function() {
+      Processor.processOperation( {
+        "target" : "w4",
+        "action" : "create",
+        "type" : "rwt.widgets.List",
+        "properties" : {
+          "style" : [ ],
+          "parent" : "w2",
+          "items" : [ "a", "b", "c" ]
+        }
+      } );
+      var list = ObjectManager.getObject( "w4" );
+      var logger = this._createLogger();
+      TestUtil.flush();
+
+      new EventBinding( list, SWT.DefaultSelection, logger );
+      TestUtil.doubleClick( list.getItems()[ 1 ] );
+      TestUtil.flush();
+
+      assertEquals( 1, logger.log.length );
+    },
+
     /////////
     // helper
 

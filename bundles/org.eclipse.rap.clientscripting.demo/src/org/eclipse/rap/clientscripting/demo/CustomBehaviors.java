@@ -69,8 +69,9 @@ public class CustomBehaviors {
     listener.addTo( widget, ClientListener.MouseUp );
     listener.addTo( widget, ClientListener.MouseEnter );
     listener.addTo( widget, ClientListener.MouseExit );
-    listener.addTo( widget, ClientListener.MouseMove );
     listener.addTo( widget, ClientListener.MouseDoubleClick );
+    listener.addTo( widget, ClientListener.Selection );
+    listener.addTo( widget, ClientListener.DefaultSelection );
   }
 
   public static void addPaintingBehavior( final Canvas canvas ) {

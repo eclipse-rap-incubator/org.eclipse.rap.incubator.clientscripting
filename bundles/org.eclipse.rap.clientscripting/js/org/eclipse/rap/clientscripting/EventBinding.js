@@ -16,6 +16,7 @@ org.eclipse.rap.clientscripting.EventBinding = function( source, eventType, targ
     var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
     this._eventType = eventType;
     this._nativeType = ClientScriptingUtil.getNativeEventType( source, this._eventType );
+    this._eventSource = ClientScriptingUtil.getNativeEventSource( source, this._eventType );
     this._targetFunction = targetFunction;
     this._source = source;
     this._bind();
@@ -27,11 +28,11 @@ org.eclipse.rap.clientscripting.EventBinding = function( source, eventType, targ
 org.eclipse.rap.clientscripting.EventBinding.prototype = {
 
   _bind : function() {
-    this._source.addEventListener( this._nativeType, this._processEvent, this );
+    this._eventSource.addEventListener( this._nativeType, this._processEvent, this );
   },
 
   _unbind : function() {
-    this._source.removeEventListener( this._nativeType, this._processEvent, this );
+    this._eventSource.removeEventListener( this._nativeType, this._processEvent, this );
   },
 
   _processEvent : function( event ) {

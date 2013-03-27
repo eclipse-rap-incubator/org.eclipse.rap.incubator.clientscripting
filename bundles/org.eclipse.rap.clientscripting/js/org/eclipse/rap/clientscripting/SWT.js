@@ -63,6 +63,16 @@ org.eclipse.rap.clientscripting.SWT = {
   Paint : 9,
 
   /**
+   * The selection event type
+   */
+  Selection : 13,
+
+  /**
+   * The default selection event type
+   */
+  DefaultSelection : 14,
+
+  /**
    * The focus in event type
    */
   FocusIn : 15,

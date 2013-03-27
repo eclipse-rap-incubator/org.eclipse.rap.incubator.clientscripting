@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -52,6 +53,7 @@ public class Demo implements EntryPoint {
     addDateFieldExample( parent );
     addCounterExample( parent );
     addCanvasExample( parent );
+    addListExample( parent );
   }
 
   private void addUpperCaseExample( Composite parent ) {
@@ -89,6 +91,14 @@ public class Demo implements EntryPoint {
     Canvas canvas = new Canvas( parent, SWT.BORDER );
     canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     CustomBehaviors.addPaintingBehavior( canvas );
+  }
+
+  private void addListExample( Composite parent ) {
+    addHeaderLabel( parent, "List:" );
+    List list = new List( parent, SWT.BORDER | SWT.MULTI );
+    list.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false) );
+    list.setItems( new String[]{ "Look", "in", "your", "javascript", "console" } );
+    CustomBehaviors.addLoggerBehavior( list );
   }
 
   private static void addHeaderLabel( Composite parent, String text ) {

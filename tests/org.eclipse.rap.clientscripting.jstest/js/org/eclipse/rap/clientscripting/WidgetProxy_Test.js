@@ -209,7 +209,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       var widgetProxy = WidgetProxy.getInstance( canvas );
       var logger = this._createLogger();
       TestUtil.flush();
-      new EventBinding( canvas, SWT.Paint, logger );
+      new EventBinding( canvas, "Paint", logger );
 
       assertEquals( 0, logger.log.length );
       widgetProxy.redraw();

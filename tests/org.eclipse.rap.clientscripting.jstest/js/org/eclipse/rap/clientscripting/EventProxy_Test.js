@@ -470,7 +470,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var gc;
 
-      new EventBinding( canvas, SWT.Paint, {
+      new EventBinding( canvas, "Paint", {
         "call" : function( ev ) {
           gc = ev.gc;
         }
@@ -496,7 +496,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var gc = [];
 
-      new EventBinding( canvas, SWT.Paint, {
+      new EventBinding( canvas, "Paint", {
         "call" : function( ev ) {
           gc.push( ev.gc );
         }
@@ -532,7 +532,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var gc;
 
-      new EventBinding( canvas, SWT.Paint, {
+      new EventBinding( canvas, "Paint", {
         "call" : function( ev ) {
           gc = ev.gc;
         }
@@ -560,7 +560,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var props;
 
-      new EventBinding( canvas, SWT.Paint, {
+      new EventBinding( canvas, "Paint", {
         "call" : function( ev ) {
           var gc = ev.gc;
           props = [
@@ -596,7 +596,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var props;
 
-      new EventBinding( canvas, SWT.Paint, {
+      new EventBinding( canvas, "Paint", {
         "call" : function( ev ) {
           var gc = ev.gc;
           props = [ gc.strokeStyle, gc.fillStyle ];
@@ -636,7 +636,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var fontArr = [ [ "Arial" ], 11, false, true ];
       var props;
 
-      new EventBinding( canvas, SWT.Paint, {
+      new EventBinding( canvas, "Paint", {
         "call" : function( ev ) {
           var gc = ev.gc;
           props = [

@@ -9,7 +9,11 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
+(function() {
+
 rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+
+var ObjectRegistry = rwt.remote.ObjectRegistry;
 
 org.eclipse.rap.clientscripting.ClientScriptingUtil = {
 
@@ -35,10 +39,38 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     }
   },
 
+  _eventTypeMapping : {
+    "*" : {
+      "KeyDown" : "keypress",
+      "KeyUp" : "keyup",
+      "MouseDown" : "mousedown",
+      "MouseUp" : "mouseup",
+      "MouseMove" : "mousemove",
+      "MouseEnter" : "mouseover",
+      "MouseExit" : "mouseout",
+      "MouseDoubleClick" : "dblclick",
+      "Paint" : "paint",
+      "FocusIn" : "focus",
+      "FocusOut" : "blur"
+    },
+    "rwt.widgets.List" : {
+      "Selection" : "changeSelection",
+      "DefaultSelection" : "dblclick"
+    },
+    "rwt.widgets.Text" : {
+      "Verify" : "input", // TODO [tb] : does currently not react on programatic changes
+      "Modify" : "changeValue"
+    }
+  },
+
+  isPublicObject : function( obj ) {
+    return ObjectRegistry.getEntry( ObjectRegistry.getId( obj ) ).handler.isPublic === true;
+  },
+
   getNativeEventSource : function( source, eventType ) {
     var SWT = org.eclipse.rap.clientscripting.SWT;
     var result;
-    if( source.classname === "rwt.widgets.List" && eventType === SWT.Selection ) {
+    if( source.classname === "rwt.widgets.List" && eventType === "Selection" ) {
       result = source.getManager();
     } else {
       result = source;
@@ -46,63 +78,13 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
     return result;
   },
 
-  // TODO [tb] : extract maps
   getNativeEventType : function( source, eventType ) {
-    var SWT = org.eclipse.rap.clientscripting.SWT;
+    var map = this._eventTypeMapping;
     var result;
-    switch( eventType ) { // TODO [tb] : Implementing keydown as traverse event?
-      case SWT.KeyDown:
-        result = "keypress";
-      break;
-      case SWT.KeyUp:
-        result = "keyup";
-      break;
-      case SWT.MouseDown:
-        result = "mousedown";
-      break;
-      case SWT.MouseUp:
-        result = "mouseup";
-      break;
-      case SWT.MouseMove:
-        result = "mousemove";
-      break;
-      case SWT.MouseEnter:
-        result = "mouseover";
-      break;
-      case SWT.MouseExit:
-        result = "mouseout";
-      break;
-      case SWT.MouseDoubleClick:
-        result = "dblclick";
-      break;
-      case SWT.Paint:
-        result = "paint";
-      break;
-      case SWT.FocusIn:
-        result = "focus";
-      break;
-      case SWT.FocusOut:
-        result = "blur";
-      break;
-    }
-    if( source.classname === "rwt.widgets.List" ) {
-      switch( eventType ) {
-        case SWT.Selection:
-          result = "changeSelection";
-        break;
-        case SWT.DefaultSelection:
-          result = "dblclick";
-        break;
-      }
-    } else if( source.classname === "rwt.widgets.Text" ) {
-      switch( eventType ) {
-        case SWT.Verify:
-          result = "input"; // TODO [tb] : does currently not react on programatic changes
-        break;
-        case SWT.Modify:
-          result = "changeValue";
-        break;
-      }
+    if( map[ source.classname ] && map[ source.classname ][ eventType ] ) {
+      result = map[ source.classname ][ eventType ];
+    } else {
+      result = map[ "*" ][ eventType ];
     }
     return result;
   },
@@ -136,7 +118,6 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   attachSetter : function( proxy, source ) {
-    var ObjectRegistry = rwt.remote.ObjectRegistry;
     var id = ObjectRegistry.getId( source );
     var handler = id ? ObjectRegistry.getEntry( id ).handler : null;
     if( handler ) {
@@ -435,3 +416,5 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   }
 
 };
+
+}());

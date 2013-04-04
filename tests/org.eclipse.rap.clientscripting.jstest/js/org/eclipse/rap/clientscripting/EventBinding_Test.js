@@ -543,6 +543,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       textWidget._inputElement.value = text;
       textWidget._inValueProperty = false;
       textWidget._oninputDom( { "propertyName" : "value" } );
+      TestUtil.forceTimerOnce();
     },
 
     _createPublicObject : function( id ) {

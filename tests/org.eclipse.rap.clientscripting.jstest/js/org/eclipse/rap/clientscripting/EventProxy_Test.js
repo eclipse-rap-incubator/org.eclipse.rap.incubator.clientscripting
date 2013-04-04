@@ -204,6 +204,26 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       assertEquals( 2, eventProxy.y );
     },
 
+    // NOTE : In webkit there is an issue with delayed rendered selection which can not be
+    //        reproduced in testing, therefor this can produce false greens: Bug 404615
+    testGetSelectionInModifyEvent : function() {
+      var selection;
+      text.setValue( "" );
+      text.addEventListener( "changeValue", function( event ) {
+        // NOTE: As in SWT, the event itself does not have the start/end fields set,
+        //       but the widget should already have been updated with the new selection
+        var eventProxy = new EventProxy( SWT.Modify, text, event );
+        selection = eventProxy.widget.getSelection();
+      } );
+
+      this._textCharInput( text, "a" );
+      TestUtil.forceTimerOnce();
+      this._textCharInput( text, "b" );
+      TestUtil.forceTimerOnce();
+
+      assertEquals( [ 2, 2 ], selection );
+    },
+
     testVerifyEventCharacter : function() {
       var eventProxy;
       text.setValue( "fooba" );

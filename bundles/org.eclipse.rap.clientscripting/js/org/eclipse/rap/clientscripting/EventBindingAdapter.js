@@ -20,7 +20,9 @@ rwt.remote.HandlerRegistry.add( "rwt.clientscripting.EventBinding", {
     var eventType = properties.eventType;
     var targetFunction = ObjectRegistry.getObject( properties.listener );
     return new EventBinding( source, eventType, targetFunction );
-  }
+  },
+
+  destructor : "dispose"
 
 } );
 

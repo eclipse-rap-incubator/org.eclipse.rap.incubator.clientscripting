@@ -15,7 +15,6 @@ import java.util.Collection;
 
 import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.internal.remote.RemoteObjectImpl;
 import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -23,7 +22,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Widget;
 
 
-@SuppressWarnings( { "serial", "restriction" } )
+@SuppressWarnings( "serial" )
 public class ClientListener {
 
   private static final String REMOTE_TYPE = "rwt.clientscripting.Listener";
@@ -105,7 +104,7 @@ public class ClientListener {
   }
 
   String getRemoteId() {
-    return ( ( RemoteObjectImpl )remoteObject ).getId();
+    return remoteObject.getId();
   }
 
   Collection<ClientListenerBinding> getBindings() {

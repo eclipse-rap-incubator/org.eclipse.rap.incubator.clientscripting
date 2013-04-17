@@ -51,6 +51,8 @@ public class ClientListener {
   public static final int DefaultSelection = SWT.DefaultSelection;
   public static final int FocusIn = SWT.FocusIn;
   public static final int FocusOut = SWT.FocusOut;
+  public static final int Show = SWT.Show;
+  public static final int Hide = SWT.Hide;
   public static final int Modify = SWT.Modify;
   public static final int Verify = SWT.Verify;
 

@@ -207,6 +207,26 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       assertEquals( 1, logger.log.length );
     },
 
+    testBindShow : function() {
+      var logger = this._createLogger();
+      text.setVisibility( false );
+
+      new EventBinding( text, "Show", logger );
+      text.setVisibility( true );
+
+      assertEquals( 1, logger.log.length );
+    },
+
+    testBindHide : function() {
+      var logger = this._createLogger();
+      text.setVisibility( true );
+
+      new EventBinding( text, "Hide", logger );
+      text.setVisibility( false );
+
+      assertEquals( 1, logger.log.length );
+    },
+
     testBindVerifyEvent : function() {
       TestUtil.flush();
       var logger = this._createLogger();

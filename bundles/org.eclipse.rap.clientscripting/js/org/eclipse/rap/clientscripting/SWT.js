@@ -82,6 +82,15 @@ org.eclipse.rap.clientscripting.SWT = {
    */
   FocusOut : 16,
 
+  /**
+   * The show event type
+   */
+  Show : 22,
+
+  /**
+   * The hide event type
+   */
+  Hide : 23,
 
   /**
    * The modify event type

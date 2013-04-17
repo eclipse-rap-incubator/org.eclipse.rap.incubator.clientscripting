@@ -51,7 +51,9 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       "MouseDoubleClick" : "dblclick",
       "Paint" : "paint",
       "FocusIn" : "focus",
-      "FocusOut" : "blur"
+      "FocusOut" : "blur",
+      "Show" : "appear",
+      "Hide" : "disappear"
     },
     "rwt.widgets.List" : {
       "Selection" : "changeSelection",

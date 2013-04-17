@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -99,6 +101,11 @@ public class Demo implements EntryPoint {
     list.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false) );
     list.setItems( new String[]{ "Look", "in", "your", "javascript", "console" } );
     CustomBehaviors.addLoggerBehavior( list );
+    Menu popup = new Menu( list );
+    new MenuItem( popup, SWT.PUSH ).setText( "Item 1" );
+    new MenuItem( popup, SWT.PUSH ).setText( "Item 2" );
+    list.setMenu( popup );
+    CustomBehaviors.addLoggerBehavior( popup );
   }
 
   private static void addHeaderLabel( Composite parent, String text ) {

@@ -72,6 +72,8 @@ public class CustomBehaviors {
     listener.addTo( widget, ClientListener.MouseDoubleClick );
     listener.addTo( widget, ClientListener.Selection );
     listener.addTo( widget, ClientListener.DefaultSelection );
+    listener.addTo( widget, ClientListener.Show );
+    listener.addTo( widget, ClientListener.Hide );
   }
 
   public static void addPaintingBehavior( final Canvas canvas ) {

@@ -51,6 +51,12 @@ public class ClientListenerUtil {
       case ClientListener.Modify:
         result = "Modify";
       break;
+      case ClientListener.Show:
+        result = "Show";
+      break;
+      case ClientListener.Hide:
+        result = "Hide";
+      break;
       case ClientListener.Verify:
         result = "Verify";
       break;

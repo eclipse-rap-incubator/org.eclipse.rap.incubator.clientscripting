@@ -53,4 +53,5 @@ http://wiki.eclipse.org/RAP/Protocol#Object_Type_Reference
 * <b>org.eclipse.swt.widgets.ToolTip</b>: setRoundedBorder, setBackgroundGradient, setAutoHide, setText, setMessage, setLocation, setVisible
 
 ## Available Getter:
-* <b>org.eclipse.swt.widget.Text</b>: getText,getSelection
+* <b>org.eclipse.swt.widget.Text</b>: getText, getSelection
+* <b>org.eclipse.swt.widget.List</b>: getSelection

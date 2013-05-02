@@ -143,9 +143,8 @@ public class ClientListener implements Listener {
     }
   }
 
-public void handleEvent(Event event) {
-	// TODO Auto-generated method stub
-
-}
+  public void handleEvent( Event event ) {
+  	// do nothing
+  }
 
 }

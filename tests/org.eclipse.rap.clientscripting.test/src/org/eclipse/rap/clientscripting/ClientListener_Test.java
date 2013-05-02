@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import org.eclipse.rap.rwt.lifecycle.PhaseId;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.*;
 import org.junit.*;
 
 
+@SuppressWarnings( "deprecation" )
 public class ClientListener_Test {
 
   private Shell shell;
@@ -110,9 +112,33 @@ public class ClientListener_Test {
 
   @Test
   public void testAddTo_createsBinding() {
-    listener.addTo( shell, ClientListener.MouseDown );
+    listener.addTo( shell, SWT.MouseDown );
 
     assertNotNull( listener.findBinding( shell, SWT.MouseDown ) );
+  }
+
+  @Test
+  public void testAddListener_callsAddTo() {
+    shell.addListener( SWT.MouseDown, listener );
+
+    verify( listener ).addTo( shell, SWT.MouseDown );
+  }
+
+  @Test
+  public void testAddListener_doesNotCrashWithNonClientListener() {
+    try {
+      shell.addListener( SWT.MouseDown, spy( new Listener() {
+
+        public void handleEvent( Event event ) {
+        }
+
+        @SuppressWarnings( "unused" )
+        public void addTo() {
+        }
+      } ) );
+    } catch( Exception e ) {
+      fail();
+    }
   }
 
   @Test
@@ -191,6 +217,33 @@ public class ClientListener_Test {
   }
 
   @Test
+  public void testRemoveListener_callsRemoveFrom() {
+    Label label = new Label( shell, SWT.NONE );
+    label.addListener( SWT.MouseDown, listener );
+
+    label.removeListener( SWT.MouseDown, listener );
+
+    verify( listener ).removeFrom( label, SWT.MouseDown );
+  }
+
+  @Test
+  public void testRemoveListener_doesNotCrashWithNonClientListener() {
+    try {
+      shell.removeListener( SWT.MouseDown, spy( new Listener() {
+
+        public void handleEvent( Event event ) {
+        }
+
+        @SuppressWarnings( "unused" )
+        public void removeFrom() {
+        }
+      } ) );
+    } catch( Exception e ) {
+      fail();
+    }
+  }
+
+  @Test
   public void testRemoveFrom_mayBeCalledTwice() {
     Label label = new Label( shell, SWT.NONE );
     listener.addTo( label, SWT.MouseDown );
@@ -217,7 +270,7 @@ public class ClientListener_Test {
   }
 
   private void createListener() {
-    listener = new ClientListener( "code" );
+    listener = spy( new ClientListener( "code" ) );
   }
 
 }

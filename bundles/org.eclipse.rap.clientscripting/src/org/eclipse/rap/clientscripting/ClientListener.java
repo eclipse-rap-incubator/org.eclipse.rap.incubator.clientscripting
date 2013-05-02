@@ -19,11 +19,13 @@ import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
 
 @SuppressWarnings( "serial" )
-public class ClientListener {
+public class ClientListener implements Listener {
 
   private static final String REMOTE_TYPE = "rwt.clientscripting.Listener";
 
@@ -70,6 +72,10 @@ public class ClientListener {
     remoteObject.set( "code", scriptCode );
   }
 
+  /**
+   * @deprecated Use {@link Widget#addListener(int, Listener)} instead
+   */
+  @Deprecated
   public void addTo( Widget widget, int eventType ) {
     if( disposed ) {
       throw new IllegalStateException( "ClientListener is disposed" );
@@ -84,6 +90,10 @@ public class ClientListener {
     addBinding( binding );
   }
 
+  /**
+   * @deprecated Use {@link Widget#removeListener(int, Listener)} instead
+   */
+  @Deprecated
   public void removeFrom( Widget widget, int eventType ) {
     if( disposed ) {
       throw new IllegalStateException( "ClientListener is disposed" );
@@ -132,5 +142,10 @@ public class ClientListener {
       } );
     }
   }
+
+public void handleEvent(Event event) {
+	// TODO Auto-generated method stub
+
+}
 
 }

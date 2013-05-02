@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.demo;
 
-import org.eclipse.rap.rwt.application.EntryPoint;
+import org.eclipse.rap.rwt.application.AbstractEntryPoint;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -20,35 +20,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 
-@SuppressWarnings( "serial" )
-public class Demo implements EntryPoint {
+public class Demo extends AbstractEntryPoint {
 
-  public int createUI() {
-    Display display = new Display();
-    Shell shell = new Shell( display );
-    shell.setText( "RAP Client Scripting Examples" );
-    createShellContents( shell );
-    shell.setBounds( 20, 20, 800, 500 );
-    shell.open();
-    while( !shell.isDisposed() ) {
-      if( !display.readAndDispatch() ) {
-        display.sleep();
-      }
-    }
-    display.dispose();
-    return 0;
-  }
-
-  private void createShellContents( Composite parent ) {
+  @Override
+  protected void createContents( Composite parent ) {
     parent.setLayout( new GridLayout( 2, false ) );
     addUpperCaseExample( parent );
     addDigitsOnlyExample( parent );

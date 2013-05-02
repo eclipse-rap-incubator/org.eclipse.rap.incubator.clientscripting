@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2013 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.rap.clientscripting.demo;
 
 import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
@@ -33,47 +34,47 @@ public class CustomBehaviors {
   public static void addUpperCaseBehavior( Text text ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "UpperCase.js" );
     ClientListener clientListener = new ClientListener( scriptCode );
-    clientListener.addTo( text, ClientListener.Verify );
+    text.addListener( SWT.Verify, clientListener );
   }
 
   public static void addDigitsOnlyBehavior( Text text ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "DigitsOnly.js" );
     ClientListener clientListener = new ClientListener( scriptCode );
-    clientListener.addTo( text, ClientListener.Modify );
+    text.addListener( SWT.Modify, clientListener );
   }
 
   public static void addDateFieldBehavior( Text text ) {
     text.setText( "__.__.____" );
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "DateField.js" );
     ClientListener clientListener = new ClientListener( scriptCode );
-    clientListener.addTo( text, ClientListener.KeyDown );
-    clientListener.addTo( text, ClientListener.Verify );
-    clientListener.addTo( text, ClientListener.MouseUp );
-    clientListener.addTo( text, ClientListener.MouseDown );
+    text.addListener( SWT.KeyDown, clientListener );
+    text.addListener( SWT.Verify, clientListener );
+    text.addListener( SWT.MouseUp, clientListener );
+    text.addListener( SWT.MouseDown, clientListener );
   }
 
   public static void addCounterBehavior( Control control ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "Counter.js" );
     ClientListener listener = new ClientListener( scriptCode );
-    listener.addTo( control, ClientListener.MouseDown );
+    control.addListener( SWT.MouseDown, listener );
   }
 
   public static void addLoggerBehavior( Widget widget ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "Logger.js" );
     ClientListener listener = new ClientListener( scriptCode );
-    listener.addTo( widget, ClientListener.KeyDown );
-    listener.addTo( widget, ClientListener.KeyUp );
-    listener.addTo( widget, ClientListener.FocusIn );
-    listener.addTo( widget, ClientListener.FocusOut );
-    listener.addTo( widget, ClientListener.MouseDown );
-    listener.addTo( widget, ClientListener.MouseUp );
-    listener.addTo( widget, ClientListener.MouseEnter );
-    listener.addTo( widget, ClientListener.MouseExit );
-    listener.addTo( widget, ClientListener.MouseDoubleClick );
-    listener.addTo( widget, ClientListener.Selection );
-    listener.addTo( widget, ClientListener.DefaultSelection );
-    listener.addTo( widget, ClientListener.Show );
-    listener.addTo( widget, ClientListener.Hide );
+    widget.addListener( SWT.KeyDown, listener );
+    widget.addListener( SWT.KeyUp, listener );
+    widget.addListener( SWT.FocusIn, listener );
+    widget.addListener( SWT.FocusOut, listener );
+    widget.addListener( SWT.MouseDown, listener );
+    widget.addListener( SWT.MouseUp, listener );
+    widget.addListener( ClientListener.MouseEnter, listener );
+    widget.addListener( ClientListener.MouseExit, listener );
+    widget.addListener( SWT.MouseDoubleClick, listener );
+    widget.addListener( SWT.Selection, listener );
+    widget.addListener( SWT.DefaultSelection, listener );
+    widget.addListener( SWT.Show, listener );
+    widget.addListener( SWT.Hide, listener );
   }
 
   public static void addPaintingBehavior( final Canvas canvas ) {
@@ -86,8 +87,8 @@ public class CustomBehaviors {
         canvas.redraw();
       }
     } );
-    listener.addTo( canvas, ClientListener.MouseMove );
-    listener.addTo( canvas, ClientListener.Paint );
+    canvas.addListener( ClientListener.MouseMove, listener );
+    canvas.addListener( ClientListener.Paint, listener );
     canvas.setForeground( getRandomColor( canvas.getDisplay() ) );
     canvas.redraw();
   }

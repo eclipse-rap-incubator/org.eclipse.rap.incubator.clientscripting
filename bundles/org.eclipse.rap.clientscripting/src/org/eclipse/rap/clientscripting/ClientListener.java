@@ -24,7 +24,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
 
-@SuppressWarnings( "serial" )
+/**
+ * A special SWT event listener that is implemented in JavaScript and will be executed on a RAP
+ * client. The handleEvent() method of this method will never be called.
+ */
 public class ClientListener implements Listener {
 
   private static final String REMOTE_TYPE = "rwt.clientscripting.Listener";
@@ -58,18 +61,29 @@ public class ClientListener implements Listener {
   public static final int Verify = SWT.Verify;
 
   private final RemoteObject remoteObject;
-  private boolean disposed;
   private final Collection<ClientListenerBinding> bindings;
 
+  /**
+   * Creates an instance of ClientListener with the specified JavaScript code. The JavaScript code
+   * is supposed to have a method named <code>handleEvent</code>. This method will be called with a
+   * single argument, <code>event</event>.
+   *
+   * @param scriptCode the JavaScript code of the event handler
+   */
   public ClientListener( String scriptCode ) {
     if( scriptCode == null ) {
       throw new NullPointerException( "Parameter is null: scriptCode" );
     }
     ClientScriptingResources.ensure();
-    disposed = false;
     bindings = new ArrayList<ClientListenerBinding>();
     remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
     remoteObject.set( "code", scriptCode );
+  }
+
+  /**
+   * This method will NOT be called on a ClientListener.
+   */
+  public void handleEvent( Event event ) {
   }
 
   /**
@@ -77,16 +91,13 @@ public class ClientListener implements Listener {
    */
   @Deprecated
   public void addTo( Widget widget, int eventType ) {
-    if( disposed ) {
-      throw new IllegalStateException( "ClientListener is disposed" );
-    }
     if( widget == null ) {
       throw new NullPointerException( "widget is null" );
     }
     if( widget.isDisposed() ) {
       throw new IllegalArgumentException( "Widget is disposed" );
     }
-    final ClientListenerBinding binding = new ClientListenerBinding( this, widget, eventType );
+    ClientListenerBinding binding = new ClientListenerBinding( this, widget, eventType );
     addBinding( binding );
   }
 
@@ -95,9 +106,6 @@ public class ClientListener implements Listener {
    */
   @Deprecated
   public void removeFrom( Widget widget, int eventType ) {
-    if( disposed ) {
-      throw new IllegalStateException( "ClientListener is disposed" );
-    }
     if( widget == null ) {
       throw new NullPointerException( "widget is null" );
     }
@@ -107,12 +115,19 @@ public class ClientListener implements Listener {
     }
   }
 
+  /**
+   * @deprecated ClientListeners do not need to be disposed anymore.
+   */
+  @Deprecated
   public void dispose() {
-    disposed = true;
   }
 
+  /**
+   * @deprecated ClientListeners do not need to be disposed anymore.
+   */
+  @Deprecated
   public boolean isDisposed() {
-    return disposed;
+    return false;
   }
 
   String getRemoteId() {
@@ -141,10 +156,6 @@ public class ClientListener implements Listener {
         }
       } );
     }
-  }
-
-  public void handleEvent( Event event ) {
-  	// do nothing
   }
 
 }

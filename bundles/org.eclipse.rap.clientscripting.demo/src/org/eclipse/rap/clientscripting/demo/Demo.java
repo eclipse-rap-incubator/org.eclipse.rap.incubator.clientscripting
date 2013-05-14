@@ -10,7 +10,10 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.demo;
 
+import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.rap.clientscripting.WidgetDataWhiteList;
 import org.eclipse.rap.rwt.application.AbstractEntryPoint;
+import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -32,12 +35,19 @@ public class Demo extends AbstractEntryPoint {
   @Override
   protected void createContents( Composite parent ) {
     parent.setLayout( new GridLayout( 2, false ) );
-    addUpperCaseExample( parent );
-    addDigitsOnlyExample( parent );
-    addDateFieldExample( parent );
-    addCounterExample( parent );
-    addCanvasExample( parent );
-    addListExample( parent );
+    Composite left = new Composite( parent, SWT.NONE );
+    left.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    left.setLayout( new GridLayout( 2, false ) );
+    addUpperCaseExample( left );
+    addDigitsOnlyExample( left );
+    addDateFieldExample( left );
+    addCounterExample( left );
+    addCanvasExample( left );
+    addListExample( left );
+    Composite right = new Composite( parent, SWT.NONE );
+    right.setLayout( new GridLayout( 1, false ) );
+    right.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true ) );
+    addNumpadExample( right );
   }
 
   private void addUpperCaseExample( Composite parent ) {
@@ -75,6 +85,42 @@ public class Demo extends AbstractEntryPoint {
     Canvas canvas = new Canvas( parent, SWT.BORDER );
     canvas.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     CustomBehaviors.addPaintingBehavior( canvas );
+  }
+
+  private void addNumpadExample( Composite parent ) {
+    addHeaderLabel( parent, "Numpad:" );
+    Text text = new Text( parent, SWT.BORDER );
+    text.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
+    text.setEditable( false );
+    Composite pad = new Composite( parent, SWT.NONE );
+    pad.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    pad.setLayout( new GridLayout( 3, true ) );
+    createNumKeys( pad, text );
+  }
+
+  private void createNumKeys( Composite parent, Text text ) {
+    WidgetDataWhiteList.addKey( "textWidget" );
+    WidgetDataWhiteList.addKey( "numValue" );
+    String scriptCode
+      = ResourceLoaderUtil.readTextContent( "org/eclipse/rap/clientscripting/demo/NumKey.js" );
+    ClientListener listener = new ClientListener( scriptCode );
+    int[] numbers = new int[]{ 7, 8, 9, 4, 5, 6, 1, 2, 3 };
+    for( int i = 0; i < numbers.length; i++ ) {
+      createNumButton( parent, text, listener, numbers[ i ] );
+    }
+    createNumButton( parent, text, listener, -1 ).setText( "C" );
+    createNumButton( parent, text, listener, 0 );
+    createNumButton( parent, text, listener, -2 ).setText( "." );
+  }
+
+  private Button createNumButton( Composite parent, Text text, ClientListener listener, int number ) {
+    Button button = new Button( parent, SWT.PUSH );
+    button.setText( String.valueOf( number ) );
+    button.setData( "textWidget", WidgetUtil.getId( text ) );
+    button.setData( "numValue", Integer.valueOf( number ) );
+    button.addListener( SWT.MouseDown, listener );
+    button.setLayoutData( new GridData( 80, 70 ) );
+    return button;
   }
 
   private void addListExample( Composite parent ) {

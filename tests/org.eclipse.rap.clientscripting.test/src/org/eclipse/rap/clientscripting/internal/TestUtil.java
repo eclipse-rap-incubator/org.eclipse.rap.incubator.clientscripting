@@ -8,15 +8,18 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
-package org.eclipse.rap.clientscripting;
+package org.eclipse.rap.clientscripting.internal;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.rap.rwt.remote.Connection;
 import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
+import org.eclipse.swt.widgets.Widget;
 
 
 public class TestUtil {
@@ -26,6 +29,14 @@ public class TestUtil {
     when( connection.createRemoteObject( anyString() ) ).thenReturn( remoteObject );
     Fixture.fakeConnection( connection );
     return connection;
+  }
+
+  public static ClientListenerBinding findBinding( ClientListener listener,
+                                                   Widget widget,
+                                                   int type )
+  {
+    ClientFunction function = listener; // the IDE does not see findBinding otherwise?
+    return function.findBinding( WidgetUtil.getId( widget ), type );
   }
 
 }

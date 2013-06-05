@@ -10,10 +10,17 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting;
 
+import static org.eclipse.rap.clientscripting.internal.TestUtil.findBinding;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import org.eclipse.rap.clientscripting.internal.ClientListenerBinding;
+import org.eclipse.rap.rwt.lifecycle.PhaseId;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
@@ -89,6 +96,103 @@ public class ClientListener_Test {
       fail();
     }
   }
+
+  @Test
+  public void testDispose_disposesBindings() {
+    Label label = new Label( shell, SWT.NONE );
+    listener.addTo( label, SWT.MouseDown );
+    Fixture.fakePhase( PhaseId.PROCESS_ACTION );
+    label.dispose();
+
+    ClientListenerBinding binding = findBinding( listener, label, SWT.MouseDown );
+    assertTrue( binding.isDisposed() );
+  }
+
+  @Test
+  public void testAddTwiceAndDispose() {
+    Label label = new Label( shell, SWT.NONE );
+    listener.addTo( label, SWT.MouseUp );
+    listener.addTo( label, SWT.MouseUp );
+    Fixture.fakePhase( PhaseId.PROCESS_ACTION );
+
+    label.dispose();
+
+    ClientListenerBinding binding = findBinding( listener, label, SWT.MouseUp );
+    assertTrue( binding.isDisposed() );
+  }
+
+  @Test
+  public void testAddTo_createsBinding() {
+    listener.addTo( shell, SWT.MouseDown );
+
+    assertNotNull( findBinding( listener, shell, SWT.MouseDown ) );
+  }
+
+  @Test
+  public void testAddTo_failsWithNullWidget() {
+    try {
+      listener.addTo( null, SWT.MouseDown );
+      fail();
+    } catch( NullPointerException exception ) {
+      assertEquals( "widget is null", exception.getMessage() );
+    }
+  }
+
+  @Test
+  public void testAddTo_failsWithDisposedWidget() {
+    Label label = new Label( shell, SWT.NONE );
+    label.dispose();
+
+    try {
+      listener.addTo( label, SWT.MouseDown );
+      fail();
+    } catch( IllegalArgumentException exception ) {
+      assertEquals( "Widget is disposed", exception.getMessage() );
+    }
+  }
+
+  @Test
+  public void testRemoveFrom_failsWithNullWidget() {
+    try {
+      listener.removeFrom( null, SWT.MouseDown );
+      fail();
+    } catch( NullPointerException exception ) {
+      assertEquals( "widget is null", exception.getMessage() );
+    }
+  }
+
+  @Test
+  public void testRemoveFrom_disposesBinding() {
+    Label label = new Label( shell, SWT.NONE );
+    listener.addTo( label, SWT.MouseDown );
+
+    listener.removeFrom( label, SWT.MouseDown );
+
+    ClientListenerBinding binding = findBinding( listener, label, SWT.MouseDown );
+    assertTrue( binding.isDisposed() );
+  }
+
+  @Test
+  public void testRemoveFrom_mayBeCalledTwice() {
+    Label label = new Label( shell, SWT.NONE );
+    listener.addTo( label, SWT.MouseDown );
+
+    listener.removeFrom( label, SWT.MouseDown );
+    listener.removeFrom( label, SWT.MouseDown );
+
+    ClientListenerBinding binding = findBinding( listener, label, SWT.MouseDown );
+    assertTrue( binding.isDisposed() );
+  }
+
+  @Test
+  public void testRemoveFrom_ignoresNonExistingBinding() {
+    Label label = new Label( shell, SWT.NONE );
+
+    listener.removeFrom( label, SWT.MouseDown );
+
+    assertNull( findBinding( listener, label, SWT.MouseDown ) );
+  }
+
 
   private void createWidgets() {
     display = new Display();

@@ -10,32 +10,26 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.internal;
 
-import static org.eclipse.rap.clientscripting.TestUtil.fakeConnection;
-import static org.junit.Assert.*;
+import static org.eclipse.rap.clientscripting.internal.TestUtil.fakeConnection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.eclipse.rap.clientscripting.ClientListener;
-import org.eclipse.rap.clientscripting.internal.ClientListenerBinding;
-import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.rap.rwt.remote.Connection;
 import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
+import org.junit.*;
 
 
 public class ClientListenerBinding_Test {
 
-  private Shell shell;
-  private Display display;
-  private Label label1;
-  private Label label2;
+  private static final String TARGET_ID_1 = "w101";
+  private static final String TARGET_ID_2 = "w102";
   private ClientListener listener1;
   private ClientListener listener2;
   private ClientListenerBinding binding;
@@ -47,7 +41,6 @@ public class ClientListenerBinding_Test {
   @Before
   public void setUp() throws Exception {
     Fixture.setUp();
-    createWidgets();
     createListeners();
     createBindingss();
   }
@@ -78,7 +71,7 @@ public class ClientListenerBinding_Test {
 
   @Test
   public void testCreation() {
-    assertSame( label1, binding.getWidget() );
+    assertEquals( TARGET_ID_1, binding.getTargetId() );
     assertEquals( SWT.MouseDown, binding.getEventType() );
   }
 
@@ -86,7 +79,7 @@ public class ClientListenerBinding_Test {
   public void testCreation_createsRemoteObject() {
     Connection connection = fakeConnection( mock( RemoteObject.class ) );
 
-    binding = new ClientListenerBinding( listener1, label1, ClientListener.KeyDown );
+    binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
 
     verify( connection ).createRemoteObject( eq( "rwt.clientscripting.EventBinding" ) );
   }
@@ -96,10 +89,10 @@ public class ClientListenerBinding_Test {
     RemoteObject remoteObject = mock( RemoteObject.class );
     fakeConnection( remoteObject );
 
-    binding = new ClientListenerBinding( listener1, label1, ClientListener.KeyDown );
+    binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
 
     verify( remoteObject ).set( eq( "listener" ), eq( listener1.getRemoteId() ) );
-    verify( remoteObject ).set( eq( "targetObject" ), eq( WidgetUtil.getId( label1 ) ) );
+    verify( remoteObject ).set( eq( "targetObject" ), eq( TARGET_ID_1 ) );
     verify( remoteObject ).set( eq( "eventType" ), eq( "KeyDown" ) );
   }
 
@@ -107,7 +100,7 @@ public class ClientListenerBinding_Test {
   public void testDispose_destroysRemoteObject() {
     RemoteObject remoteObject = mock( RemoteObject.class );
     fakeConnection( remoteObject );
-    binding = new ClientListenerBinding( listener1, label1, ClientListener.KeyDown );
+    binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
 
     binding.dispose();
 
@@ -118,7 +111,7 @@ public class ClientListenerBinding_Test {
   public void testDispose_mayBeCalledTwice() {
     RemoteObject remoteObject = mock( RemoteObject.class );
     fakeConnection( remoteObject );
-    binding = new ClientListenerBinding( listener1, label1, ClientListener.KeyDown );
+    binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
 
     binding.dispose();
     binding.dispose();
@@ -138,24 +131,17 @@ public class ClientListenerBinding_Test {
     assertTrue( binding.isDisposed() );
   }
 
-  private void createWidgets() {
-    display = new Display();
-    shell = new Shell( display );
-    label1 = new Label( shell, SWT.NONE );
-    label2 = new Label( shell, SWT.NONE );
-  }
-
   private void createListeners() {
     listener1 = new ClientListener( "code" );
     listener2 = new ClientListener( "code" );
   }
 
   private void createBindingss() {
-    binding = new ClientListenerBinding( listener1, label1, SWT.MouseDown );
-    equalBinding = new ClientListenerBinding( listener1, label1, SWT.MouseDown );
-    bindingWithDifferentWidget = new ClientListenerBinding( listener1, label2, SWT.MouseDown );
-    bindingWithDifferentEvent = new ClientListenerBinding( listener1, label1, SWT.MouseUp );
-    bindingWithDifferentListener = new ClientListenerBinding( listener2, label1, SWT.MouseDown );
+    binding = new ClientListenerBinding( listener1, TARGET_ID_1, SWT.MouseDown );
+    equalBinding = new ClientListenerBinding( listener1, TARGET_ID_1, SWT.MouseDown );
+    bindingWithDifferentWidget = new ClientListenerBinding( listener1, TARGET_ID_2, SWT.MouseDown );
+    bindingWithDifferentEvent = new ClientListenerBinding( listener1, TARGET_ID_1, SWT.MouseUp );
+    bindingWithDifferentListener = new ClientListenerBinding( listener2, TARGET_ID_1, SWT.MouseDown );
   }
 
 }

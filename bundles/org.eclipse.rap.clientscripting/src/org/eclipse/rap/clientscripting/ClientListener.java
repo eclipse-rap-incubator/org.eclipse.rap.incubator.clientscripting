@@ -11,6 +11,7 @@
 package org.eclipse.rap.clientscripting;
 
 import org.eclipse.rap.clientscripting.internal.ClientFunction;
+import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -51,6 +52,8 @@ public class ClientListener extends ClientFunction implements Listener {
   public static final int Modify = SWT.Modify;
   public static final int Verify = SWT.Verify;
 
+  private Listener widgetDisposeListener;
+
 
   /**
    * Creates an instance of ClientListener with the specified JavaScript code. The JavaScript code
@@ -61,6 +64,11 @@ public class ClientListener extends ClientFunction implements Listener {
    */
   public ClientListener( String scriptCode ) {
     super( scriptCode );
+    widgetDisposeListener =  new Listener() {
+      public void handleEvent( Event event ) {
+        disposeBindingsWithTarget( WidgetUtil.getId( event.widget ) );
+      }
+    };
   }
 
   /**
@@ -72,19 +80,27 @@ public class ClientListener extends ClientFunction implements Listener {
   /**
    * @deprecated Use {@link Widget#addListener(int, Listener)} instead
    */
-  @Override
   @Deprecated
   public void addTo( Widget widget, int eventType ) {
-    super.addTo( widget, eventType );
+    if( widget == null ) {
+      throw new NullPointerException( "widget is null" );
+    }
+    if( widget.isDisposed() ) {
+      throw new IllegalArgumentException( "Widget is disposed" );
+    }
+    widget.addListener( SWT.Dispose, widgetDisposeListener ); // TODO : May be executed multiple times
+    addTo( WidgetUtil.getId( widget ), eventType );
   }
 
   /**
    * @deprecated Use {@link Widget#removeListener(int, Listener)} instead
    */
-  @Override
   @Deprecated
   public void removeFrom( Widget widget, int eventType ) {
-    super.addTo( widget, eventType );
+    if( widget == null ) {
+      throw new NullPointerException( "widget is null" );
+    }
+    super.removeFrom( WidgetUtil.getId( widget ), eventType );
   }
 
   /**

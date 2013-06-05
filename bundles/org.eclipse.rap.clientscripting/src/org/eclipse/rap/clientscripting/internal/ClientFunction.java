@@ -16,9 +16,6 @@ import java.util.Collection;
 import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.remote.RemoteObject;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.widgets.Widget;
 
 
 
@@ -47,46 +44,41 @@ public class ClientFunction {
     return bindings;
   }
 
-  protected void addTo( Widget widget, int eventType ) {
-    if( widget == null ) {
-      throw new NullPointerException( "widget is null" );
-    }
-    if( widget.isDisposed() ) {
-      throw new IllegalArgumentException( "Widget is disposed" );
-    }
-    ClientListenerBinding binding = new ClientListenerBinding( this, widget, eventType );
+  protected void addTo( String targetId, int eventType ) {
+    ClientListenerBinding binding = new ClientListenerBinding( this, targetId, eventType );
     addBinding( binding );
   }
 
-  protected void removeFrom( Widget widget, int eventType ) {
-    if( widget == null ) {
-      throw new NullPointerException( "widget is null" );
-    }
-    ClientListenerBinding binding = findBinding( widget, eventType );
+  protected void removeFrom( String targetId, int eventType ) {
+    ClientListenerBinding binding = findBinding( targetId, eventType );
     if( binding != null ) {
-      binding.dispose();
+      binding.dispose(); // TODO still in collection?
     }
   }
 
-  protected ClientListenerBinding findBinding( Widget widget, int eventType ) {
+  protected void disposeBindingsWithTarget( String targetId ) {
     for( ClientListenerBinding binding : bindings ) {
-      if( binding.getWidget() == widget && binding.getEventType() == eventType ) {
+      if( binding.getTargetId() ==  targetId ) {
+        binding.dispose();
+      }
+    }
+  }
+
+  ClientListenerBinding findBinding( String targetId, int eventType ) {
+    for( ClientListenerBinding binding : bindings ) {
+      if( binding.getTargetId() ==  targetId && binding.getEventType() == eventType ) {
         return binding;
       }
     }
     return null;
   }
 
-  protected void addBinding( final ClientListenerBinding binding ) {
+  private void addBinding( final ClientListenerBinding binding ) {
     if( !bindings.contains( binding ) ) {
       bindings.add( binding );
-      binding.getWidget().addDisposeListener( new DisposeListener() {
-        public void widgetDisposed( DisposeEvent event ) {
-          binding.dispose();
-        }
-      } );
     }
   }
+
 
 
 }

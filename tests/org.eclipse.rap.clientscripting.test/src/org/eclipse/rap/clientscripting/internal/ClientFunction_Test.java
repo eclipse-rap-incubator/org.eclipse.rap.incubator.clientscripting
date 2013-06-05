@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.internal;
 
-import static org.eclipse.rap.clientscripting.TestUtil.fakeConnection;
+import static org.eclipse.rap.clientscripting.internal.TestUtil.fakeConnection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -21,25 +21,22 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import org.eclipse.rap.rwt.lifecycle.PhaseId;
 import org.eclipse.rap.rwt.remote.Connection;
 import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
 import org.junit.*;
 
 
 public class ClientFunction_Test {
 
-  private Shell shell;
-  private Display display;
+  private static final String TARGET_ID = "w101";
+
   private ClientFunction function;
 
   @Before
   public void setUp() throws Exception {
     Fixture.setUp();
-    createWidgets();
     createListener();
   }
 
@@ -77,100 +74,71 @@ public class ClientFunction_Test {
     verify( remoteObject ).set( eq( "code" ), eq( "script code" ) );
   }
 
-  @Test
-  public void testDispose_disposesBindings() {
-    Label label = new Label( shell, SWT.NONE );
-    function.addTo( label, SWT.MouseDown );
-    Fixture.fakePhase( PhaseId.PROCESS_ACTION );
-    label.dispose();
-
-    ClientListenerBinding binding = function.findBinding( label, SWT.MouseDown );
-    assertTrue( binding.isDisposed() );
-  }
 
   @Test
   public void testAddTo_createsBinding() {
-    function.addTo( shell, SWT.MouseDown );
+    function.addTo( TARGET_ID, SWT.MouseDown );
 
-    assertNotNull( function.findBinding( shell, SWT.MouseDown ) );
+    assertNotNull( function.findBinding( TARGET_ID, SWT.MouseDown ) );
   }
 
   @Test
   public void testAddTo_ignoresSubsequentCalls() {
-    function.addTo( shell, SWT.KeyDown );
-    function.addTo( shell, SWT.KeyDown );
+    function.addTo( TARGET_ID, SWT.KeyDown );
+    function.addTo( TARGET_ID, SWT.KeyDown );
 
     assertEquals( 1, function.getBindings().size() );
   }
 
   @Test
-  public void testAddTo_failsWithNullWidget() {
-    try {
-      function.addTo( null, SWT.MouseDown );
-      fail();
-    } catch( NullPointerException exception ) {
-      assertEquals( "widget is null", exception.getMessage() );
-    }
-  }
-
-  @Test
-  public void testAddTo_failsWithDisposedWidget() {
-    Label label = new Label( shell, SWT.NONE );
-    label.dispose();
-
-    try {
-      function.addTo( label, SWT.MouseDown );
-      fail();
-    } catch( IllegalArgumentException exception ) {
-      assertEquals( "Widget is disposed", exception.getMessage() );
-    }
-  }
-
-  @Test
-  public void testRemoveFrom_failsWithNullWidget() {
-    try {
-      function.removeFrom( null, SWT.MouseDown );
-      fail();
-    } catch( NullPointerException exception ) {
-      assertEquals( "widget is null", exception.getMessage() );
-    }
-  }
-
-  @Test
   public void testRemoveFrom_disposesBinding() {
-    Label label = new Label( shell, SWT.NONE );
-    function.addTo( label, SWT.MouseDown );
+    function.addTo( TARGET_ID, SWT.MouseDown );
 
-    function.removeFrom( label, SWT.MouseDown );
+    function.removeFrom( TARGET_ID, SWT.MouseDown );
 
-    ClientListenerBinding binding = function.findBinding( label, SWT.MouseDown );
+    ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
   }
 
   @Test
   public void testRemoveFrom_mayBeCalledTwice() {
-    Label label = new Label( shell, SWT.NONE );
-    function.addTo( label, SWT.MouseDown );
+    function.addTo( TARGET_ID, SWT.MouseDown );
 
-    function.removeFrom( label, SWT.MouseDown );
-    function.removeFrom( label, SWT.MouseDown );
+    function.removeFrom( TARGET_ID, SWT.MouseDown );
+    function.removeFrom( TARGET_ID, SWT.MouseDown );
 
-    ClientListenerBinding binding = function.findBinding( label, SWT.MouseDown );
+    ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
   }
 
   @Test
   public void testRemoveFrom_ignoresNonExistingBinding() {
-    Label label = new Label( shell, SWT.NONE );
+    function.removeFrom( TARGET_ID, SWT.MouseDown );
 
-    function.removeFrom( label, SWT.MouseDown );
-
-    assertNull( function.findBinding( label, SWT.MouseDown ) );
+    assertNull( function.findBinding( TARGET_ID, SWT.MouseDown ) );
   }
 
-  private void createWidgets() {
-    display = new Display();
-    shell = new Shell( display );
+  @Test
+  public void testDisposeBindingsWithTarget() {
+    function.addTo( TARGET_ID, SWT.MouseDown );
+
+    function.disposeBindingsWithTarget( TARGET_ID );
+
+    ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
+    assertTrue( binding.isDisposed() );
+  }
+
+  @Test
+  public void testDisposeBindingsWithTarget_MultipleBindings() {
+    function.addTo( TARGET_ID, SWT.MouseDown );
+    function.addTo( TARGET_ID, SWT.MouseUp );
+
+    function.disposeBindingsWithTarget( TARGET_ID );
+
+    ClientListenerBinding bindingMouseDown = function.findBinding( TARGET_ID, SWT.MouseDown );
+    ClientListenerBinding bindingMouseUp = function.findBinding( TARGET_ID, SWT.MouseUp );
+    assertTrue( bindingMouseDown.isDisposed() );
+    assertTrue( bindingMouseUp.isDisposed() );
   }
 
   private void createListener() {

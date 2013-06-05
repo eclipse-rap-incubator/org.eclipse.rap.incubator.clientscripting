@@ -11,9 +11,7 @@
 package org.eclipse.rap.clientscripting.internal;
 
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.rap.rwt.remote.RemoteObject;
-import org.eclipse.swt.widgets.Widget;
 
 
 public class ClientListenerBinding {
@@ -21,23 +19,23 @@ public class ClientListenerBinding {
   private static final String REMOTE_TYPE = "rwt.clientscripting.EventBinding";
 
   private final ClientFunction function;
-  private final Widget widget;
+  private final String targetId;
   private final int eventType;
   private final RemoteObject remoteObject;
   private boolean disposed;
 
-  public ClientListenerBinding( ClientFunction function, Widget widget, int eventType ) {
+  public ClientListenerBinding( ClientFunction function, String targetId, int eventType ) {
     this.function = function;
-    this.widget = widget;
+    this.targetId = targetId;
     this.eventType = eventType;
     remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
     remoteObject.set( "listener", function.getRemoteId() );
-    remoteObject.set( "targetObject", WidgetUtil.getId( widget ) );
+    remoteObject.set( "targetObject", targetId );
     remoteObject.set( "eventType", ClientListenerUtil.getEventType( eventType ) );
   }
 
-  public Widget getWidget() {
-    return widget;
+  public String getTargetId() {
+    return targetId;
   }
 
   public int getEventType() {
@@ -62,7 +60,7 @@ public class ClientListenerBinding {
       result = true;
     } else if( obj != null && getClass() == obj.getClass() ) {
       ClientListenerBinding other = ( ClientListenerBinding )obj;
-      if( eventType == other.eventType && widget == other.widget && function == other.function ) {
+      if( eventType == other.eventType && targetId == other.targetId && function == other.function ) {
         result = true;
       }
     }
@@ -74,7 +72,7 @@ public class ClientListenerBinding {
     final int prime = 31;
     int result = 1;
     result = prime * result + eventType;
-    result = prime * result + widget.hashCode();
+    result = prime * result + targetId.hashCode();
     result = prime * result + function.hashCode();
     return result;
   }

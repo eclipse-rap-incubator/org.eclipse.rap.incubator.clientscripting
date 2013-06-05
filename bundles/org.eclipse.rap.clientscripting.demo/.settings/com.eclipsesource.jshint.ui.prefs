@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-globals=SWT\: false, console\: false
+globals=SWT\: false, console\: false, rap\:false
 included=src//*.js
 options=curly\: true, immed\: true, newcap\: true, eqnull\: true, shadow\: true, funcscope\: true, undef\: true, browser\: true, laxbreak\: true, onecase\:true, sub\:true
 projectSpecificOptions=true

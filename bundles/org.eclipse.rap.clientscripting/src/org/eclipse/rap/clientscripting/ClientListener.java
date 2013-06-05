@@ -10,15 +10,8 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
-import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.remote.RemoteObject;
+import org.eclipse.rap.clientscripting.internal.ClientFunction;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
@@ -28,9 +21,7 @@ import org.eclipse.swt.widgets.Widget;
  * A special SWT event listener that is implemented in JavaScript and will be executed on a RAP
  * client. The handleEvent() method of this method will never be called.
  */
-public class ClientListener implements Listener {
-
-  private static final String REMOTE_TYPE = "rwt.clientscripting.Listener";
+public class ClientListener extends ClientFunction implements Listener {
 
   public static final int KeyDown = SWT.KeyDown;
   public static final int KeyUp = SWT.KeyUp;
@@ -60,8 +51,6 @@ public class ClientListener implements Listener {
   public static final int Modify = SWT.Modify;
   public static final int Verify = SWT.Verify;
 
-  private final RemoteObject remoteObject;
-  private final Collection<ClientListenerBinding> bindings;
 
   /**
    * Creates an instance of ClientListener with the specified JavaScript code. The JavaScript code
@@ -71,13 +60,7 @@ public class ClientListener implements Listener {
    * @param scriptCode the JavaScript code of the event handler
    */
   public ClientListener( String scriptCode ) {
-    if( scriptCode == null ) {
-      throw new NullPointerException( "Parameter is null: scriptCode" );
-    }
-    ClientScriptingResources.ensure();
-    bindings = new ArrayList<ClientListenerBinding>();
-    remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
-    remoteObject.set( "code", scriptCode );
+    super( scriptCode );
   }
 
   /**
@@ -89,30 +72,19 @@ public class ClientListener implements Listener {
   /**
    * @deprecated Use {@link Widget#addListener(int, Listener)} instead
    */
+  @Override
   @Deprecated
   public void addTo( Widget widget, int eventType ) {
-    if( widget == null ) {
-      throw new NullPointerException( "widget is null" );
-    }
-    if( widget.isDisposed() ) {
-      throw new IllegalArgumentException( "Widget is disposed" );
-    }
-    ClientListenerBinding binding = new ClientListenerBinding( this, widget, eventType );
-    addBinding( binding );
+    super.addTo( widget, eventType );
   }
 
   /**
    * @deprecated Use {@link Widget#removeListener(int, Listener)} instead
    */
+  @Override
   @Deprecated
   public void removeFrom( Widget widget, int eventType ) {
-    if( widget == null ) {
-      throw new NullPointerException( "widget is null" );
-    }
-    ClientListenerBinding binding = findBinding( widget, eventType );
-    if( binding != null ) {
-      binding.dispose();
-    }
+    super.addTo( widget, eventType );
   }
 
   /**
@@ -128,34 +100,6 @@ public class ClientListener implements Listener {
   @Deprecated
   public boolean isDisposed() {
     return false;
-  }
-
-  String getRemoteId() {
-    return remoteObject.getId();
-  }
-
-  Collection<ClientListenerBinding> getBindings() {
-    return bindings;
-  }
-
-  ClientListenerBinding findBinding( Widget widget, int eventType ) {
-    for( ClientListenerBinding binding : bindings ) {
-      if( binding.getWidget() == widget && binding.getEventType() == eventType ) {
-        return binding;
-      }
-    }
-    return null;
-  }
-
-  private void addBinding( final ClientListenerBinding binding ) {
-    if( !bindings.contains( binding ) ) {
-      bindings.add( binding );
-      binding.getWidget().addDisposeListener( new DisposeListener() {
-        public void widgetDisposed( DisposeEvent event ) {
-          binding.dispose();
-        }
-      } );
-    }
   }
 
 }

@@ -21,7 +21,7 @@ import org.eclipse.rap.rwt.testfixture.Fixture;
 
 public class TestUtil {
 
-  static Connection fakeConnection( RemoteObject remoteObject ) {
+  public static Connection fakeConnection( RemoteObject remoteObject ) {
     Connection connection = mock( Connection.class );
     when( connection.createRemoteObject( anyString() ) ).thenReturn( remoteObject );
     Fixture.fakeConnection( connection );

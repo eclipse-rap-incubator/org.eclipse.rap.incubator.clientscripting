@@ -10,20 +10,10 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting;
 
-import static org.eclipse.rap.clientscripting.TestUtil.fakeConnection;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import org.eclipse.rap.rwt.lifecycle.PhaseId;
-import org.eclipse.rap.rwt.remote.Connection;
-import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
@@ -50,126 +40,6 @@ public class ClientListener_Test {
   }
 
   @Test
-  public void testCreation_failsWithNull() {
-    try {
-      new ClientListener( null );
-      fail();
-    } catch( NullPointerException expected ) {
-      assertTrue( expected.getMessage().contains( "scriptCode" ) );
-    }
-  }
-
-  @Test
-  public void testCreation_createsRemoteObject() {
-    Connection connection = fakeConnection( mock( RemoteObject.class ) );
-
-    new ClientListener( "script code" );
-
-    verify( connection ).createRemoteObject( "rwt.clientscripting.Listener" );
-  }
-
-  @Test
-  public void testCreation_initializesRemoteObject() {
-    RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeConnection( remoteObject );
-
-    new ClientListener( "script code" );
-
-    verify( remoteObject ).set( eq( "code" ), eq( "script code" ) );
-  }
-
-  @Test
-  public void testDispose_disposesBindings() {
-    Label label = new Label( shell, SWT.NONE );
-    listener.addTo( label, SWT.MouseDown );
-    Fixture.fakePhase( PhaseId.PROCESS_ACTION );
-    label.dispose();
-
-    ClientListenerBinding binding = listener.findBinding( label, SWT.MouseDown );
-    assertTrue( binding.isDisposed() );
-  }
-
-  @Test
-  public void testAddTo_createsBinding() {
-    listener.addTo( shell, SWT.MouseDown );
-
-    assertNotNull( listener.findBinding( shell, SWT.MouseDown ) );
-  }
-
-  @Test
-  public void testAddTo_ignoresSubsequentCalls() {
-    listener.addTo( shell, SWT.KeyDown );
-    listener.addTo( shell, SWT.KeyDown );
-
-    assertEquals( 1, listener.getBindings().size() );
-  }
-
-  @Test
-  public void testAddTo_failsWithNullWidget() {
-    try {
-      listener.addTo( null, SWT.MouseDown );
-      fail();
-    } catch( NullPointerException exception ) {
-      assertEquals( "widget is null", exception.getMessage() );
-    }
-  }
-
-  @Test
-  public void testAddTo_failsWithDisposedWidget() {
-    Label label = new Label( shell, SWT.NONE );
-    label.dispose();
-
-    try {
-      listener.addTo( label, SWT.MouseDown );
-      fail();
-    } catch( IllegalArgumentException exception ) {
-      assertEquals( "Widget is disposed", exception.getMessage() );
-    }
-  }
-
-  @Test
-  public void testRemoveFrom_failsWithNullWidget() {
-    try {
-      listener.removeFrom( null, SWT.MouseDown );
-      fail();
-    } catch( NullPointerException exception ) {
-      assertEquals( "widget is null", exception.getMessage() );
-    }
-  }
-
-  @Test
-  public void testRemoveFrom_disposesBinding() {
-    Label label = new Label( shell, SWT.NONE );
-    listener.addTo( label, SWT.MouseDown );
-
-    listener.removeFrom( label, SWT.MouseDown );
-
-    ClientListenerBinding binding = listener.findBinding( label, SWT.MouseDown );
-    assertTrue( binding.isDisposed() );
-  }
-
-  @Test
-  public void testRemoveFrom_mayBeCalledTwice() {
-    Label label = new Label( shell, SWT.NONE );
-    listener.addTo( label, SWT.MouseDown );
-
-    listener.removeFrom( label, SWT.MouseDown );
-    listener.removeFrom( label, SWT.MouseDown );
-
-    ClientListenerBinding binding = listener.findBinding( label, SWT.MouseDown );
-    assertTrue( binding.isDisposed() );
-  }
-
-  @Test
-  public void testRemoveFrom_ignoresNonExistingBinding() {
-    Label label = new Label( shell, SWT.NONE );
-
-    listener.removeFrom( label, SWT.MouseDown );
-
-    assertNull( listener.findBinding( label, SWT.MouseDown ) );
-  }
-
-  @Test
   public void testAddListener_callsAddTo() {
     shell.addListener( SWT.MouseDown, listener );
 
@@ -177,7 +47,7 @@ public class ClientListener_Test {
   }
 
   @Test
-  public void testAddListener_doesNotCrashWithNonClientListener() {
+  public void testAddListener_doesNotCrashWithNonClientFunction() {
     try {
       shell.addListener( SWT.MouseDown, spy( new Listener() {
 
@@ -204,7 +74,7 @@ public class ClientListener_Test {
   }
 
   @Test
-  public void testRemoveListener_doesNotCrashWithNonClientListener() {
+  public void testRemoveListener_doesNotCrashWithNonClientFunction() {
     try {
       shell.removeListener( SWT.MouseDown, spy( new Listener() {
 

@@ -8,7 +8,7 @@
  * Contributors:
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
-package org.eclipse.rap.clientscripting;
+package org.eclipse.rap.clientscripting.internal;
 
 import static org.eclipse.rap.clientscripting.TestUtil.fakeConnection;
 import static org.junit.Assert.*;
@@ -20,6 +20,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.rap.clientscripting.internal.ClientListenerBinding;
 import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.rap.rwt.remote.Connection;
 import org.eclipse.rap.rwt.remote.RemoteObject;

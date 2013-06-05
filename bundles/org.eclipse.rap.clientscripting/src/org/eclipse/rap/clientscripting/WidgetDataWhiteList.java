@@ -23,8 +23,10 @@ public class WidgetDataWhiteList {
 
   /**
    * Adds a string to the list of keys of widget data that are synchronized with the client.
-   * It is save to add the same key twice, there are no side-effects. The data is only transferred from
-   * server to client, not back. Widgets can currently not be transferred directly, use their
+   * It is save to add the same key twice, there are no side-effects.
+   * The method has to be called from a UI-Thread and affects the entire UI-session.
+   * The data is only transferred from server to client, not back.
+   * Widgets can currently not be transferred directly, use their
    * id instead, i.e.
    * <p><code>
    *   widget.setData( "otherWidget", WidgetUtil.getId( otherWidget ) );

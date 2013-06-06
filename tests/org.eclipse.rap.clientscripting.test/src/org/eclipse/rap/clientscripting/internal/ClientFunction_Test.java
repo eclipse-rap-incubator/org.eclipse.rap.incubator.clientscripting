@@ -99,21 +99,30 @@ public class ClientFunction_Test {
   @Test
   public void testRemoveFrom_disposesBinding() {
     function.addTo( TARGET_ID, SWT.MouseDown );
+    ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
 
     function.removeFrom( TARGET_ID, SWT.MouseDown );
 
-    ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
+  }
+
+  @Test
+  public void testRemoveFrom_RemovesBindingFromList() {
+    function.addTo( TARGET_ID, SWT.MouseDown );
+
+    function.removeFrom( TARGET_ID, SWT.MouseDown );
+
+    assertNull( function.findBinding( TARGET_ID, SWT.MouseDown ) );
   }
 
   @Test
   public void testRemoveFrom_mayBeCalledTwice() {
     function.addTo( TARGET_ID, SWT.MouseDown );
-
-    function.removeFrom( TARGET_ID, SWT.MouseDown );
-    function.removeFrom( TARGET_ID, SWT.MouseDown );
-
     ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
+
+    function.removeFrom( TARGET_ID, SWT.MouseDown );
+    function.removeFrom( TARGET_ID, SWT.MouseDown );
+
     assertTrue( binding.isDisposed() );
   }
 

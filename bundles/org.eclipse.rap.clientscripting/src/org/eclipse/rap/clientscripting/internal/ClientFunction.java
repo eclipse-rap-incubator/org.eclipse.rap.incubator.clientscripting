@@ -57,7 +57,8 @@ public class ClientFunction {
   protected void removeFrom( String targetId, int eventType ) {
     ClientListenerBinding binding = findBinding( targetId, eventType );
     if( binding != null ) {
-      binding.dispose(); // TODO still in collection?
+      binding.dispose();
+      bindings.remove( binding );
     }
   }
 

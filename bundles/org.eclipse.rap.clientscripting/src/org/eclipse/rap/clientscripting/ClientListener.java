@@ -11,6 +11,7 @@
 package org.eclipse.rap.clientscripting;
 
 import org.eclipse.rap.clientscripting.internal.ClientFunction;
+import org.eclipse.rap.clientscripting.internal.ClientListenerBinding;
 import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
@@ -52,9 +53,6 @@ public class ClientListener extends ClientFunction implements Listener {
   public static final int Modify = SWT.Modify;
   public static final int Verify = SWT.Verify;
 
-  private Listener widgetDisposeListener;
-
-
   /**
    * Creates an instance of ClientListener with the specified JavaScript code. The JavaScript code
    * is supposed to have a method named <code>handleEvent</code>. This method will be called with a
@@ -64,11 +62,6 @@ public class ClientListener extends ClientFunction implements Listener {
    */
   public ClientListener( String scriptCode ) {
     super( scriptCode );
-    widgetDisposeListener =  new Listener() {
-      public void handleEvent( Event event ) {
-        disposeBindingsWithTarget( WidgetUtil.getId( event.widget ) );
-      }
-    };
   }
 
   /**
@@ -88,8 +81,14 @@ public class ClientListener extends ClientFunction implements Listener {
     if( widget.isDisposed() ) {
       throw new IllegalArgumentException( "Widget is disposed" );
     }
-    widget.addListener( SWT.Dispose, widgetDisposeListener ); // TODO : May be executed multiple times
-    addTo( WidgetUtil.getId( widget ), eventType );
+    final ClientListenerBinding binding = addTo( WidgetUtil.getId( widget ), eventType );
+    if( binding != null ) {
+      widget.addListener( SWT.Dispose, new Listener() {
+        public void handleEvent( Event event ) {
+          binding.dispose();
+        }
+      } );
+    }
   }
 
   /**
@@ -100,7 +99,7 @@ public class ClientListener extends ClientFunction implements Listener {
     if( widget == null ) {
       throw new NullPointerException( "widget is null" );
     }
-    super.removeFrom( WidgetUtil.getId( widget ), eventType );
+    removeFrom( WidgetUtil.getId( widget ), eventType );
   }
 
   /**

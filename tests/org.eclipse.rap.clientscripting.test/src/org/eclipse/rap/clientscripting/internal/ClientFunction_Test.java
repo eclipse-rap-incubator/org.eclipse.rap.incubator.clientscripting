@@ -118,29 +118,6 @@ public class ClientFunction_Test {
     assertNull( function.findBinding( TARGET_ID, SWT.MouseDown ) );
   }
 
-  @Test
-  public void testDisposeBindingsWithTarget() {
-    function.addTo( TARGET_ID, SWT.MouseDown );
-
-    function.disposeBindingsWithTarget( TARGET_ID );
-
-    ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
-    assertTrue( binding.isDisposed() );
-  }
-
-  @Test
-  public void testDisposeBindingsWithTarget_MultipleBindings() {
-    function.addTo( TARGET_ID, SWT.MouseDown );
-    function.addTo( TARGET_ID, SWT.MouseUp );
-
-    function.disposeBindingsWithTarget( TARGET_ID );
-
-    ClientListenerBinding bindingMouseDown = function.findBinding( TARGET_ID, SWT.MouseDown );
-    ClientListenerBinding bindingMouseUp = function.findBinding( TARGET_ID, SWT.MouseUp );
-    assertTrue( bindingMouseDown.isDisposed() );
-    assertTrue( bindingMouseUp.isDisposed() );
-  }
-
   private void createListener() {
     function = spy( new ClientFunction( "code" ) );
   }

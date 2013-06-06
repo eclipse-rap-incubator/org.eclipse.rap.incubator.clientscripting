@@ -44,23 +44,21 @@ public class ClientFunction {
     return bindings;
   }
 
-  protected void addTo( String targetId, int eventType ) {
+  protected ClientListenerBinding addTo( String targetId, int eventType ) {
+    // TODO : binding created twice?
     ClientListenerBinding binding = new ClientListenerBinding( this, targetId, eventType );
-    addBinding( binding );
+    if( !bindings.contains( binding ) ) {
+      bindings.add( binding );
+      return binding;
+    } else {
+      return null;
+    }
   }
 
   protected void removeFrom( String targetId, int eventType ) {
     ClientListenerBinding binding = findBinding( targetId, eventType );
     if( binding != null ) {
       binding.dispose(); // TODO still in collection?
-    }
-  }
-
-  protected void disposeBindingsWithTarget( String targetId ) {
-    for( ClientListenerBinding binding : bindings ) {
-      if( binding.getTargetId() ==  targetId ) {
-        binding.dispose();
-      }
     }
   }
 
@@ -72,13 +70,5 @@ public class ClientFunction {
     }
     return null;
   }
-
-  private void addBinding( final ClientListenerBinding binding ) {
-    if( !bindings.contains( binding ) ) {
-      bindings.add( binding );
-    }
-  }
-
-
 
 }

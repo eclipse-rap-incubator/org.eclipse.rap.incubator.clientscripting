@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.internal;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Widget;
 
 public class TestUtil {
 
-  public static Connection fakeConnection( RemoteObject remoteObject ) {
+  public static Connection fakeConnection( RemoteObject remoteObject, String remoteType ) {
     Connection connection = mock( Connection.class );
-    when( connection.createRemoteObject( anyString() ) ).thenReturn( remoteObject );
+    when( connection.createRemoteObject( eq( remoteType ) ) ).thenReturn( remoteObject );
     Fixture.fakeConnection( connection );
     return connection;
   }

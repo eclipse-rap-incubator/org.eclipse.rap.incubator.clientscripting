@@ -45,9 +45,8 @@ public class ClientFunction {
   }
 
   protected ClientListenerBinding addTo( String targetId, int eventType ) {
-    // TODO : binding created twice?
-    ClientListenerBinding binding = new ClientListenerBinding( this, targetId, eventType );
-    if( !bindings.contains( binding ) ) {
+    if( findBinding( targetId, eventType ) == null ) {
+      ClientListenerBinding binding = new ClientListenerBinding( this, targetId, eventType );
       bindings.add( binding );
       return binding;
     } else {

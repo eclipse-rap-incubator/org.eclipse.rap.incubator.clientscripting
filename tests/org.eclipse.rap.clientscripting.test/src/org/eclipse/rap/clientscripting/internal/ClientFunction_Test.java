@@ -19,6 +19,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.eclipse.rap.rwt.remote.Connection;
@@ -31,6 +32,8 @@ import org.junit.*;
 public class ClientFunction_Test {
 
   private static final String TARGET_ID = "w101";
+  private static final String CLIENT_LISTENER_TYPE =  "rwt.clientscripting.Listener";
+  private static final String LISTENER_BINDING_TYPE =  "rwt.clientscripting.EventBinding";
 
   private ClientFunction function;
 
@@ -57,7 +60,7 @@ public class ClientFunction_Test {
 
   @Test
   public void testCreation_createsRemoteObject() {
-    Connection connection = fakeConnection( mock( RemoteObject.class ) );
+    Connection connection = fakeConnection( mock( RemoteObject.class ), CLIENT_LISTENER_TYPE );
 
     new ClientFunction( "script code" );
 
@@ -67,7 +70,7 @@ public class ClientFunction_Test {
   @Test
   public void testCreation_initializesRemoteObject() {
     RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeConnection( remoteObject );
+    fakeConnection( remoteObject, CLIENT_LISTENER_TYPE );
 
     new ClientFunction( "script code" );
 
@@ -84,10 +87,13 @@ public class ClientFunction_Test {
 
   @Test
   public void testAddTo_ignoresSubsequentCalls() {
+    Connection connection = fakeConnection( mock( RemoteObject.class ), LISTENER_BINDING_TYPE );
+
     function.addTo( TARGET_ID, SWT.KeyDown );
     function.addTo( TARGET_ID, SWT.KeyDown );
 
     assertEquals( 1, function.getBindings().size() );
+    verify( connection, times( 1 ) ).createRemoteObject( eq( LISTENER_BINDING_TYPE ) );
   }
 
   @Test

@@ -30,6 +30,8 @@ public class ClientListenerBinding_Test {
 
   private static final String TARGET_ID_1 = "w101";
   private static final String TARGET_ID_2 = "w102";
+  private static final String LISTENER_BINDING_TYPE =  "rwt.clientscripting.EventBinding";
+
   private ClientListener listener1;
   private ClientListener listener2;
   private ClientListenerBinding binding;
@@ -77,7 +79,7 @@ public class ClientListenerBinding_Test {
 
   @Test
   public void testCreation_createsRemoteObject() {
-    Connection connection = fakeConnection( mock( RemoteObject.class ) );
+    Connection connection = fakeConnection( mock( RemoteObject.class ), LISTENER_BINDING_TYPE );
 
     binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
 
@@ -87,7 +89,7 @@ public class ClientListenerBinding_Test {
   @Test
   public void testCreation_initializesRemoteObject() {
     RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeConnection( remoteObject );
+    fakeConnection( remoteObject, LISTENER_BINDING_TYPE );
 
     binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
 
@@ -99,7 +101,7 @@ public class ClientListenerBinding_Test {
   @Test
   public void testDispose_destroysRemoteObject() {
     RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeConnection( remoteObject );
+    fakeConnection( remoteObject, LISTENER_BINDING_TYPE );
     binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
 
     binding.dispose();
@@ -110,7 +112,7 @@ public class ClientListenerBinding_Test {
   @Test
   public void testDispose_mayBeCalledTwice() {
     RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeConnection( remoteObject );
+    fakeConnection( remoteObject, LISTENER_BINDING_TYPE );
     binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
 
     binding.dispose();

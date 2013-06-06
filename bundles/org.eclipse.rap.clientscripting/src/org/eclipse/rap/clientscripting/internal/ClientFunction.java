@@ -44,7 +44,7 @@ public class ClientFunction {
     return bindings;
   }
 
-  protected ClientListenerBinding addTo( String targetId, int eventType ) {
+  protected ClientListenerBinding addTo( String targetId, String eventType ) {
     if( findBinding( targetId, eventType ) == null ) {
       ClientListenerBinding binding = new ClientListenerBinding( this, targetId, eventType );
       bindings.add( binding );
@@ -54,7 +54,7 @@ public class ClientFunction {
     }
   }
 
-  protected void removeFrom( String targetId, int eventType ) {
+  protected void removeFrom( String targetId, String eventType ) {
     ClientListenerBinding binding = findBinding( targetId, eventType );
     if( binding != null ) {
       binding.dispose();
@@ -62,9 +62,11 @@ public class ClientFunction {
     }
   }
 
-  ClientListenerBinding findBinding( String targetId, int eventType ) {
+  ClientListenerBinding findBinding( String targetId, String eventType ) {
     for( ClientListenerBinding binding : bindings ) {
-      if( binding.getTargetId() ==  targetId && binding.getEventType() == eventType ) {
+      if(    binding.getTargetId().equals( targetId )
+          && binding.getEventType().equals( eventType ) )
+      {
         return binding;
       }
     }

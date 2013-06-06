@@ -165,10 +165,10 @@ public class ClientListener_Test {
   public void testRemoveFrom_disposesBinding() {
     Label label = new Label( shell, SWT.NONE );
     listener.addTo( label, SWT.MouseDown );
+    ClientListenerBinding binding = findBinding( listener, label, SWT.MouseDown );
 
     listener.removeFrom( label, SWT.MouseDown );
 
-    ClientListenerBinding binding = findBinding( listener, label, SWT.MouseDown );
     assertTrue( binding.isDisposed() );
   }
 
@@ -176,11 +176,11 @@ public class ClientListener_Test {
   public void testRemoveFrom_mayBeCalledTwice() {
     Label label = new Label( shell, SWT.NONE );
     listener.addTo( label, SWT.MouseDown );
-
-    listener.removeFrom( label, SWT.MouseDown );
-    listener.removeFrom( label, SWT.MouseDown );
-
     ClientListenerBinding binding = findBinding( listener, label, SWT.MouseDown );
+
+    listener.removeFrom( label, SWT.MouseDown );
+    listener.removeFrom( label, SWT.MouseDown );
+
     assertTrue( binding.isDisposed() );
   }
 

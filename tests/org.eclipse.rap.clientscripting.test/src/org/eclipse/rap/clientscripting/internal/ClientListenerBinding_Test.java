@@ -22,14 +22,11 @@ import org.eclipse.rap.clientscripting.ClientListener;
 import org.eclipse.rap.rwt.remote.Connection;
 import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
-import org.eclipse.swt.SWT;
 import org.junit.*;
 
 
 public class ClientListenerBinding_Test {
 
-  private static final String TARGET_ID_1 = "w101";
-  private static final String TARGET_ID_2 = "w102";
   private static final String LISTENER_BINDING_TYPE =  "rwt.clientscripting.EventBinding";
 
   private ClientListener listener1;
@@ -73,15 +70,15 @@ public class ClientListenerBinding_Test {
 
   @Test
   public void testCreation() {
-    assertEquals( TARGET_ID_1, binding.getTargetId() );
-    assertEquals( SWT.MouseDown, binding.getEventType() );
+    assertEquals( "w101", binding.getTargetId() );
+    assertEquals( "MouseDown", binding.getEventType() );
   }
 
   @Test
   public void testCreation_createsRemoteObject() {
     Connection connection = fakeConnection( mock( RemoteObject.class ), LISTENER_BINDING_TYPE );
 
-    binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
+    binding = new ClientListenerBinding( listener1, "w101", "KeyDown" );
 
     verify( connection ).createRemoteObject( eq( "rwt.clientscripting.EventBinding" ) );
   }
@@ -91,10 +88,10 @@ public class ClientListenerBinding_Test {
     RemoteObject remoteObject = mock( RemoteObject.class );
     fakeConnection( remoteObject, LISTENER_BINDING_TYPE );
 
-    binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
+    binding = new ClientListenerBinding( listener1, "w101", "KeyDown" );
 
     verify( remoteObject ).set( eq( "listener" ), eq( listener1.getRemoteId() ) );
-    verify( remoteObject ).set( eq( "targetObject" ), eq( TARGET_ID_1 ) );
+    verify( remoteObject ).set( eq( "targetObject" ), eq( "w101" ) );
     verify( remoteObject ).set( eq( "eventType" ), eq( "KeyDown" ) );
   }
 
@@ -102,7 +99,7 @@ public class ClientListenerBinding_Test {
   public void testDispose_destroysRemoteObject() {
     RemoteObject remoteObject = mock( RemoteObject.class );
     fakeConnection( remoteObject, LISTENER_BINDING_TYPE );
-    binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
+    binding = new ClientListenerBinding( listener1, "w101", "KeyDown" );
 
     binding.dispose();
 
@@ -113,7 +110,7 @@ public class ClientListenerBinding_Test {
   public void testDispose_mayBeCalledTwice() {
     RemoteObject remoteObject = mock( RemoteObject.class );
     fakeConnection( remoteObject, LISTENER_BINDING_TYPE );
-    binding = new ClientListenerBinding( listener1, TARGET_ID_1, ClientListener.KeyDown );
+    binding = new ClientListenerBinding( listener1, "w101", "KeyDown" );
 
     binding.dispose();
     binding.dispose();
@@ -139,11 +136,11 @@ public class ClientListenerBinding_Test {
   }
 
   private void createBindingss() {
-    binding = new ClientListenerBinding( listener1, TARGET_ID_1, SWT.MouseDown );
-    equalBinding = new ClientListenerBinding( listener1, TARGET_ID_1, SWT.MouseDown );
-    bindingWithDifferentWidget = new ClientListenerBinding( listener1, TARGET_ID_2, SWT.MouseDown );
-    bindingWithDifferentEvent = new ClientListenerBinding( listener1, TARGET_ID_1, SWT.MouseUp );
-    bindingWithDifferentListener = new ClientListenerBinding( listener2, TARGET_ID_1, SWT.MouseDown );
+    binding = new ClientListenerBinding( listener1, "w101", "MouseDown" );
+    equalBinding = new ClientListenerBinding( listener1, "w101", "MouseDown" );
+    bindingWithDifferentWidget = new ClientListenerBinding( listener1, "w102", "MouseDown" );
+    bindingWithDifferentEvent = new ClientListenerBinding( listener1, "w101", "MouseUp" );
+    bindingWithDifferentListener = new ClientListenerBinding( listener2, "w101", "MouseDown" );
   }
 
 }

@@ -36,7 +36,7 @@ public class TestUtil {
                                                    int type )
   {
     ClientFunction function = listener; // the IDE does not see findBinding otherwise?
-    return function.findBinding( WidgetUtil.getId( widget ), type );
+    return function.findBinding( WidgetUtil.getId( widget ), ClientListenerUtil.getEventType( type ) );
   }
 
 }

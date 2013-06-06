@@ -25,13 +25,11 @@ import static org.mockito.Mockito.verify;
 import org.eclipse.rap.rwt.remote.Connection;
 import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
-import org.eclipse.swt.SWT;
 import org.junit.*;
 
 
 public class ClientFunction_Test {
 
-  private static final String TARGET_ID = "w101";
   private static final String CLIENT_LISTENER_TYPE =  "rwt.clientscripting.Listener";
   private static final String LISTENER_BINDING_TYPE =  "rwt.clientscripting.EventBinding";
 
@@ -80,17 +78,17 @@ public class ClientFunction_Test {
 
   @Test
   public void testAddTo_createsBinding() {
-    function.addTo( TARGET_ID, SWT.MouseDown );
+    function.addTo( "w101", "MouseDown" );
 
-    assertNotNull( function.findBinding( TARGET_ID, SWT.MouseDown ) );
+    assertNotNull( function.findBinding( "w101", "MouseDown" ) );
   }
 
   @Test
   public void testAddTo_ignoresSubsequentCalls() {
     Connection connection = fakeConnection( mock( RemoteObject.class ), LISTENER_BINDING_TYPE );
 
-    function.addTo( TARGET_ID, SWT.KeyDown );
-    function.addTo( TARGET_ID, SWT.KeyDown );
+    function.addTo( "w101", "KeyDown" );
+    function.addTo( "w101", "KeyDown" );
 
     assertEquals( 1, function.getBindings().size() );
     verify( connection, times( 1 ) ).createRemoteObject( eq( LISTENER_BINDING_TYPE ) );
@@ -98,39 +96,39 @@ public class ClientFunction_Test {
 
   @Test
   public void testRemoveFrom_disposesBinding() {
-    function.addTo( TARGET_ID, SWT.MouseDown );
-    ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
+    function.addTo( "w101", "MouseDown" );
+    ClientListenerBinding binding = function.findBinding( "w101", "MouseDown" );
 
-    function.removeFrom( TARGET_ID, SWT.MouseDown );
+    function.removeFrom( "w101", "MouseDown" );
 
     assertTrue( binding.isDisposed() );
   }
 
   @Test
   public void testRemoveFrom_RemovesBindingFromList() {
-    function.addTo( TARGET_ID, SWT.MouseDown );
+    function.addTo( "w101", "MouseDown" );
 
-    function.removeFrom( TARGET_ID, SWT.MouseDown );
+    function.removeFrom( "w101", "MouseDown" );
 
-    assertNull( function.findBinding( TARGET_ID, SWT.MouseDown ) );
+    assertNull( function.findBinding( "w101", "MouseDown" ) );
   }
 
   @Test
   public void testRemoveFrom_mayBeCalledTwice() {
-    function.addTo( TARGET_ID, SWT.MouseDown );
-    ClientListenerBinding binding = function.findBinding( TARGET_ID, SWT.MouseDown );
+    function.addTo( "w101", "MouseDown" );
+    ClientListenerBinding binding = function.findBinding( "w101", "MouseDown" );
 
-    function.removeFrom( TARGET_ID, SWT.MouseDown );
-    function.removeFrom( TARGET_ID, SWT.MouseDown );
+    function.removeFrom( "w101", "MouseDown" );
+    function.removeFrom( "w101", "MouseDown" );
 
     assertTrue( binding.isDisposed() );
   }
 
   @Test
   public void testRemoveFrom_ignoresNonExistingBinding() {
-    function.removeFrom( TARGET_ID, SWT.MouseDown );
+    function.removeFrom( "w101", "MouseDown" );
 
-    assertNull( function.findBinding( TARGET_ID, SWT.MouseDown ) );
+    assertNull( function.findBinding( "w101", "MouseDown" ) );
   }
 
   private void createListener() {

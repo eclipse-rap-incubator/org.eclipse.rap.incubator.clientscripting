@@ -12,6 +12,7 @@ package org.eclipse.rap.clientscripting;
 
 import org.eclipse.rap.clientscripting.internal.ClientFunction;
 import org.eclipse.rap.clientscripting.internal.ClientListenerBinding;
+import org.eclipse.rap.clientscripting.internal.ClientListenerUtil;
 import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
@@ -81,7 +82,8 @@ public class ClientListener extends ClientFunction implements Listener {
     if( widget.isDisposed() ) {
       throw new IllegalArgumentException( "Widget is disposed" );
     }
-    final ClientListenerBinding binding = addTo( WidgetUtil.getId( widget ), eventType );
+    String eventTypeString = ClientListenerUtil.getEventType( eventType );
+    final ClientListenerBinding binding = addTo( WidgetUtil.getId( widget ), eventTypeString );
     if( binding != null ) {
       widget.addListener( SWT.Dispose, new Listener() {
         public void handleEvent( Event event ) {
@@ -99,7 +101,7 @@ public class ClientListener extends ClientFunction implements Listener {
     if( widget == null ) {
       throw new NullPointerException( "widget is null" );
     }
-    removeFrom( WidgetUtil.getId( widget ), eventType );
+    removeFrom( WidgetUtil.getId( widget ), ClientListenerUtil.getEventType( eventType ) );
   }
 
   /**

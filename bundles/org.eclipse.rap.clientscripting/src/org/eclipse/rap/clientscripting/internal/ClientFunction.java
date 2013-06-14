@@ -18,7 +18,6 @@ import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.remote.RemoteObject;
 
 
-
 public class ClientFunction {
 
   private static final String REMOTE_TYPE = "rwt.clientscripting.Listener";
@@ -62,11 +61,9 @@ public class ClientFunction {
     }
   }
 
-  ClientListenerBinding findBinding( String targetId, String eventType ) {
+  protected ClientListenerBinding findBinding( String targetId, String eventType ) {
     for( ClientListenerBinding binding : bindings ) {
-      if(    binding.getTargetId().equals( targetId )
-          && binding.getEventType().equals( eventType ) )
-      {
+      if( binding.getTargetId().equals( targetId ) && binding.getEventType().equals( eventType ) ) {
         return binding;
       }
     }

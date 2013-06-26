@@ -153,8 +153,18 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   attachControlMethods : function( proxy, source ) {
+    var id = ObjectRegistry.getId( source );
+    var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
     proxy.redraw = function() {
-      org.eclipse.rap.clientscripting.ClientScriptingUtil._initGC( source );
+      ClientScriptingUtil._initGC( source );
+    };
+    proxy.forceFocus = function() {
+      var result = false;
+      if( source.getEnabled() && ClientScriptingUtil._isVisible( source ) ) {
+        rwt.widgets.Display.getCurrent().setFocusControl( id );
+        result = true;
+      }
+      return result;
     };
   },
 
@@ -327,6 +337,16 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
       if( children[ i ].rwtObject instanceof rwt.widgets.GC ) {
         result = children[ i ].rwtObject;
       }
+    }
+    return result;
+  },
+
+  _isVisible : function( widget ) {
+    var result = true;
+    var current = widget;
+    while( current && result ) {
+      result = current.getVisibility();
+      current = current.getParent();
     }
     return result;
   },

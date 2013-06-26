@@ -153,6 +153,50 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       assertEquals( [ 1, 2 ], value );
     },
 
+    testTextForceFocus : function() {
+      var widgetProxy = WidgetProxy.getInstance( text );
+      text.blur();
+
+      var value = widgetProxy.forceFocus();
+
+      assertTrue( text.isFocused() );
+      assertTrue( value );
+    },
+
+    testTextForceFocus_NotVisible : function() {
+      var widgetProxy = WidgetProxy.getInstance( text );
+      text.blur();
+      text.setVisibility( false );
+
+      var value = widgetProxy.forceFocus();
+
+      assertFalse( text.isFocused() );
+      assertFalse( value );
+    },
+
+    testTextForceFocus_ParentNotVisible : function() {
+      var widgetProxy = WidgetProxy.getInstance( text );
+      text.blur();
+      text.getParent().setVisibility( false );
+      TestUtil.flush();
+
+      var value = widgetProxy.forceFocus();
+
+      assertFalse( text.isFocused() );
+      assertFalse( value );
+    },
+
+    testTextForceFocus_NotEnabled : function() {
+      var widgetProxy = WidgetProxy.getInstance( text );
+      text.blur();
+      text.setEnabled( false );
+
+      var value = widgetProxy.forceFocus();
+
+      assertFalse( text.isFocused() );
+      assertFalse( value );
+    },
+
     testListGetSelection : function() {
       Processor.processOperation( {
         "target" : "w4",

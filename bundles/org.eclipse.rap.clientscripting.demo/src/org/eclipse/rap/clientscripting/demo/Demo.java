@@ -41,6 +41,7 @@ public class Demo extends AbstractEntryPoint {
     addUpperCaseExample( left );
     addDigitsOnlyExample( left );
     addDateFieldExample( left );
+    addFocusSwitchExample( left );
     addCounterExample( left );
     addCanvasExample( left );
     addListExample( left );
@@ -55,6 +56,22 @@ public class Demo extends AbstractEntryPoint {
     Text text = new Text( parent, SWT.BORDER );
     CustomBehaviors.addUpperCaseBehavior( text );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+  }
+
+  private void addFocusSwitchExample( Composite parent ) {
+    addHeaderLabel( parent, "Switch focus while typing:" );
+    Composite area = new Composite( parent, SWT.NONE );
+    area.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    GridLayout layout = new GridLayout( 2, false );
+    layout.marginHeight = 0;
+    layout.marginWidth = 0;
+    area.setLayout( layout );
+    Text text = new Text( area, SWT.BORDER );
+    text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    Text next = new Text( area, SWT.BORDER );
+    next.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    CustomBehaviors.addFocusNextBehavior( text, next );
+    CustomBehaviors.addFocusPreviousBehavior( next, text );
   }
 
   private void addDigitsOnlyExample( Composite parent ) {

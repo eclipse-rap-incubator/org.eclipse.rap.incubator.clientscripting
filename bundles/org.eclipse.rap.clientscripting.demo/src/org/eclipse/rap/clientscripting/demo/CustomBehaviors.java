@@ -11,6 +11,8 @@
 package org.eclipse.rap.clientscripting.demo;
 
 import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.rap.clientscripting.WidgetDataWhiteList;
+import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -91,6 +93,25 @@ public class CustomBehaviors {
     canvas.addListener( ClientListener.Paint, listener );
     canvas.setForeground( getRandomColor( canvas.getDisplay() ) );
     canvas.redraw();
+  }
+
+
+  public static void addFocusNextBehavior( Text text, Control next ) {
+    text.setTextLimit( 4 );
+    String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "FocusSwitch.js" );
+    ClientListener listener = new ClientListener( scriptCode );
+    text.addListener( SWT.Modify, listener );
+    WidgetDataWhiteList.addKey( "next" );
+    text.setData( "next", WidgetUtil.getId( next ) );
+  }
+
+  public static void addFocusPreviousBehavior( Text text, Control previous ) {
+    text.setTextLimit( 4 );
+    String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "FocusSwitch.js" );
+    ClientListener listener = new ClientListener( scriptCode );
+    text.addListener( SWT.Modify, listener );
+    WidgetDataWhiteList.addKey( "previous" );
+    text.setData( "previous", WidgetUtil.getId( previous ) );
   }
 
   public static Color getRandomColor( Device device ) {

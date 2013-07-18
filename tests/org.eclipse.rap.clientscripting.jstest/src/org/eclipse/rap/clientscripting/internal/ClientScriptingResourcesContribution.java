@@ -29,7 +29,8 @@ public class ClientScriptingResourcesContribution implements TestContribution {
     "EventBinding.js",
     "EventBindingAdapter.js",
     "EventProxy.js",
-    "WidgetProxy.js"
+    "WidgetProxy.js",
+    "ScriptHandler.js"
   };
 
   public String getName() {

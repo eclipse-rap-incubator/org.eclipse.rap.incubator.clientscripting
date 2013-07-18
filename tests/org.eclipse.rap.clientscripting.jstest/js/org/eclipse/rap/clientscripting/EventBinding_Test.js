@@ -30,12 +30,14 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
 
     testCreateBindingByProtocol : function() {
       var code = "var handleEvent = function(){};";
+      var createScript = [ "create", "r3", "rwt.clientscripting.Script", { "text" : code } ];
+      Processor.processOperationArray( createScript );
       Processor.processOperation( {
         "target" : "w4",
         "action" : "create",
         "type" : "rwt.clientscripting.Listener",
         "properties" : {
-          "code" : code
+          "script" : "r3"
         }
       } );
 

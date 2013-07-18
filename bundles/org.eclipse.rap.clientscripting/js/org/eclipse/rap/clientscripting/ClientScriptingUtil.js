@@ -22,8 +22,8 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   _getterMapping : {
     "rwt.widgets.Text" : {
       "getText" : function( widget ) { return function() { return widget.getValue(); }; },
-      "getSelection" : function( widget ) { return function() { return widget.getSelection(); };
-      }
+      "getSelection" : function( widget ) { return function() { return widget.getSelection(); }; },
+      "getEditable" : function( widget ) { return function() { return !widget.getReadOnly(); }; }
     },
     "rwt.widgets.List" : {
       "getSelection" : function( widget ) {

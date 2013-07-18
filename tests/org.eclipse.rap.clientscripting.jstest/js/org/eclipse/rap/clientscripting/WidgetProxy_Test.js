@@ -153,6 +153,23 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       assertEquals( [ 1, 2 ], value );
     },
 
+    testTextGetEditable_returnsTrue : function() {
+      var widgetProxy = WidgetProxy.getInstance( text );
+
+      var value = widgetProxy.getEditable();
+
+      assertTrue( value );
+    },
+
+    testTextGetEditable_returnsFalse : function() {
+      var widgetProxy = WidgetProxy.getInstance( text );
+      widgetProxy.setEditable( false );
+
+      var value = widgetProxy.getEditable();
+
+      assertFalse( value );
+    },
+
     testTextForceFocus : function() {
       var widgetProxy = WidgetProxy.getInstance( text );
       text.blur();

@@ -21,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.eclipse.rap.rwt.remote.Connection;
 import org.eclipse.rap.rwt.remote.RemoteObject;
@@ -32,6 +33,7 @@ public class ClientFunction_Test {
 
   private static final String CLIENT_LISTENER_TYPE =  "rwt.clientscripting.Listener";
   private static final String LISTENER_BINDING_TYPE =  "rwt.clientscripting.EventBinding";
+  private static final String SCRIPT_TYPE = "rwt.clientscripting.Script";
 
   private ClientFunction function;
 
@@ -67,12 +69,18 @@ public class ClientFunction_Test {
 
   @Test
   public void testCreation_initializesRemoteObject() {
-    RemoteObject remoteObject = mock( RemoteObject.class );
-    fakeConnection( remoteObject, CLIENT_LISTENER_TYPE );
+    RemoteObject listenerRemoteObject = mock( RemoteObject.class );
+    RemoteObject scriptRemoteObject = mock( RemoteObject.class );
+    Connection connection = mock( Connection.class );
+    when( connection.createRemoteObject( eq( CLIENT_LISTENER_TYPE ) ) )
+      .thenReturn( listenerRemoteObject );
+    when( connection.createRemoteObject( eq( SCRIPT_TYPE ) ) ).thenReturn( scriptRemoteObject );
+    when( scriptRemoteObject.getId() ).thenReturn( "fooId" );
+    Fixture.fakeConnection( connection );
 
     new ClientFunction( "script code" );
 
-    verify( remoteObject ).set( eq( "code" ), eq( "script code" ) );
+    verify( listenerRemoteObject ).set( eq( "script" ), eq( "fooId" ) );
   }
 
 

@@ -13,6 +13,7 @@ package org.eclipse.rap.clientscripting.internal;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.rap.clientscripting.Script;
 import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.remote.RemoteObject;
@@ -24,6 +25,7 @@ public class ClientFunction {
 
   private final RemoteObject remoteObject;
   private final Collection<ClientListenerBinding> bindings;
+  private final Script script;
 
   public ClientFunction( String scriptCode ) {
     if( scriptCode == null ) {
@@ -31,8 +33,9 @@ public class ClientFunction {
     }
     ClientScriptingResources.ensure();
     bindings = new ArrayList<ClientListenerBinding>();
+    script = new Script( scriptCode );
     remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
-    remoteObject.set( "code", scriptCode );
+    remoteObject.set( "script", script.getId() );
   }
 
   protected String getRemoteId() {

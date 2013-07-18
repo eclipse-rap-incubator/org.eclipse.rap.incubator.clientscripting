@@ -33,7 +33,8 @@ public final class ClientScriptingResources {
     "Function.js",
     "ListenerAdapter.js",
     "SWT.js",
-    "WidgetProxy.js"
+    "WidgetProxy.js",
+    "ScriptHandler.js"
   };
 
   public static void ensure() {

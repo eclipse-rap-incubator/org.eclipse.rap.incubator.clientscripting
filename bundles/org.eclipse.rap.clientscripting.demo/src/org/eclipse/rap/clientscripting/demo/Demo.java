@@ -10,10 +10,8 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.demo;
 
-import org.eclipse.rap.clientscripting.ClientListener;
 import org.eclipse.rap.clientscripting.WidgetDataWhiteList;
 import org.eclipse.rap.rwt.application.AbstractEntryPoint;
-import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -118,25 +116,21 @@ public class Demo extends AbstractEntryPoint {
   private void createNumKeys( Composite parent, Text text ) {
     WidgetDataWhiteList.addKey( "textWidget" );
     WidgetDataWhiteList.addKey( "numValue" );
-    String scriptCode
-      = ResourceLoaderUtil.readTextContent( "org/eclipse/rap/clientscripting/demo/NumKey.js" );
-    ClientListener listener = new ClientListener( scriptCode );
     int[] numbers = new int[]{ 7, 8, 9, 4, 5, 6, 1, 2, 3 };
     for( int i = 0; i < numbers.length; i++ ) {
-      createNumButton( parent, text, listener, numbers[ i ] );
+      createNumButton( parent, text, numbers[ i ] );
     }
-    createNumButton( parent, text, listener, -1 ).setText( "C" );
-    createNumButton( parent, text, listener, 0 );
-    createNumButton( parent, text, listener, -2 ).setText( "." );
+    createNumButton( parent, text, -1 ).setText( "C" );
+    createNumButton( parent, text, 0 );
+    createNumButton( parent, text, -2 ).setText( "." );
   }
 
-  private Button createNumButton( Composite parent, Text text, ClientListener listener, int number ) {
+
+  private Button createNumButton( Composite parent, Text text, int number ) {
     Button button = new Button( parent, SWT.PUSH );
     button.setText( String.valueOf( number ) );
-    button.setData( "textWidget", WidgetUtil.getId( text ) );
-    button.setData( "numValue", Integer.valueOf( number ) );
-    button.addListener( SWT.MouseDown, listener );
     button.setLayoutData( new GridData( 80, 70 ) );
+    CustomBehaviors.addNumKeyBehavior( text, number, button );
     return button;
   }
 

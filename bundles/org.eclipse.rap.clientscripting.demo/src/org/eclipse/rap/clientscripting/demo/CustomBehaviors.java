@@ -11,7 +11,9 @@
 package org.eclipse.rap.clientscripting.demo;
 
 import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.rap.clientscripting.Script;
 import org.eclipse.rap.clientscripting.WidgetDataWhiteList;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -19,6 +21,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
@@ -121,6 +124,25 @@ public class CustomBehaviors {
       ( int )Math.round(  Math.random() * 255 )
     );
     return new Color( device, rgb );
+  }
+
+  public static void addNumKeyBehavior( Text text, int number, Button button ) {
+    button.setData( "textWidget", WidgetUtil.getId( text ) );
+    button.setData( "numValue", Integer.valueOf( number ) );
+    ClientListener listener = new ClientListener( getScript( "NumKey.js" ) );
+    button.addListener( SWT.MouseDown, listener );
+  }
+
+  private static Script getScript( String fileName ) {
+    String key = CustomBehaviors.class.getCanonicalName() + fileName;
+    Script result = ( Script )RWT.getUISession().getAttribute( key );
+    if( result == null ) {
+      String scriptCode
+        = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + fileName );
+      result = new Script( scriptCode );
+      RWT.getUISession().setAttribute( key, result );
+    }
+    return result;
   }
 
 }

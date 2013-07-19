@@ -200,7 +200,7 @@ public class ClientListener_Test {
   }
 
   private void createListener() {
-    listener = spy( new ClientListener( "code" ) );
+    listener = spy( new ClientListener( new Script( "code" ) ) );
   }
 
 }

@@ -20,13 +20,13 @@ public class Script {
   private static final String REMOTE_TYPE = "rwt.clientscripting.Script";
   private RemoteObject remoteObject;
 
-  public Script( String text ) {
-    if( text == null ) {
-      throw new NullPointerException( "Text must not be null" );
+  public Script( String scriptCode ) {
+    if( scriptCode == null ) {
+      throw new NullPointerException( "Parameter is null: scriptCode" );
     }
     Connection connection = RWT.getUISession().getConnection();
     remoteObject = connection.createRemoteObject( REMOTE_TYPE );
-    remoteObject.set( "text", text );
+    remoteObject.set( "text", scriptCode );
   }
 
   public String getId() {

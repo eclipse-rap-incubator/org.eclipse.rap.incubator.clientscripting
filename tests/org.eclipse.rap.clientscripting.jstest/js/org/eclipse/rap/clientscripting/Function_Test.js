@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,6 +63,24 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
       var ObjectManager = rwt.remote.ObjectRegistry;
       var processor = rwt.remote.MessageProcessor;
       var code = "var handleEvent = function(){};";
+
+      processor.processOperation( {
+        "target" : "w3",
+        "action" : "create",
+        "type" : "rwt.clientscripting.Listener",
+        "properties" : {
+          "scriptCode" : code
+        }
+      } );
+
+      var result = ObjectManager.getObject( "w3" );
+      assertTrue( result instanceof Function );
+    },
+
+    testCreateFunctionByProtocol_withScriptId : function() {
+      var ObjectManager = rwt.remote.ObjectRegistry;
+      var processor = rwt.remote.MessageProcessor;
+      var code = "var handleEvent = function(){};";
       var createScript = [ "create", "r3", "rwt.clientscripting.Script", { "text" : code } ];
       processor.processOperationArray( createScript );
 
@@ -71,7 +89,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
         "action" : "create",
         "type" : "rwt.clientscripting.Listener",
         "properties" : {
-          "script" : "r3"
+          "scriptId" : "r3"
         }
       } );
 

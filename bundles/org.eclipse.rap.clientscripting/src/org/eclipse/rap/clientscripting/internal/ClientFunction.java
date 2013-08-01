@@ -27,17 +27,25 @@ public class ClientFunction {
   private final Collection<ClientListenerBinding> bindings;
 
   public ClientFunction( String scriptCode ) {
-    this( new Script( scriptCode ) );
+    this();
+    if( scriptCode == null ) {
+      throw new NullPointerException( "Parameter is null: scriptCode" );
+    }
+    remoteObject.set( "scriptCode", scriptCode );
   }
 
   public ClientFunction( Script script ) {
+    this();
     if( script == null ) {
       throw new NullPointerException( "Parameter is null: script" );
     }
-    ClientScriptingResources.ensure();
+    remoteObject.set( "scriptId", script.getId() );
+  }
+
+  private ClientFunction() {
     bindings = new ArrayList<ClientListenerBinding>();
     remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
-    remoteObject.set( "script", script.getId() );
+    ClientScriptingResources.ensure();
   }
 
   protected String getRemoteId() {

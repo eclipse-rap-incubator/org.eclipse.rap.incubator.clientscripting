@@ -49,7 +49,6 @@ public class ClientFunction_Test {
     Fixture.tearDown();
   }
 
-  @SuppressWarnings( "deprecation" )
   @Test
   public void testCreation_failsWithStringNull() {
     try {
@@ -80,7 +79,7 @@ public class ClientFunction_Test {
   }
 
   @Test
-  public void testCreationWithString_initializesRemoteObject() {
+  public void testCreationWithString_sendsString() {
     RemoteObject listenerRemoteObject = mock( RemoteObject.class );
     RemoteObject scriptRemoteObject = mock( RemoteObject.class );
     Connection connection = mock( Connection.class );
@@ -90,9 +89,9 @@ public class ClientFunction_Test {
     when( scriptRemoteObject.getId() ).thenReturn( "fooId" );
     Fixture.fakeConnection( connection );
 
-    new ClientFunction( new Script( "script code" ) );
+    new ClientFunction( "my script code" );
 
-    verify( listenerRemoteObject ).set( eq( "script" ), eq( "fooId" ) );
+    verify( listenerRemoteObject ).set( eq( "scriptCode" ), eq( "my script code" ) );
   }
 
   @Test
@@ -104,7 +103,7 @@ public class ClientFunction_Test {
 
     new ClientFunction( script );
 
-    verify( listenerRemoteObject ).set( eq( "script" ), eq( "fooId" ) );
+    verify( listenerRemoteObject ).set( eq( "scriptId" ), eq( "fooId" ) );
   }
 
   @Test

@@ -24,17 +24,17 @@ import org.eclipse.rap.rwt.service.ResourceLoader;
 public final class ClientScriptingResources {
 
   private static final String REGISTER_NAME = "clientscripting.js";
-  private static final String PREFIX = "org/eclipse/rap/clientscripting/";
+  private static final String PREFIX = "rwt/scripting/";
   private static final String[] ALL_RESOURCES = {
     "ClientScriptingUtil.js",
-    "EventBindingAdapter.js",
+    "handler/EventBindingHandler.js",
     "EventBinding.js",
     "EventProxy.js",
     "Function.js",
-    "ListenerAdapter.js",
+    "handler/ListenerHandler.js",
     "SWT.js",
     "WidgetProxyFactory.js",
-    "ScriptHandler.js",
+    "handler/ScriptHandler.js",
     "init.js"
   };
 

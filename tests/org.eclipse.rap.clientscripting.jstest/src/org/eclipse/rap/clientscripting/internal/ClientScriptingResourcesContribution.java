@@ -19,18 +19,18 @@ import org.eclipse.rap.rwt.jstest.TestContribution;
 
 public class ClientScriptingResourcesContribution implements TestContribution {
 
-  private static final String PATH_PREFIX = "/org/eclipse/rap/clientscripting/";
+  private static final String PATH_PREFIX = "/rwt/scripting/";
 
   private static final String[] RESOURCES = new String[] {
     "ClientScriptingUtil.js",
     "SWT.js",
     "Function.js",
-    "ListenerAdapter.js",
+    "handler/ListenerHandler.js",
     "EventBinding.js",
-    "EventBindingAdapter.js",
+    "handler/EventBindingHandler.js",
     "EventProxy.js",
     "WidgetProxyFactory.js",
-    "ScriptHandler.js",
+    "handler/ScriptHandler.js",
     "init.js"
   };
 

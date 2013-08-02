@@ -11,8 +11,8 @@
 
 (function() {
 
-var Function = org.eclipse.rap.clientscripting.Function;
-var SWT = org.eclipse.rap.clientscripting.SWT;
+var Function = rwt.scripting.Function;
+var SWT = rwt.scripting.SWT;
 
 rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
 

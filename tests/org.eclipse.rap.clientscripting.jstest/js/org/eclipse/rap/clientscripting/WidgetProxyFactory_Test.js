@@ -14,9 +14,9 @@
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = rwt.remote.MessageProcessor;
 var ObjectManager = rwt.remote.ObjectRegistry;
-var WidgetProxyFactory = org.eclipse.rap.clientscripting.WidgetProxyFactory;
-var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
-var SWT = org.eclipse.rap.clientscripting.SWT;
+var WidgetProxyFactory = rwt.scripting.WidgetProxyFactory;
+var EventBinding = rwt.scripting.EventBinding;
+var SWT = rwt.scripting.SWT;
 
 var text;
 

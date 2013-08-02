@@ -11,12 +11,12 @@
 
 (function() {
 
-var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
-var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
+var EventBinding = rwt.scripting.EventBinding;
+var EventProxy = rwt.scripting.EventProxy;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = rwt.remote.MessageProcessor;
 var ObjectManager = rwt.remote.ObjectRegistry;
-var SWT = org.eclipse.rap.clientscripting.SWT;
+var SWT = rwt.scripting.SWT;
 var EventHandlerUtil = rwt.event.EventHandlerUtil;
 
 var text;

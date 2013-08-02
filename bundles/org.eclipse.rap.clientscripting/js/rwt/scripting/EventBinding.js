@@ -11,10 +11,10 @@
 
 (function(){
 
-rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
-org.eclipse.rap.clientscripting.EventBinding = function( source, eventType, targetFunction ) {
-  var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
+rwt.scripting.EventBinding = function( source, eventType, targetFunction ) {
+  var ClientScriptingUtil = rwt.scripting.ClientScriptingUtil;
   try {
     this._eventType = eventType;
     this._source = source;
@@ -35,7 +35,7 @@ org.eclipse.rap.clientscripting.EventBinding = function( source, eventType, targ
   }
 };
 
-org.eclipse.rap.clientscripting.EventBinding.prototype = {
+rwt.scripting.EventBinding.prototype = {
 
   _bind : function() {
     if( this._public ) {
@@ -55,9 +55,9 @@ org.eclipse.rap.clientscripting.EventBinding.prototype = {
 
   _processEvent : function( event ) {
     try {
-      var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
-      var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
-      var SWT = org.eclipse.rap.clientscripting.SWT;
+      var EventProxy = rwt.scripting.EventProxy;
+      var ClientScriptingUtil = rwt.scripting.ClientScriptingUtil;
+      var SWT = rwt.scripting.SWT;
       var eventProxy = new EventProxy( SWT[ this._eventType ], this._source, event );
       var wrappedEventProxy = ClientScriptingUtil.wrapAsProto( eventProxy );
       this._targetFunction( wrappedEventProxy );

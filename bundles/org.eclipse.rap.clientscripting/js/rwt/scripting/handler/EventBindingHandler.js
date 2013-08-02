@@ -15,7 +15,7 @@ rwt.remote.HandlerRegistry.add( "rwt.clientscripting.EventBinding", {
 
   factory : function( properties ) {
     var ObjectRegistry = rwt.remote.ObjectRegistry;
-    var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
+    var EventBinding = rwt.scripting.EventBinding;
     var source = ObjectRegistry.getObject( properties.targetObject );
     var eventType = properties.eventType;
     var targetFunction = ObjectRegistry.getObject( properties.listener );

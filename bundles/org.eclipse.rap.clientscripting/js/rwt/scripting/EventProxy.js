@@ -9,20 +9,20 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
-org.eclipse.rap.clientscripting.EventProxy = function( eventType, target, originalEvent ) {
-  var ClientScriptingUtil = org.eclipse.rap.clientscripting.ClientScriptingUtil;
+rwt.scripting.EventProxy = function( eventType, target, originalEvent ) {
+  var ClientScriptingUtil = rwt.scripting.ClientScriptingUtil;
   ClientScriptingUtil.initEvent( this, eventType, target, originalEvent );
 };
 
-org.eclipse.rap.clientscripting.EventProxy.prototype = {
+rwt.scripting.EventProxy.prototype = {
 
   /**
    * An object representing the widget that issued the event.
    * It has setter and getter named after the properties used in the RAP protocol.
    * Only a subset of getter is currently supported.
-   * (See org.eclipse.rap.clientscripting.ClientScriptingUtil#attachGetter.)
+   * (See rwt.scripting.ClientScriptingUtil#attachGetter.)
    * Setting properties might result in server and client getting out-of-sync in RAP 1.5,
    * unless it is a property that can be changed by user-input (e.g. selection).
    */
@@ -131,6 +131,6 @@ org.eclipse.rap.clientscripting.EventProxy.prototype = {
 
 };
 
-org.eclipse.rap.clientscripting.EventProxy.disposeEventProxy = function( eventProxy ) {
+rwt.scripting.EventProxy.disposeEventProxy = function( eventProxy ) {
   eventProxy.widget = null;
 };

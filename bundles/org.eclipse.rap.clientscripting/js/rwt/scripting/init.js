@@ -18,9 +18,9 @@
   var getWrapperFor = rap._.getWrapperFor;
   rap._.getWrapperFor = function( obj ) {
     var result = getWrapperFor.call( rap._, obj );
-    var PROXY_KEY = org.eclipse.rap.clientscripting.WidgetProxyFactory._PROXY_KEY;
+    var PROXY_KEY = rwt.scripting.WidgetProxyFactory._PROXY_KEY;
     if( obj.getUserData( PROXY_KEY ) == null ) {
-     org.eclipse.rap.clientscripting.WidgetProxyFactory._initWrapper( obj, result );
+     rwt.scripting.WidgetProxyFactory._initWrapper( obj, result );
      obj.setUserData( PROXY_KEY, result );
     }
     return result;

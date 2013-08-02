@@ -9,13 +9,13 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
 
 /**
  * Note: Thise class is available within ClientScriptingFunction simply as "SWT" (no namespace)
  */
-org.eclipse.rap.clientscripting.SWT = {
+rwt.scripting.SWT = {
 
   /**
    * The key down event type

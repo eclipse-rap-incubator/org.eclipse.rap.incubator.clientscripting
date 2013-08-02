@@ -69,7 +69,7 @@
   text += nl;
   text += "## Available Getter:" + nl;
 
-  var widgets = org.eclipse.rap.clientscripting.ClientScriptingUtil._getterMapping;
+  var widgets = rwt.scripting.ClientScriptingUtil._getterMapping;
 
   for( var key in widgets ) {
     var type = "org.eclipse.swt.widget" + key.slice( key.lastIndexOf( "." ) );

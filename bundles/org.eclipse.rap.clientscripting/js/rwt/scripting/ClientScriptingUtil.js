@@ -11,11 +11,11 @@
 
 (function() {
 
-rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
 var ObjectRegistry = rwt.remote.ObjectRegistry;
 
-org.eclipse.rap.clientscripting.ClientScriptingUtil = {
+rwt.scripting.ClientScriptingUtil = {
 
   _wrapperHelper : function(){},
 
@@ -50,7 +50,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   getNativeEventSource : function( source, eventType ) {
-    var SWT = org.eclipse.rap.clientscripting.SWT;
+    var SWT = rwt.scripting.SWT;
     var result;
     if( source.classname === "rwt.widgets.List" && eventType === "Selection" ) {
       result = source.getManager();
@@ -79,7 +79,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   postProcessEvent : function( event, wrappedEvent, originalEvent ) {
-    var SWT = org.eclipse.rap.clientscripting.SWT;
+    var SWT = rwt.scripting.SWT;
     switch( event.type ) {
       case SWT.Verify:
         this._postProcessVerifyEvent( event, wrappedEvent, originalEvent );
@@ -92,8 +92,8 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   initEvent : function( event, type, target, originalEvent ) {
-    var SWT = org.eclipse.rap.clientscripting.SWT;
-    event.widget = org.eclipse.rap.clientscripting.WidgetProxyFactory.getWidgetProxy( target );
+    var SWT = rwt.scripting.SWT;
+    event.widget = rwt.scripting.WidgetProxyFactory.getWidgetProxy( target );
     event.type = type;
     switch( type ) {
       case SWT.KeyDown:
@@ -119,7 +119,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
 
   _initKeyEvent : function( event, originalEvent ) {
     var charCode = originalEvent.getCharCode();
-    var SWT = org.eclipse.rap.clientscripting.SWT;
+    var SWT = rwt.scripting.SWT;
     if( charCode !== 0 ) {
       event.character = String.fromCharCode( charCode );
       // TODO [tb] : keyCode will be off when character is not a-z
@@ -168,13 +168,13 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   _getGCFor : function( widget ) {
-    var gc = widget.getUserData( org.eclipse.rap.clientscripting.WidgetProxyFactory._GC_KEY );
+    var gc = widget.getUserData( rwt.scripting.WidgetProxyFactory._GC_KEY );
     if( gc == null ) {
       gc = this._findExistingGC( widget );
       if( gc == null ) {
         gc = new rwt.widgets.GC( widget );
       }
-      widget.setUserData( org.eclipse.rap.clientscripting.WidgetProxyFactory._GC_KEY, gc );
+      widget.setUserData( rwt.scripting.WidgetProxyFactory._GC_KEY, gc );
     }
     return gc;
   },
@@ -239,7 +239,7 @@ org.eclipse.rap.clientscripting.ClientScriptingUtil = {
   },
 
   _setStateMask : function( event, originalEvent ) {
-    var SWT = org.eclipse.rap.clientscripting.SWT;
+    var SWT = rwt.scripting.SWT;
     event.stateMask |= originalEvent.isShiftPressed() ? SWT.SHIFT : 0;
     event.stateMask |= originalEvent.isCtrlPressed() ? SWT.CTRL : 0;
     event.stateMask |= originalEvent.isAltPressed() ? SWT.ALT : 0;

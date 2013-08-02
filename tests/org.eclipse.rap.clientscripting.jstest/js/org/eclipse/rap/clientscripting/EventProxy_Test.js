@@ -10,13 +10,13 @@
  ******************************************************************************/
 (function() {
 
-var EventProxy = org.eclipse.rap.clientscripting.EventProxy;
-var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
+var EventProxy = rwt.scripting.EventProxy;
+var EventBinding = rwt.scripting.EventBinding;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = rwt.remote.MessageProcessor;
 var ObjectManager = rwt.remote.ObjectRegistry;
-var WidgetProxyFactory = org.eclipse.rap.clientscripting.WidgetProxyFactory;
-var SWT = org.eclipse.rap.clientscripting.SWT;
+var WidgetProxyFactory = rwt.scripting.WidgetProxyFactory;
+var SWT = rwt.scripting.SWT;
 
 var text;
 var shell;

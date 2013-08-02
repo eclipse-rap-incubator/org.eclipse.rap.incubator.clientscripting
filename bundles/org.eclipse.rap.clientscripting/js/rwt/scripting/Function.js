@@ -9,16 +9,16 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
-rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
 // TODO [tb] : consider a name thats not a native Constructor ( "Function" )
 
 /*global handleEvent:false */
-org.eclipse.rap.clientscripting.Function = function( /* code */ ) {
+rwt.scripting.Function = function( /* code */ ) {
   // NOTE: the eval'd code will have the same scope as this function, therefore no local
   // variables except the "imports" are used.
   // TODO [tb] : It would be cleaner if the "import" was part of the eval'd code
-  var SWT = org.eclipse.rap.clientscripting.SWT;
+  var SWT = rwt.scripting.SWT;
   try {
     eval( arguments[ 0 ] );
   } catch( ex ) {
@@ -35,7 +35,7 @@ org.eclipse.rap.clientscripting.Function = function( /* code */ ) {
   }
 };
 
-org.eclipse.rap.clientscripting.Function.prototype = {
+rwt.scripting.Function.prototype = {
 
   call : function() {
     this._function.apply( window, arguments );

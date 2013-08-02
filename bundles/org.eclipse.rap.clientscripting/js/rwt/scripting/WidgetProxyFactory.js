@@ -13,12 +13,12 @@
 
 var ObjectRegistry = rwt.remote.ObjectRegistry;
 
-rwt.qx.Class.createNamespace( "org.eclipse.rap.clientscripting", {} );
+rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
-org.eclipse.rap.clientscripting.WidgetProxyFactory = {
+rwt.scripting.WidgetProxyFactory = {
 
-  _PROXY_KEY : "org.eclipse.rap.clientscripting.WidgetProxyFactory.PROXY",
-  _GC_KEY : "org.eclipse.rap.clientscripting.WidgetProxyFactory.GC",
+  _PROXY_KEY : "rwt.scripting.WidgetProxyFactory.PROXY",
+  _GC_KEY : "rwt.scripting.WidgetProxyFactory.GC",
 
   getWidgetProxy : function( widget ) {
     // TODO [tb] : this delegates back to _initWrapper, see init.js. Should be simplified in RAP 2.2
@@ -33,7 +33,7 @@ org.eclipse.rap.clientscripting.WidgetProxyFactory = {
       this._attachControlMethods( wrapper, originalWidget );
     }
     this._addDisposeListener( originalWidget, function() {
-      org.eclipse.rap.clientscripting.WidgetProxyFactory._disposeWidgetProxy( originalWidget );
+      rwt.scripting.WidgetProxyFactory._disposeWidgetProxy( originalWidget );
     } );
   },
 
@@ -48,8 +48,8 @@ org.eclipse.rap.clientscripting.WidgetProxyFactory = {
   _disposeWidgetProxy : function( widget ) {
     var protoInstance = widget.getUserData( this._PROXY_KEY );
     var userData = widget.getUserData( rwt.remote.HandlerUtil.SERVER_DATA );
-    org.eclipse.rap.clientscripting.WidgetProxyFactory._disposeObject( protoInstance );
-    org.eclipse.rap.clientscripting.WidgetProxyFactory._disposeObject( userData );
+    rwt.scripting.WidgetProxyFactory._disposeObject( protoInstance );
+    rwt.scripting.WidgetProxyFactory._disposeObject( userData );
   },
 
   _disposeObject : function( object ) {
@@ -147,7 +147,7 @@ org.eclipse.rap.clientscripting.WidgetProxyFactory = {
     }
     var property = args[ 0 ];
     var value = args[ 1 ];
-    var USERDATA_KEY = org.eclipse.rap.clientscripting.WidgetProxyFactory._USERDATA_KEY;
+    var USERDATA_KEY = rwt.scripting.WidgetProxyFactory._USERDATA_KEY;
     var data = rwt.remote.HandlerUtil.getServerData( source );
     data[ property ] = value;
   },
@@ -196,7 +196,7 @@ org.eclipse.rap.clientscripting.WidgetProxyFactory = {
   },
 
   _initGC : function( widget ) {
-    var gc = org.eclipse.rap.clientscripting.ClientScriptingUtil._getGCFor( widget );
+    var gc = rwt.scripting.ClientScriptingUtil._getGCFor( widget );
     var width = widget.getInnerWidth();
     var height = widget.getInnerHeight();
     var fillStyle = widget.getBackgroundColor();

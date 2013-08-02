@@ -16,7 +16,7 @@ rwt.remote.HandlerRegistry.add( "rwt.clientscripting.Listener", {
     if( !scriptCode ) {
       scriptCode = rap.getObject( properties.scriptId ).getText();
     }
-    return new org.eclipse.rap.clientscripting.Function( scriptCode );
+    return new rwt.scripting.Function( scriptCode );
   }
 
 } );

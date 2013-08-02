@@ -196,7 +196,7 @@ rwt.scripting.WidgetProxyFactory = {
   },
 
   _initGC : function( widget ) {
-    var gc = rwt.scripting.ClientScriptingUtil.getGCFor( widget );
+    var gc = this._getGCFor( widget );
     var width = widget.getInnerWidth();
     var height = widget.getInnerHeight();
     var fillStyle = widget.getBackgroundColor();
@@ -216,7 +216,32 @@ rwt.scripting.WidgetProxyFactory = {
       rwt.util.Colors.stringToRgb( strokeStyle ? strokeStyle : "#000000" )
     );
 
-  }
+  },
+
+  _getGCFor : function( widget ) {
+    var gc = widget.getUserData( rwt.scripting.WidgetProxyFactory._GC_KEY );
+    if( gc == null ) {
+      gc = this._findExistingGC( widget );
+      if( gc == null ) {
+        gc = new rwt.widgets.GC( widget );
+      }
+      widget.setUserData( rwt.scripting.WidgetProxyFactory._GC_KEY, gc );
+    }
+    return gc;
+  },
+
+  _findExistingGC : function( widget ) {
+    var children = widget._getTargetNode().childNodes;
+    var result = null;
+    for( var i = 0; i < children.length && result == null; i++ ) {
+      if( children[ i ].rwtObject instanceof rwt.widgets.GC ) {
+        result = children[ i ].rwtObject;
+      }
+    }
+    return result;
+  },
+
+
 
 };
 

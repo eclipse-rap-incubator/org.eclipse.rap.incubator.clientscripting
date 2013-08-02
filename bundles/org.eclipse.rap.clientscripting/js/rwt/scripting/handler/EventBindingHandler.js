@@ -18,7 +18,7 @@ rwt.remote.HandlerRegistry.add( "rwt.scripting.EventBinding", {
 
   factory : function( properties ) {
     var source = ObjectRegistry.getObject( properties.targetObject );
-    var isPublic = rwt.scripting.ClientScriptingUtil.isPublicObject( source );
+    var isPublic = isPublicObject( source );
     var eventType = properties.eventType;
     var targetFunction = ObjectRegistry.getObject( properties.listener );
     if( isPublic ) {
@@ -43,5 +43,9 @@ rwt.remote.HandlerRegistry.add( "rwt.scripting.EventBinding", {
   }
 
 } );
+
+var isPublicObject = function( obj ) {
+  return ObjectRegistry.getEntry( ObjectRegistry.getId( obj ) ).handler.isPublic === true;
+};
 
 }());

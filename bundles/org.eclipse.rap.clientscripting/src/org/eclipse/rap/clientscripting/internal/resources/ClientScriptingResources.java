@@ -27,7 +27,6 @@ public final class ClientScriptingResources {
   private static final String PREFIX = "rwt/scripting/";
   private static final String[] ALL_RESOURCES = {
     "SWT.js",
-    "ClientScriptingUtil.js",
     "EventBinding.js",
     "handler/EventBindingHandler.js",
     "EventProxy.js",

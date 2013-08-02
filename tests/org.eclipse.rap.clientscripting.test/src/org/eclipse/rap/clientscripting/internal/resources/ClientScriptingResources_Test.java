@@ -77,7 +77,6 @@ public class ClientScriptingResources_Test {
     ClientScriptingResources.ensure();
 
     String registeredCode = registeredStringCaptor.get();
-    assertTrue( registeredCode.contains( "scripting.ClientScriptingUtil =" ) );
     assertTrue( registeredCode.contains( "scripting.EventBinding =" ) );
     assertTrue( registeredCode.contains( "scripting.SWT =" ) );
     assertTrue( registeredCode.contains( "scripting.EventProxy =" ) );

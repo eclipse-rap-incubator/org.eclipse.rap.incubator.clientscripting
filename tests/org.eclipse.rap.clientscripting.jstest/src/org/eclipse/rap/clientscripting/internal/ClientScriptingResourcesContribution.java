@@ -22,7 +22,6 @@ public class ClientScriptingResourcesContribution implements TestContribution {
   private static final String PATH_PREFIX = "/rwt/scripting/";
 
   private static final String[] RESOURCES = new String[] {
-    "ClientScriptingUtil.js",
     "SWT.js",
     "FunctionFactory.js",
     "handler/FunctionHandler.js",

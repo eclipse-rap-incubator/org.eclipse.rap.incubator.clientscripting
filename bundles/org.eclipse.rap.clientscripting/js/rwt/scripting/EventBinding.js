@@ -13,7 +13,6 @@
 
 rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
-var ClientScriptingUtil = rwt.scripting.ClientScriptingUtil;
 var SWT = rwt.scripting.SWT;
 
 var wrapperRegistry = {};
@@ -24,8 +23,8 @@ rwt.scripting.EventBinding = {
   addListener : function( widget, eventType, targetFunction ) {
     var wrapperKey = this._getWrapperKey( widget, eventType, targetFunction );
     if( wrapperRegistry[ wrapperKey ] == null ) {
-      var nativeType = ClientScriptingUtil.getNativeEventType( widget, eventType );
-      var nativeSource = ClientScriptingUtil.getNativeEventSource( widget, eventType );
+      var nativeType = this._getNativeEventType( widget, eventType );
+      var nativeSource = this._getNativeEventSource( widget, eventType );
       var wrappedListener = this._wrapListener( widget, eventType, targetFunction );
       nativeSource.addEventListener( nativeType, wrappedListener, window );
       wrapperRegistry[ wrapperKey ] = wrappedListener;
@@ -35,8 +34,8 @@ rwt.scripting.EventBinding = {
   removeListener : function( widget, eventType, targetFunction ) {
     var wrapperKey = this._getWrapperKey( widget, eventType, targetFunction );
     if( wrapperRegistry[ wrapperKey ] != null ) {
-      var nativeType = ClientScriptingUtil.getNativeEventType( widget, eventType );
-      var nativeSource = ClientScriptingUtil.getNativeEventSource( widget, eventType );
+      var nativeType = this._getNativeEventType( widget, eventType );
+      var nativeSource = this._getNativeEventSource( widget, eventType );
       var wrappedListener = wrapperRegistry[ wrapperKey ];
       nativeSource.removeEventListener( nativeType, wrappedListener, window );
       wrapperRegistry[ wrapperKey ] = null;
@@ -47,9 +46,9 @@ rwt.scripting.EventBinding = {
     return function( nativeEvent ) {
       try {
         var eventProxy = new rwt.scripting.EventProxy( SWT[ eventType ], widget, nativeEvent );
-        var wrappedEventProxy = ClientScriptingUtil.wrapAsProto( eventProxy );
+        var wrappedEventProxy = rwt.scripting.EventProxy.wrapAsProto( eventProxy );
         targetFunction( wrappedEventProxy );
-        ClientScriptingUtil.postProcessEvent( eventProxy, wrappedEventProxy, nativeEvent );
+        rwt.scripting.EventProxy.postProcessEvent( eventProxy, wrappedEventProxy, nativeEvent );
         rwt.scripting.EventProxy.disposeEventProxy( eventProxy );
       } catch( ex ) {
         var msg = "Error in scripting event type ";
@@ -65,6 +64,54 @@ rwt.scripting.EventBinding = {
       rwt.qx.Object.toHashCode( targetFunction )
     ];
     return result.join( ":" );
+  },
+
+  _getNativeEventSource : function( source, eventType ) {
+    var SWT = rwt.scripting.SWT;
+    var result;
+    if( source.classname === "rwt.widgets.List" && eventType === "Selection" ) {
+      result = source.getManager();
+    } else {
+      result = source;
+    }
+    return result;
+  },
+
+  _getNativeEventType : function( source, eventType ) {
+    var map = this._eventTypeMapping;
+    var result;
+    if( map[ source.classname ] && map[ source.classname ][ eventType ] ) {
+      result = map[ source.classname ][ eventType ];
+    } else {
+      result = map[ "*" ][ eventType ];
+    }
+    return result;
+  },
+
+  _eventTypeMapping : {
+    "*" : {
+      "KeyDown" : "keypress",
+      "KeyUp" : "keyup",
+      "MouseDown" : "mousedown",
+      "MouseUp" : "mouseup",
+      "MouseMove" : "mousemove",
+      "MouseEnter" : "mouseover",
+      "MouseExit" : "mouseout",
+      "MouseDoubleClick" : "dblclick",
+      "Paint" : "paint",
+      "FocusIn" : "focus",
+      "FocusOut" : "blur",
+      "Show" : "appear",
+      "Hide" : "disappear"
+    },
+    "rwt.widgets.List" : {
+      "Selection" : "changeSelection",
+      "DefaultSelection" : "dblclick"
+    },
+    "rwt.widgets.Text" : {
+      "Verify" : "input", // TODO [tb] : does currently not react on programatic changes
+      "Modify" : "changeValue"
+    }
   }
 
 };

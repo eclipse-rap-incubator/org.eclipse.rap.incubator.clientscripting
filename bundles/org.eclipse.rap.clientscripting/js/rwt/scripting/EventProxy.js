@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,6 @@ rwt.scripting.EventProxy.prototype = {
    * An object representing the widget that issued the event.
    * It has setter and getter named after the properties used in the RAP protocol.
    * Only a subset of getter is currently supported.
-   * (See rwt.scripting.ClientScriptingUtil#attachGetter.)
    * Setting properties might result in server and client getting out-of-sync in RAP 1.5,
    * unless it is a property that can be changed by user-input (e.g. selection).
    */
@@ -158,6 +157,26 @@ rwt.scripting.EventProxy.disposeEventProxy = function( eventProxy ) {
   eventProxy.widget = null;
 };
 
+rwt.scripting.EventProxy.wrapAsProto = function( object ) {
+    WrapperHelper.prototype = object;
+    var result = new WrapperHelper();
+    WrapperHelper.prototype = null;
+    return result;
+  };
+
+rwt.scripting.EventProxy.postProcessEvent = function( event, wrappedEvent, originalEvent ) {
+  var SWT = rwt.scripting.SWT;
+  switch( event.type ) {
+    case SWT.Verify:
+      postProcessVerifyEvent( event, wrappedEvent, originalEvent );
+    break;
+    case SWT.KeyDown:
+    case SWT.KeyUp:
+      postProcessKeyEvent( event, wrappedEvent, originalEvent );
+    break;
+  }
+};
+
 var initKeyEvent = function( event, originalEvent ) {
   var charCode = originalEvent.getCharCode();
   var SWT = rwt.scripting.SWT;
@@ -204,7 +223,7 @@ var initMouseEvent = function( event, originalEvent ) {
 };
 
 var initPaintEvent = function( event, target ) {
-  var gc = rwt.scripting.ClientScriptingUtil.getGCFor( target );
+  var gc = rwt.scripting.WidgetProxyFactory._getGCFor( target );
   event.gc = gc.getNativeContext();
 };
 
@@ -265,5 +284,34 @@ var setStateMask = function( event, originalEvent ) {
   event.stateMask |= originalEvent.isAltPressed() ? SWT.ALT : 0;
   event.stateMask |= originalEvent.isMetaPressed() ? SWT.COMMAND : 0;
 };
+
+var postProcessVerifyEvent = function( event, wrappedEvent, originalEvent ) {
+  var widget = originalEvent.getTarget();
+  if( wrappedEvent.doit !== false ) {
+    if( event.text !== wrappedEvent.text && event.text !== "" ) {
+      // insert replacement text
+      originalEvent.preventDefault();
+      var currentText = widget.getValue();
+      var textLeft = currentText.slice( 0, event.start );
+      var textRight = currentText.slice( event.end, currentText.length );
+      var carret = textLeft.length + wrappedEvent.text.length;
+      widget.setValue( textLeft + wrappedEvent.text + textRight );
+      widget.setSelection( [ carret, carret ] );
+    }
+  } else {
+    // undo any change
+    originalEvent.preventDefault();
+    widget._renderValue();
+    widget._renderSelection();
+  }
+};
+
+var postProcessKeyEvent = function( event, wrappedEvent, originalEvent ) {
+  if( wrappedEvent.doit === false ) {
+    originalEvent.preventDefault();
+  }
+};
+
+var WrapperHelper = function(){};
 
 }());

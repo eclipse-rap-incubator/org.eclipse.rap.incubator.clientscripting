@@ -20,6 +20,9 @@ public class Script {
   private static final String REMOTE_TYPE = "rwt.scripting.Script";
   private final RemoteObject remoteObject;
 
+  /**
+   * Provisional/Experimental
+   */
   public Script( String scriptCode ) {
     if( scriptCode == null ) {
       throw new NullPointerException( "Parameter is null: scriptCode" );

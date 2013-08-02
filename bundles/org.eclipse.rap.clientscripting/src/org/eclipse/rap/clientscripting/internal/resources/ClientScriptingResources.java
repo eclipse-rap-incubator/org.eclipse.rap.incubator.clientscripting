@@ -26,13 +26,13 @@ public final class ClientScriptingResources {
   private static final String REGISTER_NAME = "clientscripting.js";
   private static final String PREFIX = "rwt/scripting/";
   private static final String[] ALL_RESOURCES = {
+    "SWT.js",
     "ClientScriptingUtil.js",
     "handler/EventBindingHandler.js",
     "EventBinding.js",
     "EventProxy.js",
     "FunctionFactory.js",
     "handler/FunctionHandler.js",
-    "SWT.js",
     "WidgetProxyFactory.js",
     "handler/ScriptHandler.js",
     "init.js"

@@ -196,7 +196,7 @@ rwt.scripting.WidgetProxyFactory = {
   },
 
   _initGC : function( widget ) {
-    var gc = rwt.scripting.ClientScriptingUtil._getGCFor( widget );
+    var gc = rwt.scripting.ClientScriptingUtil.getGCFor( widget );
     var width = widget.getInnerWidth();
     var height = widget.getInnerHeight();
     var fillStyle = widget.getBackgroundColor();

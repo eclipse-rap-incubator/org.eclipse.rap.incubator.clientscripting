@@ -91,83 +91,7 @@ rwt.scripting.ClientScriptingUtil = {
     }
   },
 
-  initEvent : function( event, type, target, originalEvent ) {
-    var SWT = rwt.scripting.SWT;
-    event.widget = rwt.scripting.WidgetProxyFactory.getWidgetProxy( target );
-    event.type = type;
-    switch( type ) {
-      case SWT.KeyDown:
-      case SWT.KeyUp:
-        this._initKeyEvent( event, originalEvent );
-      break;
-      case SWT.MouseDown:
-      case SWT.MouseUp:
-      case SWT.MouseMove:
-      case SWT.MouseEnter:
-      case SWT.MouseExit:
-      case SWT.MouseDoubleClick:
-        this._initMouseEvent( event, originalEvent );
-      break;
-      case SWT.Verify:
-        this._initVerifyEvent( event, originalEvent );
-      break;
-      case SWT.Paint:
-        this._initPaintEvent( event, target );
-      break;
-    }
-  },
-
-  _initKeyEvent : function( event, originalEvent ) {
-    var charCode = originalEvent.getCharCode();
-    var SWT = rwt.scripting.SWT;
-    if( charCode !== 0 ) {
-      event.character = String.fromCharCode( charCode );
-      // TODO [tb] : keyCode will be off when character is not a-z
-      event.keyCode = event.character.toLowerCase().charCodeAt( 0 );
-    } else {
-      var keyCode = this._getLastKeyCode();
-      switch( keyCode ) {
-        case 16:
-          event.keyCode = SWT.SHIFT;
-        break;
-        case 17:
-          event.keyCode = SWT.CTRL;
-        break;
-        case 18:
-          event.keyCode = SWT.ALT;
-        break;
-        case 224:
-          event.keyCode = SWT.COMMAND;
-        break;
-        default:
-          event.keyCode = keyCode;
-        break;
-      }
-    }
-    this._setStateMask( event, originalEvent );
-  },
-
-  _initMouseEvent : function( event, originalEvent ) {
-    var target = originalEvent.getTarget()._getTargetNode();
-    var offset = rwt.html.Location.get( target, "scroll" );
-    event.x = originalEvent.getPageX() - offset.left;
-    event.y = originalEvent.getPageY() - offset.top;
-    if( originalEvent.isLeftButtonPressed() ) {
-      event.button = 1;
-    } else if( originalEvent.isRightButtonPressed() ) {
-      event.button = 3;
-    } if( originalEvent.isMiddleButtonPressed() ) {
-      event.button = 2;
-    }
-    this._setStateMask( event, originalEvent );
-  },
-
-  _initPaintEvent : function( event, target ) {
-    var gc = this._getGCFor( target );
-    event.gc = gc.getNativeContext();
-  },
-
-  _getGCFor : function( widget ) {
+  getGCFor : function( widget ) {
     var gc = widget.getUserData( rwt.scripting.WidgetProxyFactory._GC_KEY );
     if( gc == null ) {
       gc = this._findExistingGC( widget );
@@ -188,27 +112,6 @@ rwt.scripting.ClientScriptingUtil = {
       }
     }
     return result;
-  },
-
-  _initVerifyEvent : function( event, originalEvent ) {
-    var text = originalEvent.getTarget();
-    if( text.classname === "rwt.widgets.Text" ) {
-      var keyCode = this._getLastKeyCode();
-      var newValue = text.getComputedValue();
-      var oldValue = text.getValue();
-      var oldSelection = text.getSelection();
-      var diff = this._getDiff( newValue, oldValue, oldSelection, keyCode );
-      if(    diff[ 0 ].length === 1
-          && diff[ 1 ] === diff[ 2 ]
-          && diff[ 0 ] === originalEvent.getData()
-      ) {
-        event.keyCode = keyCode;
-        event.character = diff[ 0 ];
-      }
-      event.text = diff[ 0 ];
-      event.start = diff[ 1 ];
-      event.end = diff[ 2 ];
-    }
   },
 
   _postProcessVerifyEvent : function( event, wrappedEvent, originalEvent ) {
@@ -236,44 +139,6 @@ rwt.scripting.ClientScriptingUtil = {
     if( wrappedEvent.doit === false ) {
       originalEvent.preventDefault();
     }
-  },
-
-  _setStateMask : function( event, originalEvent ) {
-    var SWT = rwt.scripting.SWT;
-    event.stateMask |= originalEvent.isShiftPressed() ? SWT.SHIFT : 0;
-    event.stateMask |= originalEvent.isCtrlPressed() ? SWT.CTRL : 0;
-    event.stateMask |= originalEvent.isAltPressed() ? SWT.ALT : 0;
-    event.stateMask |= originalEvent.isMetaPressed() ? SWT.COMMAND : 0;
-  },
-
-  _getLastKeyCode : function() {
-    // NOTE : While this is a private field, this mechanism must be integrated with
-    // KeyEventSupport anyway to support the doit flag better.
-    return rwt.remote.KeyEventSupport.getInstance()._currentKeyCode;
-  },
-
-  _getDiff : function( newValue, oldValue, oldSel, keyCode ) {
-    var start;
-    var end;
-    var text;
-    if( newValue.length >= oldValue.length || oldSel[ 0 ] !== oldSel[ 1 ] ) {
-      start = oldSel[ 0 ];
-      end = oldSel[ 1 ];
-      text = newValue.slice( start, newValue.length - ( oldValue.length - oldSel[ 1 ] ) );
-    } else {
-      text = "";
-      if(    oldSel[ 0 ] === oldSel[ 1 ]
-          && keyCode === 8 // backspace
-          && ( oldValue.length - 1 ) === newValue.length
-      ) {
-        start = oldSel[ 0 ] - 1;
-        end = oldSel[ 0 ];
-      } else {
-        start = oldSel[ 0 ];
-        end = start + oldValue.length - newValue.length;
-      }
-    }
-    return [ text, start, end ];
   }
 
 };

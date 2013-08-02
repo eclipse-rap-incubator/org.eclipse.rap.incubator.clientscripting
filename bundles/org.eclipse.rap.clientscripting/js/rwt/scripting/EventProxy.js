@@ -9,11 +9,35 @@
  *    EclipseSource - initial API and implementation
  ******************************************************************************/
 
+(function(){
+
+var SWT = rwt.scripting.SWT;
+
 rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
-rwt.scripting.EventProxy = function( eventType, target, originalEvent ) {
-  var ClientScriptingUtil = rwt.scripting.ClientScriptingUtil;
-  ClientScriptingUtil.initEvent( this, eventType, target, originalEvent );
+rwt.scripting.EventProxy = function( eventType, originalTarget, originalEvent ) {
+  this.widget = rwt.scripting.WidgetProxyFactory.getWidgetProxy( originalTarget );
+  this.type = eventType;
+  switch( eventType ) {
+    case SWT.KeyDown:
+    case SWT.KeyUp:
+      initKeyEvent( this, originalEvent );
+    break;
+    case SWT.MouseDown:
+    case SWT.MouseUp:
+    case SWT.MouseMove:
+    case SWT.MouseEnter:
+    case SWT.MouseExit:
+    case SWT.MouseDoubleClick:
+      initMouseEvent( this, originalEvent );
+    break;
+    case SWT.Verify:
+      initVerifyEvent( this, originalEvent );
+    break;
+    case SWT.Paint:
+      initPaintEvent( this, originalTarget );
+    break;
+  }
 };
 
 rwt.scripting.EventProxy.prototype = {
@@ -128,9 +152,118 @@ rwt.scripting.EventProxy.prototype = {
    */
   gc : null
 
-
 };
 
 rwt.scripting.EventProxy.disposeEventProxy = function( eventProxy ) {
   eventProxy.widget = null;
 };
+
+var initKeyEvent = function( event, originalEvent ) {
+  var charCode = originalEvent.getCharCode();
+  var SWT = rwt.scripting.SWT;
+  if( charCode !== 0 ) {
+    event.character = String.fromCharCode( charCode );
+    // TODO [tb] : keyCode will be off when character is not a-z
+    event.keyCode = event.character.toLowerCase().charCodeAt( 0 );
+  } else {
+    var keyCode = getLastKeyCode();
+    switch( keyCode ) {
+      case 16:
+        event.keyCode = SWT.SHIFT;
+      break;
+      case 17:
+        event.keyCode = SWT.CTRL;
+      break;
+      case 18:
+        event.keyCode = SWT.ALT;
+      break;
+      case 224:
+        event.keyCode = SWT.COMMAND;
+      break;
+      default:
+        event.keyCode = keyCode;
+      break;
+    }
+  }
+  setStateMask( event, originalEvent );
+};
+
+var initMouseEvent = function( event, originalEvent ) {
+  var target = originalEvent.getTarget()._getTargetNode();
+  var offset = rwt.html.Location.get( target, "scroll" );
+  event.x = originalEvent.getPageX() - offset.left;
+  event.y = originalEvent.getPageY() - offset.top;
+  if( originalEvent.isLeftButtonPressed() ) {
+    event.button = 1;
+  } else if( originalEvent.isRightButtonPressed() ) {
+    event.button = 3;
+  } if( originalEvent.isMiddleButtonPressed() ) {
+    event.button = 2;
+  }
+  setStateMask( event, originalEvent );
+};
+
+var initPaintEvent = function( event, target ) {
+  var gc = rwt.scripting.ClientScriptingUtil.getGCFor( target );
+  event.gc = gc.getNativeContext();
+};
+
+var initVerifyEvent = function( event, originalEvent ) {
+  var text = originalEvent.getTarget();
+  if( text.classname === "rwt.widgets.Text" ) {
+    var keyCode = getLastKeyCode();
+    var newValue = text.getComputedValue();
+    var oldValue = text.getValue();
+    var oldSelection = text.getSelection();
+    var diff = getDiff( newValue, oldValue, oldSelection, keyCode );
+    if(    diff[ 0 ].length === 1
+        && diff[ 1 ] === diff[ 2 ]
+        && diff[ 0 ] === originalEvent.getData()
+    ) {
+      event.keyCode = keyCode;
+      event.character = diff[ 0 ];
+    }
+    event.text = diff[ 0 ];
+    event.start = diff[ 1 ];
+    event.end = diff[ 2 ];
+  }
+};
+
+var getLastKeyCode = function() {
+  // NOTE : While this is a private field, this mechanism must be integrated with
+  // KeyEventSupport anyway to support the doit flag better.
+  return rwt.remote.KeyEventSupport.getInstance()._currentKeyCode;
+};
+
+var getDiff = function( newValue, oldValue, oldSel, keyCode ) {
+  var start;
+  var end;
+  var text;
+  if( newValue.length >= oldValue.length || oldSel[ 0 ] !== oldSel[ 1 ] ) {
+    start = oldSel[ 0 ];
+    end = oldSel[ 1 ];
+    text = newValue.slice( start, newValue.length - ( oldValue.length - oldSel[ 1 ] ) );
+  } else {
+    text = "";
+    if(    oldSel[ 0 ] === oldSel[ 1 ]
+        && keyCode === 8 // backspace
+        && ( oldValue.length - 1 ) === newValue.length
+    ) {
+      start = oldSel[ 0 ] - 1;
+      end = oldSel[ 0 ];
+    } else {
+      start = oldSel[ 0 ];
+      end = start + oldValue.length - newValue.length;
+    }
+  }
+  return [ text, start, end ];
+};
+
+var setStateMask = function( event, originalEvent ) {
+  event.stateMask |= originalEvent.isShiftPressed() ? SWT.SHIFT : 0;
+  event.stateMask |= originalEvent.isCtrlPressed() ? SWT.CTRL : 0;
+  event.stateMask |= originalEvent.isAltPressed() ? SWT.ALT : 0;
+  event.stateMask |= originalEvent.isMetaPressed() ? SWT.COMMAND : 0;
+};
+
+}());

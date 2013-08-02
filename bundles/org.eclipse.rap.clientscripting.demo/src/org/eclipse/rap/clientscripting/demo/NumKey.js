@@ -1,3 +1,5 @@
+//# sourceURL=NumKey.js
+
 var handleEvent = function( event ) {
   var button = event.widget;
   var text = rap.getObject( button.getData( "textWidget" ) );

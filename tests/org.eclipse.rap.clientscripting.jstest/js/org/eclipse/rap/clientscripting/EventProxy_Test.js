@@ -15,7 +15,7 @@ var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = rwt.remote.MessageProcessor;
 var ObjectManager = rwt.remote.ObjectRegistry;
-var WidgetProxy = org.eclipse.rap.clientscripting.WidgetProxy;
+var WidgetProxyFactory = org.eclipse.rap.clientscripting.WidgetProxyFactory;
 var SWT = org.eclipse.rap.clientscripting.SWT;
 
 var text;
@@ -495,7 +495,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           gc = ev.gc;
         }
       } );
-      WidgetProxy.getInstance( canvas ).redraw();
+      WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
 
       assertNotNull( gc );
       assertTrue( gc.stroke instanceof Function );
@@ -521,8 +521,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           gc.push( ev.gc );
         }
       } );
-      WidgetProxy.getInstance( canvas ).redraw();
-      WidgetProxy.getInstance( canvas ).redraw();
+      WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
+      WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
 
       assertTrue( gc[ 0 ].stroke instanceof Function );
       assertIdentical( gc[ 0 ], gc[ 1 ] );
@@ -557,7 +557,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           gc = ev.gc;
         }
       } );
-      WidgetProxy.getInstance( canvas ).redraw();
+      WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
 
       assertIdentical( serverGc.getNativeContext(), gc );
       canvas.destroy();
@@ -592,8 +592,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           gc.fillStyle = "#00ff00";
         }
       } );
-      WidgetProxy.getInstance( canvas ).redraw();
-      WidgetProxy.getInstance( canvas ).redraw();
+      WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
+      WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
 
       assertEquals( [ "#bbbbbb", "#aaaaaa", "italic 11px Arial" ], props );
       canvas.destroy();
@@ -624,8 +624,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           gc.fillStyle = "#00ff00";
         }
       } );
-      WidgetProxy.getInstance( canvas ).redraw();
-      WidgetProxy.getInstance( canvas ).redraw();
+      WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
+      WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
 
       assertEquals( [ "#000000", "#000000" ], props );
       canvas.destroy();

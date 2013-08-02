@@ -14,20 +14,20 @@
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = rwt.remote.MessageProcessor;
 var ObjectManager = rwt.remote.ObjectRegistry;
-var WidgetProxy = org.eclipse.rap.clientscripting.WidgetProxy;
+var WidgetProxyFactory = org.eclipse.rap.clientscripting.WidgetProxyFactory;
 var EventBinding = org.eclipse.rap.clientscripting.EventBinding;
 var SWT = org.eclipse.rap.clientscripting.SWT;
 
 var text;
 
-rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
+rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxyFactory_Test", {
 
   extend : rwt.qx.Object,
 
   members : {
 
   testCreateTextWidgetProxyFromPublicAPI : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
 
       var otherProxy = rap.getObject( "w3" );
 
@@ -35,14 +35,14 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testCreateTextWidgetProxyTwice : function() {
-      var widgetProxy1 = WidgetProxy.getInstance( text );
-      var widgetProxy2 = WidgetProxy.getInstance( text );
+      var widgetProxy1 = WidgetProxyFactory.getWidgetProxy( text );
+      var widgetProxy2 = WidgetProxyFactory.getWidgetProxy( text );
 
       assertTrue( widgetProxy1 === widgetProxy2 );
     },
 
     testDisposeWidgetProxy : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
 
       text.destroy();
       TestUtil.flush();
@@ -55,7 +55,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testDisposeUserData : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       widgetProxy.setData( "key", {} );
       var data = rwt.remote.HandlerUtil.getServerData( text );
       assertFalse( TestUtil.hasNoObjects( data ) );
@@ -67,7 +67,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testSetter : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
 
       widgetProxy.setText( "foo" );
 
@@ -75,8 +75,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testSetGetData : function() {
-      var widgetProxy1 = WidgetProxy.getInstance( text );
-      var widgetProxy2 = WidgetProxy.getInstance( text );
+      var widgetProxy1 = WidgetProxyFactory.getWidgetProxy( text );
+      var widgetProxy2 = WidgetProxyFactory.getWidgetProxy( text );
 
       widgetProxy1.setData( "myKey", 24 );
 
@@ -85,7 +85,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testSetDataTooManyArguments : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       try {
         widgetProxy.setData( "myKey", 24, "foo" );
         fail();
@@ -95,7 +95,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testSetDataTooFewArguments : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       try {
         widgetProxy.setData( 24 );
         fail();
@@ -105,7 +105,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testGetDataTooManyArguments : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       try {
         widgetProxy.getData( "myKey", 24 );
         fail();
@@ -115,7 +115,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testGetDataTooFewArguments : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       try {
         widgetProxy.getData();
         fail();
@@ -126,7 +126,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
 
     testSetTextSync : function() {
       TestUtil.initRequestLog();
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
 
       widgetProxy.setText( "foo" );
       rwt.remote.Server.getInstance().send();
@@ -135,7 +135,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testTextGetText : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       text.setValue( "foo" );
 
       var value = widgetProxy.getText();
@@ -144,7 +144,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testTextGetSelection : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       text.setValue( "foo" );
       text.setSelection( [ 1,2 ] );
 
@@ -154,7 +154,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testTextGetEditable_returnsTrue : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
 
       var value = widgetProxy.getEditable();
 
@@ -162,7 +162,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testTextGetEditable_returnsFalse : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       widgetProxy.setEditable( false );
 
       var value = widgetProxy.getEditable();
@@ -171,7 +171,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testTextForceFocus : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       text.blur();
 
       var value = widgetProxy.forceFocus();
@@ -181,7 +181,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testTextForceFocus_NotVisible : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       text.blur();
       text.setVisibility( false );
 
@@ -192,7 +192,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testTextForceFocus_ParentNotVisible : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       text.blur();
       text.getParent().setVisibility( false );
       TestUtil.flush();
@@ -204,7 +204,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
     },
 
     testTextForceFocus_NotEnabled : function() {
-      var widgetProxy = WidgetProxy.getInstance( text );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
       text.blur();
       text.setEnabled( false );
 
@@ -227,7 +227,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       } );
       var list = ObjectManager.getObject( "w4" );
       TestUtil.flush();
-      var widgetProxy = WidgetProxy.getInstance( list );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( list );
       TestUtil.click( list.getItems()[ 1 ] );
 
       var value = widgetProxy.getSelection();
@@ -248,7 +248,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
       } );
       var list = ObjectManager.getObject( "w4" );
       TestUtil.flush();
-      var widgetProxy = WidgetProxy.getInstance( list );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( list );
       TestUtil.click( list.getItems()[ 1 ] );
 
       var value = widgetProxy.getSelection();
@@ -267,7 +267,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxy_Test", {
         }
       } );
       var canvas = ObjectManager.getObject( "w4" );
-      var widgetProxy = WidgetProxy.getInstance( canvas );
+      var widgetProxy = WidgetProxyFactory.getWidgetProxy( canvas );
       var logger = this._createLogger();
       TestUtil.flush();
       new EventBinding( canvas, "Paint", logger );

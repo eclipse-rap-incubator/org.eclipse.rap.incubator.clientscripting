@@ -17,7 +17,7 @@ import org.eclipse.rap.rwt.remote.RemoteObject;
 
 public class Script {
 
-  private static final String REMOTE_TYPE = "rwt.clientscripting.Script";
+  private static final String REMOTE_TYPE = "rwt.scripting.Script";
   private final RemoteObject remoteObject;
 
   public Script( String scriptCode ) {

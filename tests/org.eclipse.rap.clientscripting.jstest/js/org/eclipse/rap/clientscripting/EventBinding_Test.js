@@ -33,16 +33,17 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       Processor.processOperation( {
         "target" : "w4",
         "action" : "create",
-        "type" : "rwt.clientscripting.Listener",
+        "type" : "rwt.scripting.Function",
         "properties" : {
-          "scriptCode" : code
+          "scriptCode" : code,
+          "name" : "handleEvent"
         }
       } );
 
       Processor.processOperation( {
         "target" : "w5",
         "action" : "create",
-        "type" : "rwt.clientscripting.EventBinding",
+        "type" : "rwt.scripting.EventBinding",
         "properties" : {
           "eventType" : "KeyDown",
           "targetObject" : "w3",
@@ -98,10 +99,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     },
 
     testDoItFalseKeyDown : function() {
-      var listener = {
-        "call" : function( event ) {
-          event.doit = false;
-        }
+      var listener = function( event ) {
+        event.doit = false;
       };
 
       new EventBinding( text, "KeyDown", listener );
@@ -112,10 +111,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     },
 
     testDoItFalseMouseDown : function() {
-      var listener = {
-        "call" : function( event ) {
-          event.doit = false;
-        }
+      var listener = function( event ) {
+        event.doit = false;
       };
 
       new EventBinding( text, "MouseDown", listener );
@@ -253,10 +250,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       text.setValue( "foo" );
       var textValue;
-      var handler = {
-        "call" : function( event ) {
-          textValue = event.widget.getText();
-        }
+      var handler = function( event ) {
+        textValue = event.widget.getText();
       };
 
       new EventBinding( text, "Verify", handler );
@@ -269,10 +264,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testVerifyEventDoItFalse : function() {
       TestUtil.flush();
       text.setValue( "foo" );
-      var handler = {
-        "call" : function( event ) {
-          event.doit = false;
-        }
+      var handler = function( event ) {
+        event.doit = false;
       };
 
       new EventBinding( text, "Verify", handler );
@@ -285,10 +278,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testVerifyEventDoItFalseSelection : function() {
       TestUtil.flush();
       text.setValue( "fooxxx" );
-      var handler = {
-        "call" : function( event ) {
-          event.doit = false;
-        }
+      var handler = function( event ) {
+        event.doit = false;
       };
 
       new EventBinding( text, "Verify", handler );
@@ -301,10 +292,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testVerifyBindingProtectAgainstTypeOverwrite : function() {
       TestUtil.flush();
       text.setValue( "foo" );
-      var handler = {
-        "call" : function( event ) {
-          event.type = "boom";
-        }
+      var handler = function( event ) {
+        event.type = "boom";
       } ;
 
       new EventBinding( text, "Verify", handler );
@@ -316,10 +305,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testVerifyEventTextOverwrite : function() {
       TestUtil.flush();
       text.setValue( "foo" );
-      var handler = {
-        "call" : function( event ) {
-          event.text = "bar";
-        }
+      var handler = function( event ) {
+        event.text = "bar";
       };
 
       new EventBinding( text, "Verify", handler );
@@ -331,10 +318,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testVerifyEventSelectionAfterTextOverwrite : function() {
       TestUtil.flush();
       text.setValue( "foo" );
-      var handler = {
-        "call" : function( event ) {
-          event.text = "bar";
-        }
+      var handler = function( event ) {
+        event.text = "bar";
       } ;
 
       new EventBinding( text, "Verify", handler );
@@ -348,10 +333,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testVerifyEventSelectionAfterReplacementTextOverwrite : function() {
       TestUtil.flush();
       text.setValue( "foo" );
-      var handler = {
-        "call" : function( event ) {
-          event.text = "bar";
-        }
+      var handler = function( event ) {
+        event.text = "bar";
       } ;
 
       new EventBinding( text, "Verify", handler );
@@ -366,12 +349,10 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       text.setValue( "foo" );
       var selection;
-      var handler = {
-        "call" : function( event ) {
-          event.text = "bar";
-          selection = event.widget.getSelection();
-        }
-      } ;
+      var handler = function( event ) {
+        event.text = "bar";
+        selection = event.widget.getSelection();
+      };
 
       new EventBinding( text, "Verify", handler );
       this._inputText( text, "foxo", [ 2, 2 ] );
@@ -385,11 +366,9 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       text.setValue( "foo" );
       var selection;
-      var handler = {
-        "call" : function( event ) {
-          event.text = "bar";
-          selection = event.widget.getSelection();
-        }
+      var handler = function( event ) {
+        event.text = "bar";
+        selection = event.widget.getSelection();
       } ;
 
       new EventBinding( text, "Verify", handler );
@@ -519,12 +498,11 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     // helper
 
     _createLogger : function() {
-      var result = {
-        "log" : [],
-        "call" : function( arg ) {
-          this.log.push( arg ); // it's important that "this" is available, like in Function.js
-        }
+      var log = [];
+      var result = function( arg ) {
+        log.push( arg );
       };
+      result.log = log;
       return result;
     },
 

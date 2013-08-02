@@ -24,7 +24,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Script_Test", {
     testCreateScriptWithTextByProtocol : function() {
       var code = "1+1;";
 
-      var op = [ "create", "r3", "rwt.clientscripting.Script", { "text" : code } ];
+      var op = [ "create", "r3", "rwt.scripting.Script", { "text" : code } ];
       MessageProcessor.processOperationArray( op );
 
       var ObjectManager = rwt.remote.ObjectRegistry;

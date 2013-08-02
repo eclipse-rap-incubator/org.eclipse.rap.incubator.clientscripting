@@ -27,7 +27,7 @@ import org.junit.*;
 
 public class ClientListenerBinding_Test {
 
-  private static final String LISTENER_BINDING_TYPE =  "rwt.clientscripting.EventBinding";
+  private static final String LISTENER_BINDING_TYPE =  "rwt.scripting.EventBinding";
 
   private ClientListener listener1;
   private ClientListener listener2;
@@ -80,7 +80,7 @@ public class ClientListenerBinding_Test {
 
     binding = new ClientListenerBinding( listener1, "w101", "KeyDown" );
 
-    verify( connection ).createRemoteObject( eq( "rwt.clientscripting.EventBinding" ) );
+    verify( connection ).createRemoteObject( eq( "rwt.scripting.EventBinding" ) );
   }
 
   @Test

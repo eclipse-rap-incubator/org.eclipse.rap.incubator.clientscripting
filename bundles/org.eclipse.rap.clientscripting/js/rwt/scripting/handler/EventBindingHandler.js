@@ -11,7 +11,7 @@
 
 (function(){
 
-rwt.remote.HandlerRegistry.add( "rwt.clientscripting.EventBinding", {
+rwt.remote.HandlerRegistry.add( "rwt.scripting.EventBinding", {
 
   factory : function( properties ) {
     var ObjectRegistry = rwt.remote.ObjectRegistry;

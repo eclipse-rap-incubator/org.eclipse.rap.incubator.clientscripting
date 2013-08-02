@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.internal.resources;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.endsWith;
@@ -23,10 +25,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.*;
 import java.util.concurrent.atomic.AtomicReference;
-import static org.junit.Assert.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 import org.eclipse.rap.rwt.application.Application;
 import org.eclipse.rap.rwt.client.Client;
@@ -34,6 +32,7 @@ import org.eclipse.rap.rwt.client.service.JavaScriptLoader;
 import org.eclipse.rap.rwt.service.ResourceLoader;
 import org.eclipse.rap.rwt.service.ResourceManager;
 import org.eclipse.rap.rwt.testfixture.Fixture;
+import org.junit.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -78,10 +77,10 @@ public class ClientScriptingResources_Test {
     ClientScriptingResources.ensure();
 
     String registeredCode = registeredStringCaptor.get();
-    assertTrue( registeredCode.contains( "clientscripting.ClientScriptingUtil =" ) );
-    assertTrue( registeredCode.contains( "clientscripting.EventBinding =" ) );
-    assertTrue( registeredCode.contains( "clientscripting.SWT =" ) );
-    assertTrue( registeredCode.contains( "clientscripting.EventProxy =" ) );
+    assertTrue( registeredCode.contains( "scripting.ClientScriptingUtil =" ) );
+    assertTrue( registeredCode.contains( "scripting.EventBinding =" ) );
+    assertTrue( registeredCode.contains( "scripting.SWT =" ) );
+    assertTrue( registeredCode.contains( "scripting.EventProxy =" ) );
   }
 
   static String read( InputStream inputStream, String charset ) throws IOException {

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -24,7 +24,7 @@ import org.junit.*;
 
 public class Script_Test {
 
-  private static final String REMOTE_TYPE = "rwt.clientscripting.Script";
+  private static final String REMOTE_TYPE = "rwt.scripting.Script";
   private Connection connection;
   private RemoteObject remoteObject;
 

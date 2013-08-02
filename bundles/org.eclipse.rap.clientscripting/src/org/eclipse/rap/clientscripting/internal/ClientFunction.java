@@ -21,7 +21,7 @@ import org.eclipse.rap.rwt.remote.RemoteObject;
 
 public class ClientFunction {
 
-  private static final String REMOTE_TYPE = "rwt.clientscripting.Listener";
+  private static final String REMOTE_TYPE = "rwt.scripting.Function";
 
   private final RemoteObject remoteObject;
   private final Collection<ClientListenerBinding> bindings;
@@ -46,6 +46,7 @@ public class ClientFunction {
     bindings = new ArrayList<ClientListenerBinding>();
     remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
     ClientScriptingResources.ensure();
+    remoteObject.set( "name", "handleEvent" );
   }
 
   protected String getRemoteId() {

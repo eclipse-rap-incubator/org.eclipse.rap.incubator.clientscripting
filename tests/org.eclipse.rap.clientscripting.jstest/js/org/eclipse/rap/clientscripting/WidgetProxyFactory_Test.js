@@ -284,12 +284,10 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxyFactory_Test", 
 
     _createLogger : function() {
       var log = [];
-      var result = {
-        "log" : log,
-        "call" : function( arg ) {
-          log.push( arg );
-        }
+      var result = function( arg ) {
+        log.push( arg );
       };
+      result.log = log;
       return result;
     },
 

@@ -32,9 +32,8 @@ import org.junit.*;
 
 public class ClientFunction_Test {
 
-  private static final String CLIENT_LISTENER_TYPE =  "rwt.clientscripting.Listener";
-  private static final String LISTENER_BINDING_TYPE =  "rwt.clientscripting.EventBinding";
-  private static final String SCRIPT_TYPE = "rwt.clientscripting.Script";
+  private static final String CLIENT_LISTENER_TYPE = "rwt.scripting.Function";
+  private static final String LISTENER_BINDING_TYPE = "rwt.scripting.EventBinding";
 
   private ClientFunction function;
 
@@ -75,18 +74,30 @@ public class ClientFunction_Test {
 
     new ClientFunction( new Script( "script code" ) );
 
-    verify( connection ).createRemoteObject( "rwt.clientscripting.Listener" );
+    verify( connection ).createRemoteObject( "rwt.scripting.Function" );
   }
 
   @Test
-  public void testCreationWithString_sendsString() {
+  public void testCreation_setsName() {
     RemoteObject listenerRemoteObject = mock( RemoteObject.class );
     RemoteObject scriptRemoteObject = mock( RemoteObject.class );
     Connection connection = mock( Connection.class );
     when( connection.createRemoteObject( eq( CLIENT_LISTENER_TYPE ) ) )
       .thenReturn( listenerRemoteObject );
-    when( connection.createRemoteObject( eq( SCRIPT_TYPE ) ) ).thenReturn( scriptRemoteObject );
     when( scriptRemoteObject.getId() ).thenReturn( "fooId" );
+    Fixture.fakeConnection( connection );
+
+    new ClientFunction( "my script code" );
+
+    verify( listenerRemoteObject ).set( eq( "name" ), eq( "handleEvent" ) );
+  }
+
+  @Test
+  public void testCreationWithString_setsString() {
+    RemoteObject listenerRemoteObject = mock( RemoteObject.class );
+    Connection connection = mock( Connection.class );
+    when( connection.createRemoteObject( eq( CLIENT_LISTENER_TYPE ) ) )
+    .thenReturn( listenerRemoteObject );
     Fixture.fakeConnection( connection );
 
     new ClientFunction( "my script code" );
@@ -95,7 +106,7 @@ public class ClientFunction_Test {
   }
 
   @Test
-  public void testCreationWithScript_initializesRemoteObject() {
+  public void testCreationWithScript_setsScriptId() {
     RemoteObject listenerRemoteObject = mock( RemoteObject.class );
     fakeConnection( listenerRemoteObject, CLIENT_LISTENER_TYPE );
     Script script = mock( Script.class );

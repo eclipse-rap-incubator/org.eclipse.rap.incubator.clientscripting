@@ -1,4 +1,4 @@
-/*******************************************************************************
+ /*******************************************************************************
  * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -490,10 +490,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var gc;
 
-      new EventBinding( canvas, "Paint", {
-        "call" : function( ev ) {
-          gc = ev.gc;
-        }
+      new EventBinding( canvas, "Paint", function( ev ) {
+        gc = ev.gc;
       } );
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
 
@@ -516,10 +514,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var gc = [];
 
-      new EventBinding( canvas, "Paint", {
-        "call" : function( ev ) {
-          gc.push( ev.gc );
-        }
+      new EventBinding( canvas, "Paint", function( ev ) {
+        gc.push( ev.gc );
       } );
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
@@ -552,10 +548,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var gc;
 
-      new EventBinding( canvas, "Paint", {
-        "call" : function( ev ) {
-          gc = ev.gc;
-        }
+      new EventBinding( canvas, "Paint", function( ev ) {
+        gc = ev.gc;
       } );
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
 
@@ -580,17 +574,15 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var props;
 
-      new EventBinding( canvas, "Paint", {
-        "call" : function( ev ) {
-          var gc = ev.gc;
-          props = [
-            gc.strokeStyle,
-            gc.fillStyle,
-            rwt.html.Font.fromString( gc.font ).toCss()
-          ];
-          gc.strokeStyle = "#ff00ff";
-          gc.fillStyle = "#00ff00";
-        }
+      new EventBinding( canvas, "Paint", function( ev ) {
+        var gc = ev.gc;
+        props = [
+          gc.strokeStyle,
+          gc.fillStyle,
+          rwt.html.Font.fromString( gc.font ).toCss()
+        ];
+        gc.strokeStyle = "#ff00ff";
+        gc.fillStyle = "#00ff00";
       } );
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
@@ -616,13 +608,11 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       TestUtil.flush();
       var props;
 
-      new EventBinding( canvas, "Paint", {
-        "call" : function( ev ) {
-          var gc = ev.gc;
-          props = [ gc.strokeStyle, gc.fillStyle ];
-          gc.strokeStyle = "#ff00ff";
-          gc.fillStyle = "#00ff00";
-        }
+      new EventBinding( canvas, "Paint", function( ev ) {
+        var gc = ev.gc;
+        props = [ gc.strokeStyle, gc.fillStyle ];
+        gc.strokeStyle = "#ff00ff";
+        gc.fillStyle = "#00ff00";
       } );
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
@@ -656,17 +646,15 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       var fontArr = [ [ "Arial" ], 11, false, true ];
       var props;
 
-      new EventBinding( canvas, "Paint", {
-        "call" : function( ev ) {
-          var gc = ev.gc;
-          props = [
-            gc.strokeStyle,
-            gc.fillStyle,
-            rwt.html.Font.fromString( gc.font ).toCss()
-          ];
-          gc.strokeStyle = "#ff00ff";
-          gc.fillStyle = "#00ff00";
-        }
+      new EventBinding( canvas, "Paint", function( ev ) {
+        var gc = ev.gc;
+        props = [
+          gc.strokeStyle,
+          gc.fillStyle,
+          rwt.html.Font.fromString( gc.font ).toCss()
+        ];
+        gc.strokeStyle = "#ff00ff";
+        gc.fillStyle = "#00ff00";
       } );
       serverGc.init( 500, 500, fontArr, [ 170, 170, 170 ], [ 187, 187, 187 ] );
 

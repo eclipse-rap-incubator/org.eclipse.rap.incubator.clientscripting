@@ -19,9 +19,7 @@ rwt.scripting.EventBinding = function( source, eventType, targetFunction ) {
     this._eventType = eventType;
     this._source = source;
     this._public = ClientScriptingUtil.isPublicObject( source );
-    this._targetFunction = function() {
-      targetFunction.call.apply( targetFunction, arguments );
-    };
+    this._targetFunction = targetFunction;
     if( this._public ) {
       this._eventSource = source;
       this._nativeType = eventType;

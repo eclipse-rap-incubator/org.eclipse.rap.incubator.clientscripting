@@ -11,7 +11,7 @@
 
 (function(){
 
-rap.registerTypeHandler( "rwt.clientscripting.Script", {
+rap.registerTypeHandler( "rwt.scripting.Script", {
 
   factory : function( properties ) {
     var text = properties.text;

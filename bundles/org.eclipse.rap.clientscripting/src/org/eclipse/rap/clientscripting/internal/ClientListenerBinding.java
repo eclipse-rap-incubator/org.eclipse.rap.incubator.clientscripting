@@ -16,7 +16,7 @@ import org.eclipse.rap.rwt.remote.RemoteObject;
 
 public class ClientListenerBinding {
 
-  private static final String REMOTE_TYPE = "rwt.clientscripting.EventBinding";
+  private static final String REMOTE_TYPE = "rwt.scripting.EventBinding";
 
   private final ClientFunction function;
   private final String targetId;

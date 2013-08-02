@@ -11,7 +11,7 @@
 
 (function() {
 
-var Function = rwt.scripting.Function;
+var FunctionFactory = rwt.scripting.FunctionFactory;
 var SWT = rwt.scripting.SWT;
 
 rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
@@ -23,7 +23,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
     testCreateFunctionWrongNamed : function() {
       var code = "function foo(){}";
       try {
-        new Function( code );
+        FunctionFactory.createFunction( code, "handleEvent" );
         fail();
       } catch( ex ) {
         // expected
@@ -33,8 +33,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
     /*global global:true */
     testCreateFunctionWithHelper : function() {
       var code = "var foo = function(){  global = 1;  };var handleEvent = function(){ foo(); };";
-      var listener = new Function( code );
-      listener.call();
+      var listener = FunctionFactory.createFunction( code, "handleEvent" );
+      listener();
       assertEquals( 1, global );
       delete global; // An alternative would be to create a storage for such cases in TestUtil
     },
@@ -42,7 +42,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
     testCreateFunctionSyntaxError : function() {
       var code = "null.no!;";
       try {
-        new Function( code );
+        FunctionFactory.createFunction( code, "handleEvent" );
         fail();
       } catch( ex ) {
         // expected
@@ -52,7 +52,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
     testCreateFunctionNoFunction : function() {
       var code = "1";
       try {
-        new Function( code );
+        FunctionFactory.createFunction( code, "handleEvent" );
         fail();
       } catch( ex ) {
         // expected
@@ -67,9 +67,10 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
       processor.processOperation( {
         "target" : "w3",
         "action" : "create",
-        "type" : "rwt.clientscripting.Listener",
+        "type" : "rwt.scripting.Function",
         "properties" : {
-          "scriptCode" : code
+          "scriptCode" : code,
+          "name" : "handleEvent"
         }
       } );
 
@@ -81,15 +82,16 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
       var ObjectManager = rwt.remote.ObjectRegistry;
       var processor = rwt.remote.MessageProcessor;
       var code = "var handleEvent = function(){};";
-      var createScript = [ "create", "r3", "rwt.clientscripting.Script", { "text" : code } ];
+      var createScript = [ "create", "r3", "rwt.scripting.Script", { "text" : code } ];
       processor.processOperationArray( createScript );
 
       processor.processOperation( {
         "target" : "w3",
         "action" : "create",
-        "type" : "rwt.clientscripting.Listener",
+        "type" : "rwt.scripting.Function",
         "properties" : {
-          "scriptId" : "r3"
+          "scriptId" : "r3",
+          "name" : "handleEvent"
         }
       } );
 
@@ -99,34 +101,47 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
 
     testCallWithArgument : function() {
       var code = "function handleEvent( e ){ e.x++; }";
-      var listener = new Function( code );
+      var listener = FunctionFactory.createFunction( code, "handleEvent" );
+
       var event = {
         x : 1
       };
 
-      listener.call( event );
+      listener( event );
 
       assertEquals( 2, event.x );
     },
 
     testNoContext : function() {
       var code = "var handleEvent = function(){ this.x++; }";
-      var listener = new Function( code );
+      var listener = FunctionFactory.createFunction( code, "handleEvent" );
       listener.x = 1;
 
-      listener.call();
+      listener();
 
       assertEquals( 1, listener.x );
     },
 
-    testImportedClasses : function() {
+    testImportSWT : function() {
+      var ObjectManager = rwt.remote.ObjectRegistry;
+      var processor = rwt.remote.MessageProcessor;
+      var code = "var handleEvent = function( obj ){ obj.SWT = SWT;};";
+
+      processor.processOperation( {
+        "target" : "w3",
+        "action" : "create",
+        "type" : "rwt.scripting.Function",
+        "properties" : {
+          "scriptCode" : code,
+          "name" : "handleEvent"
+        }
+      } );
+      var result = ObjectManager.getObject( "w3" );
       var obj = {};
-      var code = "function handleEvent( obj ){ obj.SWT = SWT; }";
-      var fun = new Function( code );
 
-      fun.call( obj );
+      result( obj );
 
-      assertIdentical( SWT, obj.SWT );
+      assertIdentical( rwt.scripting.SWT, obj.SWT );
     }
 
   }

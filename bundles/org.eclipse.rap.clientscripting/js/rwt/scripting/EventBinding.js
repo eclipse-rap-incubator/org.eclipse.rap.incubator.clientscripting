@@ -13,68 +13,58 @@
 
 rwt.qx.Class.createNamespace( "rwt.scripting", {} );
 
-rwt.scripting.EventBinding = function( source, eventType, targetFunction ) {
-  var ClientScriptingUtil = rwt.scripting.ClientScriptingUtil;
-  try {
-    this._eventType = eventType;
-    this._source = source;
-    this._public = ClientScriptingUtil.isPublicObject( source );
-    this._targetFunction = targetFunction;
-    if( this._public ) {
-      this._eventSource = source;
-      this._nativeType = eventType;
-    } else {
-      this._nativeType = ClientScriptingUtil.getNativeEventType( source, this._eventType );
-      this._eventSource = ClientScriptingUtil.getNativeEventSource( source, this._eventType );
-    }
-    this._bind();
-  } catch( ex ) {
-    throw new Error( "Could not create EventBinding " + eventType + ":" + ex.message );
-  }
-};
+var ClientScriptingUtil = rwt.scripting.ClientScriptingUtil;
+var SWT = rwt.scripting.SWT;
 
-rwt.scripting.EventBinding.prototype = {
+var wrapperRegistry = {};
 
-  _bind : function() {
-    if( this._public ) {
-      this._eventSource.addListener( this._nativeType, this._targetFunction );
-    } else {
-      this._eventSource.addEventListener( this._nativeType, this._processEvent, this );
+// TODO : better name?
+rwt.scripting.EventBinding = {
+
+  addListener : function( widget, eventType, targetFunction ) {
+    var wrapperKey = this._getWrapperKey( widget, eventType, targetFunction );
+    if( wrapperRegistry[ wrapperKey ] == null ) {
+      var nativeType = ClientScriptingUtil.getNativeEventType( widget, eventType );
+      var nativeSource = ClientScriptingUtil.getNativeEventSource( widget, eventType );
+      var wrappedListener = this._wrapListener( widget, eventType, targetFunction );
+      nativeSource.addEventListener( nativeType, wrappedListener, window );
+      wrapperRegistry[ wrapperKey ] = wrappedListener;
     }
   },
 
-  _unbind : function() {
-    if( this._public ) {
-      this._eventSource.removeListener( this._nativeType, this._targetFunction );
-    } else {
-      this._eventSource.removeEventListener( this._nativeType, this._processEvent, this );
+  removeListener : function( widget, eventType, targetFunction ) {
+    var wrapperKey = this._getWrapperKey( widget, eventType, targetFunction );
+    if( wrapperRegistry[ wrapperKey ] != null ) {
+      var nativeType = ClientScriptingUtil.getNativeEventType( widget, eventType );
+      var nativeSource = ClientScriptingUtil.getNativeEventSource( widget, eventType );
+      var wrappedListener = wrapperRegistry[ wrapperKey ];
+      nativeSource.removeEventListener( nativeType, wrappedListener, window );
+      wrapperRegistry[ wrapperKey ] = null;
     }
   },
 
-  _processEvent : function( event ) {
-    try {
-      var EventProxy = rwt.scripting.EventProxy;
-      var ClientScriptingUtil = rwt.scripting.ClientScriptingUtil;
-      var SWT = rwt.scripting.SWT;
-      var eventProxy = new EventProxy( SWT[ this._eventType ], this._source, event );
-      var wrappedEventProxy = ClientScriptingUtil.wrapAsProto( eventProxy );
-      this._targetFunction( wrappedEventProxy );
-      ClientScriptingUtil.postProcessEvent( eventProxy, wrappedEventProxy, event );
-      EventProxy.disposeEventProxy( eventProxy );
-    } catch( ex ) {
-      var msg = "Error in ClientScripting event type ";
-      throw new Error( msg + this._eventType + ": " + ex.message ? ex.message : ex );
-    }
+  _wrapListener : function( widget, eventType, targetFunction ) {
+    return function( nativeEvent ) {
+      try {
+        var eventProxy = new rwt.scripting.EventProxy( SWT[ eventType ], widget, nativeEvent );
+        var wrappedEventProxy = ClientScriptingUtil.wrapAsProto( eventProxy );
+        targetFunction( wrappedEventProxy );
+        ClientScriptingUtil.postProcessEvent( eventProxy, wrappedEventProxy, nativeEvent );
+        rwt.scripting.EventProxy.disposeEventProxy( eventProxy );
+      } catch( ex ) {
+        var msg = "Error in scripting event type ";
+        throw new Error( msg + eventType + ": " + ex.message ? ex.message : ex );
+      }
+    };
   },
 
-  getType : function() {
-    return this._eventType;
-  },
-
-  dispose : function() {
-    this._unbind();
-    this._source = null;
-    this._targetFunction = null;
+  _getWrapperKey : function( widget, eventType, targetFunction ) {
+    var result = [
+      rwt.qx.Object.toHashCode( widget ),
+      eventType,
+      rwt.qx.Object.toHashCode( targetFunction )
+    ];
+    return result.join( ":" );
   }
 
 };

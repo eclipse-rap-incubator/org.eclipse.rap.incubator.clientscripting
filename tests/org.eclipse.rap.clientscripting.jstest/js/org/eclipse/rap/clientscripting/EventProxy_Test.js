@@ -14,7 +14,7 @@ var EventProxy = rwt.scripting.EventProxy;
 var EventBinding = rwt.scripting.EventBinding;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = rwt.remote.MessageProcessor;
-var ObjectManager = rwt.remote.ObjectRegistry;
+var ObjectRegistry = rwt.remote.ObjectRegistry;
 var WidgetProxyFactory = rwt.scripting.WidgetProxyFactory;
 var SWT = rwt.scripting.SWT;
 
@@ -486,11 +486,11 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           "parent" : "w2"
         }
       } );
-      var canvas = ObjectManager.getObject( "w4" );
+      var canvas = ObjectRegistry.getObject( "w4" );
       TestUtil.flush();
       var gc;
 
-      new EventBinding( canvas, "Paint", function( ev ) {
+      this._bindByProtocol( canvas, "Paint", function( ev ) {
         gc = ev.gc;
       } );
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
@@ -510,11 +510,11 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           "parent" : "w2"
         }
       } );
-      var canvas = ObjectManager.getObject( "w4" );
+      var canvas = ObjectRegistry.getObject( "w4" );
       TestUtil.flush();
       var gc = [];
 
-      new EventBinding( canvas, "Paint", function( ev ) {
+      this._bindByProtocol( canvas, "Paint", function( ev ) {
         gc.push( ev.gc );
       } );
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
@@ -543,12 +543,12 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           "parent" : "w4"
         }
       } );
-      var serverGc = ObjectManager.getObject( "w5" );
-      var canvas = ObjectManager.getObject( "w4" );
+      var serverGc = ObjectRegistry.getObject( "w5" );
+      var canvas = ObjectRegistry.getObject( "w4" );
       TestUtil.flush();
       var gc;
 
-      new EventBinding( canvas, "Paint", function( ev ) {
+      this._bindByProtocol( canvas, "Paint", function( ev ) {
         gc = ev.gc;
       } );
       WidgetProxyFactory.getWidgetProxy( canvas ).redraw();
@@ -567,14 +567,14 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           "parent" : "w2"
         }
       } );
-      var canvas = ObjectManager.getObject( "w4" );
+      var canvas = ObjectRegistry.getObject( "w4" );
       canvas.setBackgroundColor( "#aaaaaa" );
       canvas.setTextColor( "#bbbbbb" );
       canvas.setFont( rwt.html.Font.fromString( "11px italic Arial") );
       TestUtil.flush();
       var props;
 
-      new EventBinding( canvas, "Paint", function( ev ) {
+      this._bindByProtocol( canvas, "Paint", function( ev ) {
         var gc = ev.gc;
         props = [
           gc.strokeStyle,
@@ -601,14 +601,14 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           "parent" : "w2"
         }
       } );
-      var canvas = ObjectManager.getObject( "w4" );
+      var canvas = ObjectRegistry.getObject( "w4" );
       canvas.setBackgroundColor( null );
       canvas.setTextColor( null );
       canvas.setFont( null );
       TestUtil.flush();
       var props;
 
-      new EventBinding( canvas, "Paint", function( ev ) {
+      this._bindByProtocol( canvas, "Paint", function( ev ) {
         var gc = ev.gc;
         props = [ gc.strokeStyle, gc.fillStyle ];
         gc.strokeStyle = "#ff00ff";
@@ -632,7 +632,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           "parent" : "w2"
         }
       } );
-      var canvas = ObjectManager.getObject( "w4" );
+      var canvas = ObjectRegistry.getObject( "w4" );
       Processor.processOperation( {
         "target" : "w5",
         "action" : "create",
@@ -641,12 +641,12 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
           "parent" : "w4"
         }
       } );
-      var serverGc = ObjectManager.getObject( "w5" );
+      var serverGc = ObjectRegistry.getObject( "w5" );
       TestUtil.flush();
       var fontArr = [ [ "Arial" ], 11, false, true ];
       var props;
 
-      new EventBinding( canvas, "Paint", function( ev ) {
+      this._bindByProtocol( canvas, "Paint", function( ev ) {
         var gc = ev.gc;
         props = [
           gc.strokeStyle,
@@ -681,7 +681,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
         }
       } );
       TestUtil.flush();
-      text = ObjectManager.getObject( "w3" );
+      text = ObjectRegistry.getObject( "w3" );
       text.focus();
     },
 
@@ -716,6 +716,23 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventProxy_Test", {
       textWidget._inputElement.value = value;
       textWidget._inValueProperty = false;
       textWidget._oninputDom( { "propertyName" : "value" } );
+    },
+
+    _bindByProtocol : function( obj, type, targetFunction ) {
+      if( ObjectRegistry.getId( obj ) == null ) {
+        ObjectRegistry.add( "w33", obj, { "isPublic" : true } );
+      }
+      ObjectRegistry.add( "w45", targetFunction, {} );
+      Processor.processOperation( {
+        "target" : "w5",
+        "action" : "create",
+        "type" : "rwt.scripting.EventBinding",
+        "properties" : {
+          "eventType" : type,
+          "targetObject" : ObjectRegistry.getId( obj ),
+          "listener" : "w45"
+        }
+      } );
     }
 
   }

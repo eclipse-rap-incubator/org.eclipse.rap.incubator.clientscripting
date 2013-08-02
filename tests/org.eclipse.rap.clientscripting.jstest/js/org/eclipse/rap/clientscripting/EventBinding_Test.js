@@ -15,7 +15,7 @@ var EventBinding = rwt.scripting.EventBinding;
 var EventProxy = rwt.scripting.EventProxy;
 var TestUtil = org.eclipse.rwt.test.fixture.TestUtil;
 var Processor = rwt.remote.MessageProcessor;
-var ObjectManager = rwt.remote.ObjectRegistry;
+var ObjectRegistry = rwt.remote.ObjectRegistry;
 var SWT = rwt.scripting.SWT;
 var EventHandlerUtil = rwt.event.EventHandlerUtil;
 
@@ -28,39 +28,11 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
 
   members : {
 
-    testCreateBindingByProtocol : function() {
-      var code = "var handleEvent = function(){};";
-      Processor.processOperation( {
-        "target" : "w4",
-        "action" : "create",
-        "type" : "rwt.scripting.Function",
-        "properties" : {
-          "scriptCode" : code,
-          "name" : "handleEvent"
-        }
-      } );
-
-      Processor.processOperation( {
-        "target" : "w5",
-        "action" : "create",
-        "type" : "rwt.scripting.EventBinding",
-        "properties" : {
-          "eventType" : "KeyDown",
-          "targetObject" : "w3",
-          "listener" : "w4"
-        }
-      } );
-
-      var result = ObjectManager.getObject( "w5" );
-      assertTrue( result instanceof EventBinding );
-      assertIdentical( "KeyDown", result.getType() );
-    },
-
     testBindKeyEvent : function() {
       TestUtil.flush();
       var logger = this._createLogger();
 
-      new EventBinding( text, "KeyDown", logger );
+      this._bindByProtocol( text, "KeyDown", logger );
       TestUtil.press( text, "A" );
 
       assertEquals( 1, logger.log.length );
@@ -69,19 +41,17 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testDisposeBindKeyEvent : function() {
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, "KeyDown", logger );
-      binding.dispose();
+      this._bindByProtocol( text, "KeyDown", logger );
+      this._unbindByProtocol();
       TestUtil.press( text, "A" );
 
       assertEquals( 0, logger.log.length );
-      assertNull( binding._source );
-      assertNull( binding._targetFunction );
     },
 
     testBindCreatesProxyEvent : function() {
       var logger = this._createLogger();
 
-      new EventBinding( text, "KeyDown", logger );
+      this._bindByProtocol( text, "KeyDown", logger );
       TestUtil.press( text, "A" );
 
       var event = logger.log[ 0 ];
@@ -91,7 +61,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testBindDisposesProxyEvent : function() {
       var logger = this._createLogger();
 
-      new EventBinding( text, "KeyDown", logger );
+      this._bindByProtocol( text, "KeyDown", logger );
       TestUtil.press( text, "A" );
 
       var event = logger.log[ 0 ];
@@ -103,7 +73,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         event.doit = false;
       };
 
-      new EventBinding( text, "KeyDown", listener );
+      this._bindByProtocol( text, "KeyDown", listener );
       var domEvent = TestUtil.createFakeDomKeyEvent( text.getElement(), "keypress", "a" );
       TestUtil.fireFakeDomEvent( domEvent );
 
@@ -115,7 +85,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         event.doit = false;
       };
 
-      new EventBinding( text, "MouseDown", listener );
+      this._bindByProtocol( text, "MouseDown", listener );
       var domEvent = TestUtil.createFakeDomKeyEvent( text.getElement(), "keypress", "a" );
       TestUtil.fireFakeDomEvent( domEvent );
 
@@ -127,7 +97,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, "KeyUp", logger );
+      this._bindByProtocol( text, "KeyUp", logger );
       TestUtil.keyDown( textEl, "A" );
       assertEquals( 0, logger.log.length );
       TestUtil.keyUp( textEl, "A" );
@@ -140,7 +110,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       text.blur();
       var logger = this._createLogger();
 
-      new EventBinding( text, "FocusIn", logger );
+      this._bindByProtocol( text, "FocusIn", logger );
       text.focus();
 
       assertEquals( 1, logger.log.length );
@@ -150,7 +120,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       text.focus();
       var logger = this._createLogger();
 
-      new EventBinding( text, "FocusOut", logger );
+      this._bindByProtocol( text, "FocusOut", logger );
       text.blur();
 
       assertEquals( 1, logger.log.length );
@@ -159,7 +129,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testBindMouseDown : function() {
       var logger = this._createLogger();
 
-      new EventBinding( text, "MouseDown", logger );
+      this._bindByProtocol( text, "MouseDown", logger );
       TestUtil.fakeMouseEventDOM( textEl, "mousedown" );
 
       assertEquals( 1, logger.log.length );
@@ -169,7 +139,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var logger = this._createLogger();
 
       TestUtil.fakeMouseEventDOM( textEl, "mousedown" );
-      new EventBinding( text, "MouseUp", logger );
+      this._bindByProtocol( text, "MouseUp", logger );
       TestUtil.fakeMouseEventDOM( textEl, "mouseup" );
 
       assertEquals( 1, logger.log.length );
@@ -179,7 +149,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var logger = this._createLogger();
 
       TestUtil.fakeMouseEventDOM( textEl, "mouseover" );
-      new EventBinding( text, "MouseMove", logger );
+      this._bindByProtocol( text, "MouseMove", logger );
       TestUtil.fakeMouseEventDOM( textEl, "mousemove" );
 
       assertEquals( 1, logger.log.length );
@@ -188,7 +158,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
     testBindMouseEnter : function() {
       var logger = this._createLogger();
 
-      new EventBinding( text, "MouseEnter", logger );
+      this._bindByProtocol( text, "MouseEnter", logger );
       TestUtil.fakeMouseEventDOM( textEl, "mouseover" );
 
       assertEquals( 1, logger.log.length );
@@ -198,7 +168,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var logger = this._createLogger();
 
       TestUtil.fakeMouseEventDOM( textEl, "mouseover" );
-      new EventBinding( text, "MouseExit", logger );
+      this._bindByProtocol( text, "MouseExit", logger );
       TestUtil.fakeMouseEventDOM( textEl, "mouseout" );
 
       assertEquals( 1, logger.log.length );
@@ -208,7 +178,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var logger = this._createLogger();
       text.setVisibility( false );
 
-      new EventBinding( text, "Show", logger );
+      this._bindByProtocol( text, "Show", logger );
       text.setVisibility( true );
 
       assertEquals( 1, logger.log.length );
@@ -218,7 +188,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var logger = this._createLogger();
       text.setVisibility( true );
 
-      new EventBinding( text, "Hide", logger );
+      this._bindByProtocol( text, "Hide", logger );
       text.setVisibility( false );
 
       assertEquals( 1, logger.log.length );
@@ -228,7 +198,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       var logger = this._createLogger();
 
-      new EventBinding( text, "Verify", logger );
+      this._bindByProtocol( text, "Verify", logger );
       this._inputText( text, "goo" );
 
       assertEquals( 1, logger.log.length );
@@ -238,8 +208,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       var logger = this._createLogger();
 
-      var binding = new EventBinding( text, "Verify", logger );
-      binding.dispose();
+      this._bindByProtocol( text, "Verify", logger );
+      this._unbindByProtocol();
       this._inputText( text, "goo" );
 
       assertEquals( 0, logger.log.length );
@@ -254,7 +224,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         textValue = event.widget.getText();
       };
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       this._inputText( text, "bar" );
 
       assertEquals( "bar", text.getValue() );
@@ -268,7 +238,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         event.doit = false;
       };
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       this._inputText( text, "bar" );
 
       assertEquals( "foo", text.getValue() );
@@ -282,7 +252,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         event.doit = false;
       };
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       this._inputText( text, "foobarxxx", [ 3, 3 ] );
 
       assertEquals( 3, text._getSelectionStart() );
@@ -296,7 +266,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         event.type = "boom";
       } ;
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       this._inputText( text, "bar" );
 
       assertEquals( "bar", text.getValue() );
@@ -309,7 +279,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         event.text = "bar";
       };
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       this._inputText( text, "foob", [ 3, 3 ] );
 
       assertEquals( "foobar", text.getValue() );
@@ -322,7 +292,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         event.text = "bar";
       } ;
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       this._inputText( text, "foxo", [ 2, 2 ] );
 
       assertEquals( "fobaro", text.getValue() );
@@ -337,7 +307,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         event.text = "bar";
       } ;
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       this._inputText( text, "fxo", [ 1, 2 ] );
 
       assertEquals( "fbaro", text.getValue() );
@@ -354,7 +324,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         selection = event.widget.getSelection();
       };
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       this._inputText( text, "foxo", [ 2, 2 ] );
 
       assertEquals( 5, text._getSelectionStart() );
@@ -371,7 +341,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         selection = event.widget.getSelection();
       } ;
 
-      new EventBinding( text, "Verify", handler );
+      this._bindByProtocol( text, "Verify", handler );
       text._setSelectionStart( 2 );
       text._setSelectionLength( 0 );
       TestUtil.press( text, "x" );
@@ -386,7 +356,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       var logger = this._createLogger();
 
-      new EventBinding( text, "Modify", logger );
+      this._bindByProtocol( text, "Modify", logger );
       text.setValue( "foo" );
 
       assertEquals( 1, logger.log.length );
@@ -396,8 +366,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       TestUtil.flush();
       var logger = this._createLogger();
 
-      new EventBinding( text, "Modify", logger );
-      new EventBinding( text, "Verify", logger );
+      this._bindByProtocol( text, "Modify", logger );
+      this._bindByProtocol( text, "Verify", logger );
       this._inputText( text, "foo" );
 
       assertEquals( 2, logger.log.length );
@@ -415,14 +385,13 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
           "parent" : "w2"
         }
       } );
-      var canvas = ObjectManager.getObject( "w4" );
+      var canvas = ObjectRegistry.getObject( "w4" );
       var logger = this._createLogger();
       TestUtil.flush();
 
-      new EventBinding( canvas, "Paint", logger );
+      this._bindByProtocol( canvas, "Paint", logger );
       canvas.dispatchSimpleEvent( "paint" );
       TestUtil.flush();
-
 
       assertEquals( 1, logger.log.length );
       canvas.destroy();
@@ -439,11 +408,11 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
           "items" : [ "a", "b", "c" ]
         }
       } );
-      var list = ObjectManager.getObject( "w4" );
+      var list = ObjectRegistry.getObject( "w4" );
       var logger = this._createLogger();
       TestUtil.flush();
 
-      new EventBinding( list, "Selection", logger );
+      this._bindByProtocol( list, "Selection", logger );
       TestUtil.click( list.getItems()[ 1 ] );
       TestUtil.flush();
 
@@ -461,11 +430,11 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
           "items" : [ "a", "b", "c" ]
         }
       } );
-      var list = ObjectManager.getObject( "w4" );
+      var list = ObjectRegistry.getObject( "w4" );
       var logger = this._createLogger();
       TestUtil.flush();
 
-      new EventBinding( list, "DefaultSelection", logger );
+      this._bindByProtocol( list, "DefaultSelection", logger );
       TestUtil.doubleClick( list.getItems()[ 1 ] );
       TestUtil.flush();
 
@@ -476,7 +445,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var obj = this._createPublicObject( "x1" );
       var logger = this._createLogger();
 
-      new EventBinding( obj, "Selection", logger );
+      this._bindByProtocol( obj, "Selection", logger );
       obj.listenerHolder.dispatchSimpleEvent( "Selection", "myEventObject" );
 
       assertEquals( 1, logger.log.length );
@@ -487,8 +456,8 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
       var obj = this._createPublicObject( "x1" );
       var logger = this._createLogger();
 
-      var binding = new EventBinding( obj, "Selection", logger );
-      binding.dispose();
+      this._bindByProtocol( obj, "Selection", logger );
+      this._unbindByProtocol();
       obj.listenerHolder.dispatchSimpleEvent( "Selection", "myEventObject" );
 
       assertEquals( 0, logger.log.length );
@@ -518,7 +487,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         }
       } );
       TestUtil.flush();
-      text = ObjectManager.getObject( "w3" );
+      text = ObjectRegistry.getObject( "w3" );
       text.focus();
       textEl = text.getElement();
     },
@@ -568,8 +537,31 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.EventBinding_Test", {
         "properties" : {}
       } );
       return rap.getObject( id );
-    }
+    },
 
+    _bindByProtocol : function( obj, type, targetFunction ) {
+      if( ObjectRegistry.getId( obj ) == null ) {
+        ObjectRegistry.add( "w33", obj, { "isPublic" : true } );
+      }
+      ObjectRegistry.add( "w45", targetFunction, {} );
+      Processor.processOperation( {
+        "target" : "w5",
+        "action" : "create",
+        "type" : "rwt.scripting.EventBinding",
+        "properties" : {
+          "eventType" : type,
+          "targetObject" : ObjectRegistry.getId( obj ),
+          "listener" : "w45"
+        }
+      } );
+    },
+
+    _unbindByProtocol : function() {
+      Processor.processOperation( {
+        "target" : "w5",
+        "action" : "destroy"
+      } );
+    }
 
   }
 

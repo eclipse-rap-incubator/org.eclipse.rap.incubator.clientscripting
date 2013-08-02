@@ -26,7 +26,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxyFactory_Test", 
 
   members : {
 
-  testCreateTextWidgetProxyFromPublicAPI : function() {
+    testCreateTextWidgetProxyFromPublicAPI : function() {
       var widgetProxy = WidgetProxyFactory.getWidgetProxy( text );
 
       var otherProxy = rap.getObject( "w3" );
@@ -270,7 +270,7 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.WidgetProxyFactory_Test", 
       var widgetProxy = WidgetProxyFactory.getWidgetProxy( canvas );
       var logger = this._createLogger();
       TestUtil.flush();
-      new EventBinding( canvas, "Paint", logger );
+      EventBinding.addListener( canvas, "Paint", logger );
 
       assertEquals( 0, logger.log.length );
       widgetProxy.redraw();

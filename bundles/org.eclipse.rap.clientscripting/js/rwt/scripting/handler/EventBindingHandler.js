@@ -11,18 +11,36 @@
 
 (function(){
 
+var ObjectRegistry = rwt.remote.ObjectRegistry;
+var EventBinding = rwt.scripting.EventBinding;
+
 rwt.remote.HandlerRegistry.add( "rwt.scripting.EventBinding", {
 
   factory : function( properties ) {
-    var ObjectRegistry = rwt.remote.ObjectRegistry;
-    var EventBinding = rwt.scripting.EventBinding;
     var source = ObjectRegistry.getObject( properties.targetObject );
+    var isPublic = rwt.scripting.ClientScriptingUtil.isPublicObject( source );
     var eventType = properties.eventType;
     var targetFunction = ObjectRegistry.getObject( properties.listener );
-    return new EventBinding( source, eventType, targetFunction );
+    if( isPublic ) {
+      source.addListener( eventType, targetFunction );
+    } else {
+      EventBinding.addListener( source, eventType, targetFunction );
+    }
+    return {
+      "isPublic" : isPublic,
+      "eventType" : eventType,
+      "source" : source,
+      "targetFunction" : targetFunction
+    };
   },
 
-  destructor : "dispose"
+  destructor : function( binding ) {
+    if( binding.isPublic ) {
+      binding.source.removeListener( binding.eventType, binding.targetFunction );
+    } else {
+      EventBinding.removeListener( binding.source, binding.eventType, binding.targetFunction );
+    }
+  }
 
 } );
 

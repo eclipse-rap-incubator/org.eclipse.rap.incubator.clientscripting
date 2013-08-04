@@ -65,10 +65,6 @@ public class ClientListener extends ClientFunction implements Listener {
     super( scriptCode );
   }
 
-  public ClientListener( Script script ) {
-    super( script );
-  }
-
   /**
    * This method will NOT be called on a ClientListener.
    */

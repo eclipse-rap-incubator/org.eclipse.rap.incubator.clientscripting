@@ -23,7 +23,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.eclipse.rap.clientscripting.Script;
 import org.eclipse.rap.rwt.remote.Connection;
 import org.eclipse.rap.rwt.remote.RemoteObject;
 import org.eclipse.rap.rwt.testfixture.Fixture;
@@ -59,20 +58,10 @@ public class ClientFunction_Test {
   }
 
   @Test
-  public void testCreation_failsWithScriptNull() {
-    try {
-      new ClientFunction( ( Script )null );
-      fail();
-    } catch( NullPointerException expected ) {
-      assertTrue( expected.getMessage().contains( "script" ) );
-    }
-  }
-
-  @Test
   public void testCreation_createsRemoteObject() {
     Connection connection = fakeConnection( mock( RemoteObject.class ), CLIENT_LISTENER_TYPE );
 
-    new ClientFunction( new Script( "script code" ) );
+    new ClientFunction( "script code" );
 
     verify( connection ).createRemoteObject( "rwt.scripting.Function" );
   }
@@ -103,18 +92,6 @@ public class ClientFunction_Test {
     new ClientFunction( "my script code" );
 
     verify( listenerRemoteObject ).set( eq( "scriptCode" ), eq( "my script code" ) );
-  }
-
-  @Test
-  public void testCreationWithScript_setsScriptId() {
-    RemoteObject listenerRemoteObject = mock( RemoteObject.class );
-    fakeConnection( listenerRemoteObject, CLIENT_LISTENER_TYPE );
-    Script script = mock( Script.class );
-    when( script.getId() ).thenReturn( "fooId" );
-
-    new ClientFunction( script );
-
-    verify( listenerRemoteObject ).set( eq( "scriptId" ), eq( "fooId" ) );
   }
 
   @Test
@@ -173,7 +150,7 @@ public class ClientFunction_Test {
   }
 
   private void createListener() {
-    function = spy( new ClientFunction( new Script( "code" ) ) );
+    function = spy( new ClientFunction( "code" ) );
   }
 
 }

@@ -29,7 +29,6 @@ public class ClientScriptingResourcesContribution implements TestContribution {
     "handler/EventBindingHandler.js",
     "EventProxy.js",
     "WidgetProxyFactory.js",
-    "handler/ScriptHandler.js",
     "init.js"
   };
 

@@ -10,11 +10,15 @@
  ******************************************************************************/
 package org.eclipse.rap.clientscripting.demo;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.eclipse.rap.clientscripting.ClientListener;
-import org.eclipse.rap.clientscripting.Script;
 import org.eclipse.rap.clientscripting.WidgetDataWhiteList;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.JavaScriptLoader;
 import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
+import org.eclipse.rap.rwt.service.ResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -129,20 +133,22 @@ public class CustomBehaviors {
   public static void addNumKeyBehavior( Text text, int number, Button button ) {
     button.setData( "textWidget", WidgetUtil.getId( text ) );
     button.setData( "numValue", Integer.valueOf( number ) );
-    ClientListener listener = new ClientListener( getScript( "NumKey.js" ) );
-    button.addListener( SWT.MouseDown, listener );
+    ensure( "NumKey.js" );
+    button.addListener( SWT.MouseDown, new ClientListener( "var handleEvent = demoscripts.numKey;") );
   }
 
-  private static Script getScript( String fileName ) {
-    String key = CustomBehaviors.class.getCanonicalName() + fileName;
-    Script result = ( Script )RWT.getUISession().getAttribute( key );
-    if( result == null ) {
-      String scriptCode
-        = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + fileName );
-      result = new Script( scriptCode );
-      RWT.getUISession().setAttribute( key, result );
+  private static void ensure( String fileName ) {
+    String path = RESOURCES_PREFIX + fileName;
+    InputStream stream = CustomBehaviors.class.getClassLoader().getResourceAsStream( path );
+    ResourceManager manager = RWT.getResourceManager();
+    manager.register( path, stream );
+    try {
+      stream.close();
+    } catch( IOException e ) {
+      e.printStackTrace();
     }
-    return result;
+    JavaScriptLoader jsl = RWT.getClient().getService( JavaScriptLoader.class );
+    jsl.require( manager.getLocation( path ) );
   }
 
 }

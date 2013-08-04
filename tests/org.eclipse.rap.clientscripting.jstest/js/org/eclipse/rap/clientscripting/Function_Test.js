@@ -78,27 +78,6 @@ rwt.qx.Class.define( "org.eclipse.rap.clientscripting.Function_Test", {
       assertTrue( result instanceof Function );
     },
 
-    testCreateFunctionByProtocol_withScriptId : function() {
-      var ObjectManager = rwt.remote.ObjectRegistry;
-      var processor = rwt.remote.MessageProcessor;
-      var code = "var handleEvent = function(){};";
-      var createScript = [ "create", "r3", "rwt.scripting.Script", { "text" : code } ];
-      processor.processOperationArray( createScript );
-
-      processor.processOperation( {
-        "target" : "w3",
-        "action" : "create",
-        "type" : "rwt.scripting.Function",
-        "properties" : {
-          "scriptId" : "r3",
-          "name" : "handleEvent"
-        }
-      } );
-
-      var result = ObjectManager.getObject( "w3" );
-      assertTrue( result instanceof Function );
-    },
-
     testCallWithArgument : function() {
       var code = "function handleEvent( e ){ e.x++; }";
       var listener = FunctionFactory.createFunction( code, "handleEvent" );

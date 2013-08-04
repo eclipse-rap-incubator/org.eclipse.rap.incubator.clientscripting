@@ -33,7 +33,6 @@ public final class ClientScriptingResources {
     "FunctionFactory.js",
     "handler/FunctionHandler.js",
     "WidgetProxyFactory.js",
-    "handler/ScriptHandler.js",
     "init.js"
   };
 

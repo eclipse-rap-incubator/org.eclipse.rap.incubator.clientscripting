@@ -24,8 +24,7 @@ public class ClientScriptingTestContribution implements TestContribution {
     "Function_Test.js",
     "EventBinding_Test.js",
     "EventProxy_Test.js",
-    "WidgetProxyFactory_Test.js",
-    "Script_Test.js",
+    "WidgetProxyFactory_Test.js"
   };
 
   public String getName() {

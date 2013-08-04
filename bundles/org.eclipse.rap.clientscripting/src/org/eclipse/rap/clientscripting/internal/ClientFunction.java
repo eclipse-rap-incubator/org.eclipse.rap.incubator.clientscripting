@@ -13,7 +13,6 @@ package org.eclipse.rap.clientscripting.internal;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.rap.clientscripting.Script;
 import org.eclipse.rap.clientscripting.internal.resources.ClientScriptingResources;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.remote.RemoteObject;
@@ -27,26 +26,14 @@ public class ClientFunction {
   private final Collection<ClientListenerBinding> bindings;
 
   public ClientFunction( String scriptCode ) {
-    this();
-    if( scriptCode == null ) {
-      throw new NullPointerException( "Parameter is null: scriptCode" );
-    }
-    remoteObject.set( "scriptCode", scriptCode );
-  }
-
-  public ClientFunction( Script script ) {
-    this();
-    if( script == null ) {
-      throw new NullPointerException( "Parameter is null: script" );
-    }
-    remoteObject.set( "scriptId", script.getId() );
-  }
-
-  private ClientFunction() {
     bindings = new ArrayList<ClientListenerBinding>();
     remoteObject = RWT.getUISession().getConnection().createRemoteObject( REMOTE_TYPE );
     ClientScriptingResources.ensure();
     remoteObject.set( "name", "handleEvent" );
+    if( scriptCode == null ) {
+      throw new NullPointerException( "Parameter is null: scriptCode" );
+    }
+    remoteObject.set( "scriptCode", scriptCode );
   }
 
   protected String getRemoteId() {

@@ -1,6 +1,9 @@
 //# sourceURL=NumKey.js
 
-var handleEvent = function( event ) {
+/*globals demoscripts:true */
+demoscripts = ( typeof demoscripts !== "undefined" ) ? demoscripts : {};
+
+demoscripts.numKey = function( event ) {
   var button = event.widget;
   var text = rap.getObject( button.getData( "textWidget" ) );
   var value = button.getData( "numValue" );

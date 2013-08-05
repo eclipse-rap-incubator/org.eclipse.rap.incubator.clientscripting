@@ -239,9 +239,7 @@ rwt.scripting.WidgetProxyFactory = {
       }
     }
     return result;
-  },
-
-
+  }
 
 };
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 EclipseSource and others.
+ * Copyright (c) 2012, 2013 EclipseSource and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.rap.clientscripting.ClientListener;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.Color;
@@ -43,20 +44,20 @@ public class CustomBehaviors {
   public static void addUpperCaseBehavior( Text text ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "UpperCase.js" );
     ClientListener clientListener = new ClientListener( scriptCode );
-    clientListener.addTo( text, ClientListener.Verify );
+    text.addListener( SWT.Verify, clientListener );
   }
 
   public static void addDigitsOnlyBehavior( Text text ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "DigitsOnly.js" );
     ClientListener clientListener = new ClientListener( scriptCode );
-    clientListener.addTo( text, ClientListener.Modify );
+    text.addListener( SWT.Modify, clientListener );
   }
 
   public static void addDigitsOnlyEnforcementBehavior( Text text ) {
     String scriptCode
       = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "DigitsOnlyEnforcement.js" );
     ClientListener clientListener = new ClientListener( scriptCode );
-    clientListener.addTo( text, ClientListener.Verify );
+    text.addListener( SWT.Verify, clientListener );
   }
 
   public static void addDateFieldBehavior( final Text text ) {
@@ -67,8 +68,8 @@ public class CustomBehaviors {
   private static void addClientSideDateFieldBehavior( Text text ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "DateField.js" );
     ClientListener clientListener = new ClientListener( scriptCode );
-    clientListener.addTo( text, ClientListener.Verify );
-    clientListener.addTo( text, ClientListener.Modify );
+    text.addListener( SWT.Verify, clientListener );
+    text.addListener( SWT.Modify, clientListener );
   }
 
   private static void addServerSideDateFieldBehavior( final Text text ) {
@@ -95,7 +96,7 @@ public class CustomBehaviors {
   public static void addCounterBehavior( Control control ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "Counter.js" );
     ClientListener listener = new ClientListener( scriptCode );
-    listener.addTo( control, ClientListener.MouseDown );
+    control.addListener( SWT.MouseDown, listener );
   }
 
   public static void addEMailBehavior( Text text ) {
@@ -106,7 +107,7 @@ public class CustomBehaviors {
   private static void addClientSideEmailBehavior( Text text ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "Email.js" );
     ClientListener listener = new ClientListener( scriptCode );
-    listener.addTo( text, ClientListener.Modify );
+    text.addListener( SWT.Modify, listener );
   }
 
   private static void addServerSideEmailBehavior( final Text text ) {
@@ -140,16 +141,16 @@ public class CustomBehaviors {
   public static void addLoggerBehavior( Widget widget ) {
     String scriptCode = ResourceLoaderUtil.readTextContent( RESOURCES_PREFIX + "Logger.js" );
     ClientListener listener = new ClientListener( scriptCode );
-    listener.addTo( widget, ClientListener.KeyDown );
-    listener.addTo( widget, ClientListener.KeyUp );
-    listener.addTo( widget, ClientListener.FocusIn );
-    listener.addTo( widget, ClientListener.FocusOut );
-    listener.addTo( widget, ClientListener.MouseDown );
-    listener.addTo( widget, ClientListener.MouseUp );
-    listener.addTo( widget, ClientListener.MouseEnter );
-    listener.addTo( widget, ClientListener.MouseExit );
-    listener.addTo( widget, ClientListener.MouseMove );
-    listener.addTo( widget, ClientListener.MouseDoubleClick );
+    widget.addListener( SWT.KeyDown, listener );
+    widget.addListener( SWT.KeyUp, listener );
+    widget.addListener( SWT.FocusIn, listener );
+    widget.addListener( SWT.FocusOut, listener );
+    widget.addListener( SWT.MouseDown, listener );
+    widget.addListener( SWT.MouseUp, listener );
+    widget.addListener( ClientListener.MouseEnter, listener );
+    widget.addListener( ClientListener.MouseExit, listener );
+    widget.addListener( ClientListener.MouseMove, listener );
+    widget.addListener( SWT.MouseDoubleClick, listener );
   }
 
   private static void showWarning( Text text, String message ) {
